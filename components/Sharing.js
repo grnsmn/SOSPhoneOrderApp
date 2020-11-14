@@ -13,7 +13,9 @@ class ShareExample extends Component {
           'Lista batterie:\n' +
           global.listBatt +
           '\nLista Display:\n' +
-          global.listDisplay
+          global.listDisplay +
+          'Lista Extra:\n' +
+          global.extra
       })
 
       if (result.action === Share.sharedAction) {
