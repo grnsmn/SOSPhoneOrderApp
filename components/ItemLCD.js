@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
-import { Button } from 'react-native-elements'
+import { Button, Input } from 'react-native-elements'
 import Item from './Item'
 
 global.store2 = []
@@ -43,7 +43,7 @@ class ItemLCD extends Item {
         <Text
           style={{
             color: 'white',
-            flex: 2,
+            flex: 1,
             marginLeft: 10,
             fontSize: 15
           }}
@@ -53,12 +53,42 @@ class ItemLCD extends Item {
 
         <View
           style={{
-            margin: 5,
+            flex:1,
+            margin: 2,
             flexDirection: 'row',
             justifyContent: 'flex-end'
           }}
         >
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{ flex: 1, borderWidth:1, borderColor:'white'}}>
+          <Input
+            style={{ borderWidth: 1, color: 'white' }}
+            renderErrorMessage={false}
+            label={'White'}
+            keyboardType='numeric'
+            maxLength={1}
+            value={this.state.contatore}
+            onChangeText={value => this.setState({ contatore: value })}
+            onSubmitEditing={() => this.inStore2('Bianco', this.state.contatore)}
+          />
+        </View>
+        <View style={{ flex:1, borderWidth:1, borderColor:'white'}}>
+          <Input
+            style={{ borderWidth: 1, color: 'white' }}
+            renderErrorMessage={false}
+            label={'Black'}
+            keyboardType='numeric'
+            maxLength={1}
+            value={this.state.contatore2}
+            onChangeText={value => this.setState({ contatore2: value })}
+            onSubmitEditing={() => this.inStore2('NERO', this.state.contatore2)}
+          />
+        </View>
+        </View>
+      </View>
+    )
+  }
+}
+/**
             <Button
               onPress={() => {
                 this.downgrade()
@@ -80,20 +110,8 @@ class ItemLCD extends Item {
               containerStyle={{ borderRightWidth: 4 }}
               buttonStyle={{ backgroundColor: 'white' }}
               titleStyle={{ color: 'black' }}
-            />
-          </View>
-        </View>
-        <View
-          style={{
-            margin: 5,
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            //borderWidth: 1,
-            borderColor: 'white'
-          }}
-        >
-          <View style={{ flexDirection: 'row' }}>
-            <Button
+
+              <Button
               onPress={() => {
                 this.downgrade2()
               }}
@@ -114,11 +132,5 @@ class ItemLCD extends Item {
               containerStyle={{ borderRightWidth: 4 }}
               buttonStyle={{ backgroundColor: 'black' }}
             />
-          </View>
-        </View>
-      </View>
-    )
-  }
-}
-
+            /> */
 export default ItemLCD
