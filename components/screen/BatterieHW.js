@@ -4,7 +4,7 @@ import { Button } from 'react-native-elements'
 import ShareExample from '../Sharing'
 import Item from '../Item'
 
-global.listBatt = ' ' //Variabile globale per la scrittura dell'ordine finale
+global.list_Batt_Huawei = ' ' //Variabile globale per la scrittura dell'ordine finale
 
 const list = [
   { id: 0, nome: 'IPHONE 5', nMax: 2 },
@@ -29,9 +29,9 @@ export default class BattList extends Component {
       return value
     })
     extractList.forEach(
-      element => (global.listBatt += element.n + ' ' + element.name + '\n')
+      element => (global.list_Batt_Huawei += element.n + ' ' + element.name + '\n')
     )
-    console.log(global.listBatt)
+    console.log(global.list_Batt_Huawei)
   }
   render () {
     return (
@@ -55,7 +55,7 @@ export default class BattList extends Component {
             title={'CLEAR Memory'}
             onPress={() => {
               global.store = []
-              global.listBatt = ' '
+              global.list_Batt_Huawei = ' '
             }}
             containerStyle={{
               borderBottomWidth: 3,

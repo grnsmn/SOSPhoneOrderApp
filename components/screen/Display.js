@@ -3,8 +3,7 @@ import { View, StyleSheet, FlatList } from 'react-native'
 import { Button } from 'react-native-elements'
 import ShareExample from '../Sharing'
 import ItemLCD from '../ItemLCD'
-
-global.listDisplay = ' '
+global.listDisplay = ' ';
 
 const list = [
   { id: 0, nome: 'IPHONE 5', nMax: 2 },
@@ -56,8 +55,8 @@ export default class DisplayList extends Component {
         <Button
           title={'CLEAR Memory'}
           onPress={() => {
-            global.store2 = []
-            global.listDisplay = ' '
+            global.store2 = [];
+            global.listDisplay = ' ';
           }}
           containerStyle={{ borderBottomWidth: 3, borderTopWidth: 1.5 }}
           buttonStyle={{ backgroundColor: 'red' }}

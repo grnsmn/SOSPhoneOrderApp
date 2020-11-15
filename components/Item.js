@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
-import { Button } from 'react-native-elements'
+import { Text, View, StyleSheet } from 'react-native'
+import { Button, Input } from 'react-native-elements'
 
 global.store = [] //Array globale che conterrà nomi e quantità di elementi da mettere in lista
 
-class Item extends Component {
+export default class Item extends Component {
   state = { id: 0, nomeItem: '', contatore: 0 }
 
   constructor (props) {
@@ -29,20 +29,28 @@ class Item extends Component {
   }
   render () {
     return (
-      <View
-        style={{
-          flex:1,
-          flexDirection: 'row',
-          borderColor: 'white',
-          borderWidth: 1,
-          margin: 1,
-          alignItems: 'center'
-        }}
-      >
-        <Text style={{ color: 'white', flex: 1, fontSize: 15, marginLeft:10,}}>
+      <View style={styles.container}>
+        <Text style={{ color: 'white', flex: 1, fontSize: 15, marginLeft: 10 }}>
           {this.props.NameItem}
         </Text>
-        <Button
+        <View style={{ flex: 0.3, borderWidth:1, borderColor:'white'}}>
+          <Input
+            style={{ borderWidth: 1, color: 'white' }}
+            renderErrorMessage={false}
+            label={'n°'}
+            keyboardType='numeric'
+            maxLength={1}
+            value={this.state.contatore}
+            onChangeText={value => this.setState({ contatore: value })}
+            onSubmitEditing={() => this.inStore()}
+          />
+        </View>
+      </View>
+    )
+  }
+}
+/**
+ *  <Button
           containerStyle={{ color: 'red' }}
           onPress={() => {
             this.downgrade()
@@ -59,18 +67,20 @@ class Item extends Component {
           title='+'
           disabled={this.state.contatore == this.props.nMax ? true : false}
           containerStyle={{ borderWidth: 2 }}
-          
-
         />
         <Button
           title={'' + this.state.contatore}
           onPress={() => this.inStore()}
           buttonStyle={{ backgroundColor: 'black' }}
-
         />
-      </View>
-    )
+ */
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    borderColor: 'white',
+    borderWidth: 1,
+    margin: 1,
+    alignItems: 'center'
   }
-}
-
-export default Item
+})
