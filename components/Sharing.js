@@ -3,13 +3,18 @@ import { Share, View } from 'react-native'
 import { Button } from 'react-native-elements'
 
 class ShareExample extends Component {
-  
   onShare = async () => {
     try {
-      const data = new Date();
+      const data = new Date()
       const result = await Share.share({
         message:
-          'Ordine del ' + data.getDate() + "/"+ data.getMonth()+"/"+ data.getFullYear()+ '\n\n'+
+          'Ordine del ' +
+          data.getDate() +
+          '/' +
+          data.getMonth() +
+          '/' +
+          data.getFullYear() +
+          '\n\n' +
           'Lista batterie:\n' +
           global.listBatt +
           '\nLista Display:\n' +
@@ -34,9 +39,11 @@ class ShareExample extends Component {
 
   render () {
     return (
-      <View style={{ borderBottomWidth:3, borderTopWidth:3 }}>
-        <Button onPress={this.onShare} title='SHARE' 
-          buttonStyle={{backgroundColor:'grey'}}
+      <View style={{ flex: 1, borderWidth:2 }}>
+        <Button
+          onPress={this.onShare}
+          title='Share'
+          buttonStyle={{ backgroundColor: 'grey' }}
         />
       </View>
     )

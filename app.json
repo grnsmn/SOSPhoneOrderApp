@@ -3,7 +3,7 @@
   "displayName": "SOSPhone Order App ",
   "expo": {
     "name": "SOSPhone Order",
-    "icon":"./img/SOSPhone.png",
+    "icon": "./img/SOSPhone.png",
     "slug": "SOS",
     "version": "1.1.1",
     "assetBundlePatterns": [
@@ -11,6 +11,9 @@
     ],
     "android": {
       "package": "com.gscripts.SOS"
+    },
+    "ios": {
+      "bundleIdentifier": "com.gscripts.SOS"
     }
   }
 }

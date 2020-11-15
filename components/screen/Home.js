@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet, Image } from 'react-native'
 import { Button, Input } from 'react-native-elements'
+import ShareExample from '../Sharing'
 
 global.extra = ''
 
@@ -33,19 +34,24 @@ export default class Home extends Component {
             onPress={() => this.props.navigation.navigate('Display')}
           ></Button>
         </View>
-
+        <View style={{flexDirection:'row'}}>
+        <ShareExample nomeLista={'Lista Extra'} />
         <Button
-          title={'Memory'}
+          title={'Lista Extra'}
           onPress={() => alert('Extra: ' + global.extra)}
           containerStyle={{
+            flex:1,
             borderBottomWidth: 3,
             borderTopWidth: 1.5,
             borderLeftWidth: 2
           }}
           buttonStyle={{ backgroundColor: 'black' }}
         />
+
+        </View>
+  
         <Input
-          placeholder='Input Extra'
+          placeholder='Inserisci Ricambi Extra'
           leftIcon={{ type: 'font-awesome', name: 'comment' }}
           style={styles.input}
           ref={this.state.input} //Riferimento per poter ripulire l'input dopo l'invio con la funzione clear in this._save
@@ -53,6 +59,7 @@ export default class Home extends Component {
           onChangeText={value => this.setState({ text: value })}
           onSubmitEditing={() => this._save()}
         />
+        
         <View />
       </View>
     )

@@ -31,60 +31,60 @@ class ItemLCD extends Item {
   render () {
     return (
       <View
+      style={{
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        margin: 1,
+        borderWidth: 1,
+        borderColor: 'white'
+      }}
+    >
+      <Text
         style={{
+          color: 'white',
           flex: 1,
-          flexDirection: 'row',
-          alignItems: 'center',
-          margin: 1,
-          borderWidth: 1,
-          borderColor: 'white'
+          marginLeft: 10,
+          fontSize: 15
         }}
       >
-        <Text
-          style={{
-            color: 'white',
-            flex: 1,
-            marginLeft: 10,
-            fontSize: 15
-          }}
-        >
-          {this.props.NameItem}
-        </Text>
+        {this.props.NameItem}
+      </Text>
 
-        <View
-          style={{
-            flex:1,
-            margin: 2,
-            flexDirection: 'row',
-            justifyContent: 'flex-end'
-          }}
-        >
-          <View style={{ flex: 1, borderWidth:1, borderColor:'white'}}>
-          <Input
-            style={{ borderWidth: 1, color: 'white' }}
-            renderErrorMessage={false}
-            label={'White'}
-            keyboardType='numeric'
-            maxLength={1}
-            value={this.state.contatore}
-            onChangeText={value => this.setState({ contatore: value })}
-            onSubmitEditing={() => this.inStore2('Bianco', this.state.contatore)}
-          />
-        </View>
-        <View style={{ flex:1, borderWidth:1, borderColor:'white'}}>
-          <Input
-            style={{ borderWidth: 1, color: 'white' }}
-            renderErrorMessage={false}
-            label={'Black'}
-            keyboardType='numeric'
-            maxLength={1}
-            value={this.state.contatore2}
-            onChangeText={value => this.setState({ contatore2: value })}
-            onSubmitEditing={() => this.inStore2('NERO', this.state.contatore2)}
-          />
-        </View>
-        </View>
+      <View
+        style={{
+          flex:1,
+          margin: 2,
+          flexDirection: 'row',
+          justifyContent: 'flex-end'
+        }}
+      >
+        <View style={{ flex: 1, borderWidth:1, borderColor:'white'}}>
+        <Input
+          style={{ borderWidth: 1, color: 'white' }}
+          renderErrorMessage={false}
+          label={'White'}
+          keyboardType='numeric'
+          maxLength={1}
+          value={this.state.contatore}
+          onChangeText={value => this.setState({ contatore: value })}
+          onSubmitEditing={() => this.inStore2('Bianco', this.state.contatore)}
+        />
       </View>
+      <View style={{ flex:1, borderWidth:1, borderColor:'white'}}>
+        <Input
+          style={{ borderWidth: 1, color: 'white' }}
+          renderErrorMessage={false}
+          label={'Black'}
+          keyboardType='numeric'
+          maxLength={1}
+          value={this.state.contatore2}
+          onChangeText={value => this.setState({ contatore2: value })}
+          onSubmitEditing={() => this.inStore2('NERO', this.state.contatore2)}
+        />
+      </View>
+      </View>
+    </View>
     )
   }
 }

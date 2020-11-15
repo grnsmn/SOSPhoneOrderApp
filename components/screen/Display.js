@@ -43,30 +43,34 @@ export default class DisplayList extends Component {
     return (
       <View style={styles.container}>
         <FlatList data={list} renderItem={this.renderRow} />
-        <ShareExample nomeLista={'Lista Display'} />
-        <Button
-          title={'STAMPA'}
-          onPress={() => {
-            this.stampList()
-          }}
-          containerStyle={{ borderBottomWidth: 3, borderTopWidth: 1.5 }}
-          buttonStyle={{ backgroundColor: 'green' }}
-        />
-        <Button
-          title={'CLEAR Memory'}
-          onPress={() => {
-            global.store2 = [];
-            global.listDisplay = ' ';
-          }}
-          containerStyle={{ borderBottomWidth: 3, borderTopWidth: 1.5 }}
-          buttonStyle={{ backgroundColor: 'red' }}
-        />
-        <Button
-          title={'Memory'}
-          onPress={() => alert(JSON.stringify(global.store2))}
-          containerStyle={{ borderBottomWidth: 3, borderTopWidth: 1.5 }}
-          buttonStyle={{ backgroundColor: 'black' }}
-        />
+        
+        <View style={{ flexDirection: 'row' }}>
+          <Button
+            title={'Lista'}
+            onPress={() => alert(JSON.stringify(global.store2))}
+            containerStyle={styles.buttonContainer}
+            buttonStyle={{ backgroundColor: 'black' }}
+          />
+          <Button
+            title={'STAMPA'}
+            onPress={() => {
+              this.stampList()
+            }}
+            containerStyle={styles.buttonContainer}
+            buttonStyle={{ backgroundColor: 'green' }}
+          />
+          <Button
+            title={'Svuota Lista'}
+            onPress={() => {
+              global.store2 = []
+              global.listDisplay = ' '
+              alert('Lista Svuotata')
+            }}
+            containerStyle={styles.buttonContainer}
+            buttonStyle={{ backgroundColor: 'red' }}
+          />
+        </View>
+ 
       </View>
     )
   }
@@ -78,5 +82,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'black'
     //padding: 5
     //  paddingTop: StatusBar.length
+  },
+  buttonContainer: {
+    flex: 1,
+    borderWidth:2,
+
+//    borderBottomWidth: 3,
+  //  borderTopWidth: 1.5,
+    //borderLeftWidth: 2
   }
 })
