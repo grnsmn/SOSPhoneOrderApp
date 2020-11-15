@@ -1,13 +1,25 @@
 import React from 'react'
-import { StyleSheet} from 'react-native'
+import { StyleSheet, Image, View, Text } from 'react-native'
 import HomeScreen from './components/screen/Home'
 import BattList from './components/screen/Batterie'
 import 'react-native-gesture-handler'
-import { NavigationContainer} from '@react-navigation/native'
+import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import DisplayList from './components/screen/Display'
 
 const Stack = createStackNavigator()
+
+function LogoTitle () {
+  return (
+    <View style= {{flexDirection:'row', alignItems:'center'}}>
+      <Image
+        style={{ width: 50, height: 50 }}
+        source={require('./img/SOSPhone.jpg')}
+      />
+      <Text style={{ fontWeight: 'bold', color:'white'}}>Order App</Text>
+    </View>
+  )
+}
 
 export default function App () {
   return (

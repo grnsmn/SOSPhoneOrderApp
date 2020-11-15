@@ -3,9 +3,9 @@
   "displayName": "SOSPhone Order App ",
   "expo": {
     "name": "SOSPhone Order",
-    "icon":"./img/icona.png",
+    "icon":"./img/SOSPhone.png",
     "slug": "SOS",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "assetBundlePatterns": [
       "**/*"
     ],

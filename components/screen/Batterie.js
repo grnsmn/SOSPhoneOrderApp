@@ -19,6 +19,7 @@ const list = [
   { id: 9, nome: 'IPHONE 8 PLUS', nMax: 2 }
 ]
 export default class BattList extends Component {
+  
   renderRow = ({ item }) => (
     <Item NameItem={item.nome} nMax={item.nMax} id={item.id} />
   )
