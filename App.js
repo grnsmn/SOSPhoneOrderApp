@@ -6,6 +6,8 @@ import 'react-native-gesture-handler'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import DisplayList from './components/screen/Display'
+import BattListHW from './components/screen/BatterieHW'
+import DisplayListHW from './components/screen/DisplayHW'
 
 const Stack = createStackNavigator()
 
@@ -55,6 +57,32 @@ export default function App () {
         <Stack.Screen
           name='Display'
           component={DisplayList}
+          options={{
+            headerStyle: {
+              backgroundColor: '#f4511D'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold'
+            }
+          }}
+        />
+          <Stack.Screen
+          name='BatterieHW'
+          component={BattListHW}
+          options={{
+            headerStyle: {
+              backgroundColor: '#f4511D'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold'
+            }
+          }}
+        />
+          <Stack.Screen
+          name='DisplayHW'
+          component={DisplayListHW}
           options={{
             headerStyle: {
               backgroundColor: '#f4511D'

@@ -17,7 +17,7 @@
     "expo-updates": "~0.3.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-native": "~0.63.3",
+    "react-native": "^0.63.3",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "~1.7.0",

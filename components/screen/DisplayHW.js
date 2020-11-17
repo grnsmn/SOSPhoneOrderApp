@@ -4,26 +4,23 @@ import { Button } from 'react-native-elements'
 import ShareExample from '../Sharing'
 import ItemLCD from '../ItemLCD'
 
-global.listDisplay = ' '
+global.list_Display_Huawei = ' '
 
 const list = [
-  { id: 0, nome: 'IPHONE 5', nMax: 2 },
-  { id: 1, nome: 'IPHONE 5S', nMax: 2 },
-  { id: 2, nome: 'IPHONE 6', nMax: 4 },
-  { id: 3, nome: 'IPHONE 6S', nMax: 4 },
-  { id: 4, nome: 'IPHONE 7', nMax: 4 },
-  { id: 5, nome: 'IPHONE 8', nMax: 2 },
-  { id: 6, nome: 'IPHONE 6 PLUS', nMax: 2 },
-  { id: 7, nome: 'IPHONE 6S PLUS', nMax: 2 },
-  { id: 8, nome: 'IPHONE 7 PLUS', nMax: 2 },
-  { id: 9, nome: 'IPHONE 8 PLUS', nMax: 2 },
-  { id: 10, nome: 'IPHONE X', nMax: 4 },
-  { id: 11, nome: 'IPHONE XS MAX', nMax: 1 },
-  { id: 12, nome: 'IPHONE XR', nMax: 2 },
-  { id: 13, nome: 'IPHONE 11', nMax: 1 }
+  { id: 0, nome: 'Huawei P8', nMax: 1 },
+  { id: 1, nome: 'Huawei P8 Lite', nMax: 1 },
+  { id: 2, nome: 'Huawei P9', nMax: 1 },
+  { id: 3, nome: 'Huawei P9 Lite', nMax: 1 },
+  { id: 4, nome: 'Huawei P10', nMax: 1 },
+  { id: 5, nome: 'Huawei P10 Lite', nMax: 1 },
+  { id: 6, nome: 'Huawei P20 Lite', nMax: 2 },
+  { id: 7, nome: 'Huawei Mate 10 Lite', nMax: 2 },
+  { id: 8, nome: 'Huawei Mate 20 Lite', nMax: 2 },
+  { id: 9, nome: 'Huawei PSmart', nMax: 2 },
+  { id: 10, nome: 'Huawei PSmart 2019', nMax: 2 },
 ]
 
-export default class DisplayList extends Component {
+export default class DisplayListHW extends Component {
   renderRow = ({ item }) => (
     <ItemLCD NameItem={item.nome} nMax={item.nMax} id={item.id} />
   )
@@ -34,10 +31,10 @@ export default class DisplayList extends Component {
     })
     extractList.forEach(
       element =>
-        (global.listDisplay +=
+        (global.list_Display_Huawei +=
           element.n + ' ' + element.name + ' ' + element.colore + '\n')
     )
-    console.log(global.listDisplay)
+    console.log(global.list_Display_Huawei)
   }
 
   render () {
@@ -57,7 +54,7 @@ export default class DisplayList extends Component {
           title={'CLEAR Memory'}
           onPress={() => {
             global.store2 = []
-            global.listDisplay = ' '
+            global.list_Display_Huawei = ' '
           }}
           containerStyle={{ borderBottomWidth: 3, borderTopWidth: 1.5 }}
           buttonStyle={{ backgroundColor: 'red' }}

@@ -10,10 +10,14 @@ class ShareExample extends Component {
       const result = await Share.share({
         message:
           'Ordine del ' + data.getDate() + "/"+ data.getMonth()+"/"+ data.getFullYear()+ '\n\n'+
-          'Lista batterie:\n' +
+          'Lista Batterie:\n' +
           global.listBatt +
           '\nLista Display:\n' +
           global.listDisplay +
+          '\nLista Batterie:\n' +
+          global.list_Batt_Huawei +
+          '\nLista Display:\n' +
+          global.list_Display_Huawei +
           'Lista Extra:\n' +
           global.extra
       })
