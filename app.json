@@ -5,7 +5,7 @@
     "name": "SOSPhone Order",
     "icon":"./img/SOSPhone.png",
     "slug": "SOS",
-    "version": "1.0.1",
+    "version": "1.0.3",
     "assetBundlePatterns": [
       "**/*"
     ],

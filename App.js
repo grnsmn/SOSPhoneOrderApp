@@ -11,18 +11,6 @@ import DisplayListHW from './components/screen/DisplayHW'
 
 const Stack = createStackNavigator()
 
-function LogoTitle () {
-  return (
-    <View style= {{flexDirection:'row', alignItems:'center'}}>
-      <Image
-        style={{ width: 50, height: 50 }}
-        source={require('./img/SOSPhone.jpg')}
-      />
-      <Text style={{ fontWeight: 'bold', color:'white'}}>Order App</Text>
-    </View>
-  )
-}
-
 export default function App () {
   return (
     <NavigationContainer>
@@ -33,7 +21,8 @@ export default function App () {
           options={{
             title: 'SOS PHONE ORDER APP',
             headerStyle: {
-              backgroundColor: '#f4511D'
+              backgroundColor: '#f4511D',
+              height:60
             },
             headerTintColor: '#fff',
             headerTitleStyle: {

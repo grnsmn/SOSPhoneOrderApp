@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet, Image } from 'react-native'
 import { Button, Input } from 'react-native-elements'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 import ShareExample from '../Sharing'
 
 global.extra = ''
@@ -35,10 +36,13 @@ export default class Home extends Component {
             <Button
               title='Batterie'
               onPress={() => this.props.navigation.navigate('Batterie')}
+              icon={<Icon name='battery-unknown' size={28} color='white' />}
+              //iconRight
             ></Button>
             <Button
               title='Display'
               onPress={() => this.props.navigation.navigate('Display')}
+              icon={<Icon name='smartphone' size={28} color='white' />}
             ></Button>
           </View>
 
@@ -56,32 +60,37 @@ export default class Home extends Component {
             <Button
               title='Batterie'
               onPress={() => this.props.navigation.navigate('BatterieHW')}
+              icon={<Icon name='battery-unknown' size={28} color='white' />}
             ></Button>
             <Button
               title='Display'
               onPress={() => this.props.navigation.navigate('DisplayHW')}
+              icon={<Icon name='smartphone' size={28} color='white' />}
             ></Button>
           </View>
         </View>
 
         <View style={{ flexDirection: 'row' }}>
           <Button
-            title={'Lista Extra'}
+            title={' Lista Extra'}
             onPress={() => alert('Extra: ' + global.extra)}
             containerStyle={{
               flex: 1,
               borderBottomWidth: 3,
               borderTopWidth: 1.5,
               borderLeftWidth: 2
-            }}
+            }} 
             buttonStyle={{ backgroundColor: 'black' }}
+            icon={<Icon name='view-list' size={28} color='white' />}
           />
           <ShareExample nomeLista={'Lista Extra'} />
         </View>
         <Input
           placeholder='   Inserisci Ricambi Extra'
-          leftIcon={{ type: 'font-awesome', name: 'comment' }}
+          leftIcon={{ type: 'ionicons', name: 'add', color: 'red', size: 25 }}
+          //containerStyle={{borderWidth:1, borderColor:'white'}}
           style={styles.input}
+          renderErrorMessage={false}
           ref={this.state.input} //Riferimento per poter ripulire l'input dopo l'invio con la funzione clear in this._save
           value={this.state.text}
           onChangeText={value => this.setState({ text: value })}
@@ -131,7 +140,8 @@ const styles = StyleSheet.create({
     //alignItems: 'center'
   },
   input: {
-    margin: 15,
+    flex: 1,
+    //margin: 15,
     height: 40,
     //borderColor: '#7a42f4',
     borderColor: 'red',
