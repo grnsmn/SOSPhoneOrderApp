@@ -1,18 +1,29 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, Image } from 'react-native'
+import { Text, View, StyleSheet, Image, AsyncStorage } from 'react-native'
 import { Button, Input } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import ShareExample from '../Sharing'
 
-global.extra = ''
+global.extra = ' '
 
 export default class Home extends Component {
-  state = { text: '', input: React.createRef() }
+  state = { text: '', input: React.createRef(), element: [] }
   _save () {
     global.extra += this.state.text + ' \n'
-    console.log(global.extra)
+    //this.setState({element: [...this.state.element,this.state.text]})
+    //console.log(...this.state.element)
+    
+    AsyncStorage.setItem('ListExtra', global.extra)
+    //AsyncStorage.getItem('ListExtra').then((result, err) => console.log(result))
+    //console.log(global.extra)
     this.state.input.current.clear()
     alert('Inserito!')
+  }
+
+  componentDidMount () {
+    AsyncStorage.getItem('ListExtra').then(
+      (result, err) => (global.extra = result)
+    )
   }
 
   render () {
@@ -73,15 +84,31 @@ export default class Home extends Component {
         <View style={{ flexDirection: 'row' }}>
           <Button
             title={' Lista Extra'}
-            onPress={() => alert('Extra: ' + global.extra)}
+            onPress={() => {
+              alert('Extra: ' + global.extra)
+            }}
             containerStyle={{
               flex: 1,
-              borderBottomWidth: 3,
-              borderTopWidth: 1.5,
-              borderLeftWidth: 2
-            }} 
+              //borderBottomWidth: 2,
+              borderTopWidth: 3,
+              //borderLeftWidth: 2
+            }}
             buttonStyle={{ backgroundColor: 'black' }}
             icon={<Icon name='view-list' size={28} color='white' />}
+          />
+          <Button
+            title={'Svuota Lista'}
+            onPress={() => {
+              global.extra = '';
+              AsyncStorage.clear().then(()=>alert('lista svuotata'))
+            }}
+            containerStyle={{
+              flex: 0.8,
+              //borderBottomWidth: 2,
+              borderTopWidth: 3,
+              borderRightWidth: 2
+            }}
+            buttonStyle={{ backgroundColor: 'red' }}
           />
           <ShareExample nomeLista={'Lista Extra'} />
         </View>
@@ -102,24 +129,8 @@ export default class Home extends Component {
       </View>
     )
   }
-} /*
-<View style={styles.container}>
-          <View style={styles.modelSection}>
-            <Image
-              source={require('./huawei.png')}
-              style={{ width: 30, height: 30 }}
-            ></Image>
-            <Text style={{ color: 'white', fontSize: 20 }}>HUAWEI</Text>
-            <Button
-              title='Batterie'
-              onPress={() => this.props.navigation.navigate('Batterie')}
-            ></Button>
-            <Button
-              title='Display'
-              onPress={() => this.props.navigation.navigate('Display')}
-            ></Button>
-          </View>
-        </View>*/
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

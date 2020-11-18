@@ -30,43 +30,31 @@ export default class BattListHW extends Component {
     return (
       <View style={styles.container}>
         <FlatList data={list} renderItem={this.renderRow} />
-        <View style={{ flexDirection: 'column' }}>
-          <ShareExample nomeLista={'Lista Batterie'} />
+        <View style={{ flexDirection: 'row' }}>
+        <Button
+            title={'Lista'}
+            onPress={() => alert(JSON.stringify(global.store))}
+            containerStyle={styles.buttonContainer}
+            buttonStyle={{ backgroundColor: 'black' }}
+          />
           <Button
-            title={'STAMPA'}
+            title={'Stampa'}
             onPress={() => {
               this.stampList()
             }}
-            containerStyle={{
-              borderBottomWidth: 3,
-              borderTopWidth: 1.5,
-              borderLeftWidth: 2
-            }}
+            containerStyle={styles.buttonContainer}
             buttonStyle={{ backgroundColor: 'green' }}
           />
           <Button
-            title={'CLEAR Memory'}
+            title={'Svuota Lista'}
             onPress={() => {
               global.store = []
               global.list_Batt_Huawei = ' '
             }}
-            containerStyle={{
-              borderBottomWidth: 3,
-              borderTopWidth: 1.5,
-              borderLeftWidth: 2
-            }}
+            containerStyle={styles.buttonContainer}
             buttonStyle={{ backgroundColor: 'red' }}
           />
-          <Button
-            title={'Memory'}
-            onPress={() => alert(JSON.stringify(global.store))}
-            containerStyle={{
-              borderBottomWidth: 3,
-              borderTopWidth: 1.5,
-              borderLeftWidth: 2
-            }}
-            buttonStyle={{ backgroundColor: 'black' }}
-          />
+        
         </View>
       </View>
     )
@@ -76,9 +64,18 @@ export default class BattListHW extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
+    //flexDirection: 'row',
     backgroundColor: 'black',
     padding: 5
     //paddingTop: StatusBar.length
+  },
+  buttonContainer: {
+    flex: 1,
+    borderWidth:2,
+  
+  //    borderBottomWidth: 3,
+  //  borderTopWidth: 1.5,
+    //borderLeftWidth: 2
   }
-})
+  })
+  
