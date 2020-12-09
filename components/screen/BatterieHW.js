@@ -5,26 +5,19 @@ import ShareExample from '../Sharing'
 import Item from '../Item'
 
 global.list_Batt_Huawei = ' ' //Variabile globale per la scrittura dell'ordine finale
-
+global.store_Huawei = []
 const list = [
-  { id: 0, nome: 'IPHONE 5', nMax: 2 },
-  { id: 1, nome: 'IPHONE 5S', nMax: 2 },
-  { id: 2, nome: 'IPHONE 6', nMax: 4 },
-  { id: 3, nome: 'IPHONE 6S', nMax: 4 },
-  { id: 4, nome: 'IPHONE 7', nMax: 4 },
-  { id: 5, nome: 'IPHONE 8', nMax: 2 },
-  { id: 6, nome: 'IPHONE X', nMax: 2 },
-  { id: 7, nome: 'IPHONE 6/6S PLUS', nMax: 2 },
-  { id: 8, nome: 'IPHONE 7 PLUS', nMax: 2 },
-  { id: 9, nome: 'IPHONE 8 PLUS', nMax: 2 }
+  { id: 0, nome: 'Huawei P9', nMax: 5 },
+  { id: 1, nome: 'Huawei Mate 10 lite', nMax: 2 },
+ 
 ]
-export default class BattList extends Component {
+export default class BattListHW extends Component {
   renderRow = ({ item }) => (
-    <Item NameItem={item.nome} nMax={item.nMax} id={item.id} />
+    <Item NameItem={item.nome} nMax={item.nMax} id={item.id} storeName = {global.store_Huawei}/>
   )
 
   stampList () {
-    const jsonList = JSON.stringify(global.store)
+    const jsonList = JSON.stringify(global.store_Huawei)
     const extractList = JSON.parse(jsonList, (key, value) => {
       return value
     })
@@ -37,43 +30,31 @@ export default class BattList extends Component {
     return (
       <View style={styles.container}>
         <FlatList data={list} renderItem={this.renderRow} />
-        <View style={{ flexDirection: 'column' }}>
-          <ShareExample nomeLista={'Lista Batterie'} />
+        <View style={{ flexDirection: 'row' }}>
+        <Button
+            title={'Lista'}
+            onPress={() => alert(JSON.stringify(global.store_Huawei))}
+            containerStyle={styles.buttonContainer}
+            buttonStyle={{ backgroundColor: 'black' }}
+          />
           <Button
-            title={'STAMPA'}
+            title={'Stampa'}
             onPress={() => {
               this.stampList()
             }}
-            containerStyle={{
-              borderBottomWidth: 3,
-              borderTopWidth: 1.5,
-              borderLeftWidth: 2
-            }}
+            containerStyle={styles.buttonContainer}
             buttonStyle={{ backgroundColor: 'green' }}
           />
           <Button
-            title={'CLEAR Memory'}
+            title={'Svuota Lista'}
             onPress={() => {
-              global.store = []
+              global.store_Huawei = []
               global.list_Batt_Huawei = ' '
             }}
-            containerStyle={{
-              borderBottomWidth: 3,
-              borderTopWidth: 1.5,
-              borderLeftWidth: 2
-            }}
+            containerStyle={styles.buttonContainer}
             buttonStyle={{ backgroundColor: 'red' }}
           />
-          <Button
-            title={'Memory'}
-            onPress={() => alert(JSON.stringify(global.store))}
-            containerStyle={{
-              borderBottomWidth: 3,
-              borderTopWidth: 1.5,
-              borderLeftWidth: 2
-            }}
-            buttonStyle={{ backgroundColor: 'black' }}
-          />
+        
         </View>
       </View>
     )
@@ -83,9 +64,18 @@ export default class BattList extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
+    //flexDirection: 'row',
     backgroundColor: 'black',
     padding: 5
     //paddingTop: StatusBar.length
+  },
+  buttonContainer: {
+    flex: 1,
+    borderWidth:2,
+  
+  //    borderBottomWidth: 3,
+  //  borderTopWidth: 1.5,
+    //borderLeftWidth: 2
   }
-})
+  })
+  

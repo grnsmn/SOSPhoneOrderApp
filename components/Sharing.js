@@ -1,11 +1,19 @@
 import React, { Component } from 'react'
-import { Share, View } from 'react-native'
+import { Share, View, AsyncStorage } from 'react-native'
 import { Button } from 'react-native-elements'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 class ShareExample extends Component {
+  state = { extra: '' }
   onShare = async () => {
     try {
       const data = new Date()
+
+      /*    AsyncStorage.getItem('ListExtra').then((result, err) =>
+        this.setState({ extra: result })
+      )
+      console.log(this.state.extra)
+*/
       const result = await Share.share({
         message:
           'Ordine del ' +
@@ -15,10 +23,14 @@ class ShareExample extends Component {
           '/' +
           data.getFullYear() +
           '\n\n' +
-          'Lista batterie:\n' +
+          //'Lista Batterie:\n' +
           global.listBatt +
-          '\nLista Display:\n' +
+          '\n' +
+          //global.list_Batt_Huawei +
+          //'Lista Display:\n' +
           global.listDisplay +
+          '\n' +
+        //  global.list_Display_Huawei +
           'Lista Extra:\n' +
           global.extra
       })
@@ -39,10 +51,12 @@ class ShareExample extends Component {
 
   render () {
     return (
-      <View style={{ flex: 1, borderWidth:2 }}>
+      <View style={{ borderTopWidth: 3 }}>
         <Button
           onPress={this.onShare}
-          title='Share'
+          icon={<Icon name='send' size={20} color='white' />}
+          iconRight
+          title='Invia '
           buttonStyle={{ backgroundColor: 'grey' }}
         />
       </View>

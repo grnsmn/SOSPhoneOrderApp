@@ -1,25 +1,26 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { Component } from 'react'
 import { View, StyleSheet, FlatList } from 'react-native'
 import { Button } from 'react-native-elements'
-import ShareExample from '../Sharing'
 import ItemLCD from '../ItemLCD'
-global.listDisplay = ' ';
+
+global.listDisplay = ''
 
 const list = [
-  { id: 0, nome: 'IPHONE 5', nMax: 2 },
-  { id: 1, nome: 'IPHONE 5S', nMax: 2 },
-  { id: 2, nome: 'IPHONE 6', nMax: 4 },
-  { id: 3, nome: 'IPHONE 6S', nMax: 4 },
-  { id: 4, nome: 'IPHONE 7', nMax: 4 },
-  { id: 5, nome: 'IPHONE 8', nMax: 2 },
-  { id: 6, nome: 'IPHONE 6 PLUS', nMax: 2 },
-  { id: 7, nome: 'IPHONE 6S PLUS', nMax: 2 },
-  { id: 8, nome: 'IPHONE 7 PLUS', nMax: 2 },
-  { id: 9, nome: 'IPHONE 8 PLUS', nMax: 2 },
-  { id: 10, nome: 'IPHONE X', nMax: 4 },
-  { id: 11, nome: 'IPHONE XS MAX', nMax: 1 },
-  { id: 12, nome: 'IPHONE XR', nMax: 2 },
-  { id: 13, nome: 'IPHONE 11', nMax: 1 }
+  { id: 'KIX', nome: 'IPHONE 5', nMax: 2 },
+  { id: 'Z7P', nome: 'IPHONE 5S', nMax: 2 },
+  { id: 'RFJ', nome: 'IPHONE 6', nMax: 2 },
+  { id: 'H3V' , nome: 'IPHONE 6S', nMax: 2 },
+  { id: 'ZK2', nome: 'IPHONE 7', nMax: 2 },
+  { id: 'FP6', nome: 'IPHONE 8', nMax: 2 },
+  { id: 'D89', nome: 'IPHONE 6 PLUS', nMax: 2 },
+  { id: 'G5G', nome: 'IPHONE 6S PLUS', nMax: 2 },
+  { id: 'WYR', nome: 'IPHONE 7 PLUS', nMax: 2 },
+  { id: 'M3P', nome: 'IPHONE 8 PLUS', nMax: 2 },
+  { id: '2TI', nome: 'IPHONE X', nMax: 4 },
+  { id: '5QM', nome: 'IPHONE XS MAX', nMax: 1 },
+  { id: 'JQ7', nome: 'IPHONE XR', nMax: 2 },
+  { id: '2A4', nome: 'IPHONE 11', nMax: 2 }
 ]
 
 export default class DisplayList extends Component {
@@ -27,29 +28,51 @@ export default class DisplayList extends Component {
     <ItemLCD NameItem={item.nome} nMax={item.nMax} id={item.id} />
   )
   stampList () {
-    const jsonList = JSON.stringify(global.store2)
-    const extractList = JSON.parse(jsonList, (key, value) => {
-      return value
-    })
-    extractList.forEach(
-      element =>
-        (global.listDisplay +=
-          element.n + ' ' + element.name + ' ' + element.colore + '\n')
-    )
-    console.log(global.listDisplay)
-  }
+    global.listDisplay = ''
 
+    global.store_Lcd_IP.forEach(
+      element =>
+        global.listDisplay += 'x'+  element.n + ' LCD ' + element.name + ' ' + element.col + '\n'
+    )
+    alert('Ordine Inserito!')
+  }
+  clearListDisplay () {
+    global.store_Lcd_IP.clear()
+    global.listDisplay = ''
+    list.forEach(element => {
+      //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
+      const itemW = {
+        id: element.id,
+        name: element.nome,
+        n: 0,
+        col: 'BIANCO'
+      }
+      const itemBK = {
+        id: element.id,
+        name: element.nome,
+        n: 0,
+        col: 'NERO'
+      }
+      AsyncStorage.multiRemove([element.id+'W', element.id+'Bk']).then(console.log("multirimozione eseguita"))
+      //AsyncStorage.mergeItem(element.id, JSON.stringify(item))
+    })
+    alert('Lista Svuotata')
+  }
   render () {
     return (
       <View style={styles.container}>
         <FlatList data={list} renderItem={this.renderRow} />
-        
+
         <View style={{ flexDirection: 'row' }}>
           <Button
             title={'Lista'}
-            onPress={() => alert(JSON.stringify(global.store2))}
+            onPress={() =>
+              alert(
+              'Lista Display \n' + 
+                JSON.stringify([...global.store_Lcd_IP.values()].sort()))
+            }
             containerStyle={styles.buttonContainer}
-            buttonStyle={{ backgroundColor: 'black' }}
+            buttonStyle={{ backgroundColor: 'gray' }}
           />
           <Button
             title={'STAMPA'}
@@ -61,16 +84,12 @@ export default class DisplayList extends Component {
           />
           <Button
             title={'Svuota Lista'}
-            onPress={() => {
-              global.store2 = []
-              global.listDisplay = ' '
-              alert('Lista Svuotata')
+            onPress={() => {this.clearListDisplay()
             }}
             containerStyle={styles.buttonContainer}
             buttonStyle={{ backgroundColor: 'red' }}
           />
         </View>
- 
       </View>
     )
   }
@@ -78,17 +97,17 @@ export default class DisplayList extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: -0.5,
-    backgroundColor: 'black'
-    //padding: 5
+    flex: 1,
+    backgroundColor: 'black',
+    padding: 5
     //  paddingTop: StatusBar.length
   },
   buttonContainer: {
     flex: 1,
-    borderWidth:2,
+    borderWidth: 2
 
-//    borderBottomWidth: 3,
-  //  borderTopWidth: 1.5,
+    //    borderBottomWidth: 3,
+    //  borderTopWidth: 1.5,
     //borderLeftWidth: 2
   }
 })

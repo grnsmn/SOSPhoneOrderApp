@@ -1,31 +1,50 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
-import { Button, Input } from 'react-native-elements'
+import { Input } from 'react-native-elements'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-global.store = [] //Array globale che conterrà nomi e quantità di elementi da mettere in lista
+global.store_Batt_IP = new Map() //Array globale che conterrà nomi e quantità di BATTERIE IPHONE da mettere in lista
 
-export default class Item extends Component {
-  state = { id: 0, nomeItem: '', contatore: 0 }
+class Item extends Component {
+  state = { id: '', nomeItem: '', contatore: 0 }
 
   constructor (props) {
     super(props)
     this.state.nomeItem = this.props.NameItem
     this.state.id = this.props.id
   }
-  upgrade () {
-    this.setState({ contatore: this.state.contatore + 1 })
+  componentDidMount () {
+    AsyncStorage.getItem(this.state.id).then(result => {
+      //console.log(JSON.parse(result).contatore)
+      if (JSON.parse(result).id != null) {
+        const tmp = JSON.parse(result, (key, value) => {
+          //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
+          return value
+        })
+        this.setState({ contatore: tmp.contatore })
+        if (this.state.contatore != 0) {
+          // console.log([...global.store_Batt_IP.get(this.state.id)])
+          global.store_Batt_IP.set(this.state.id, {
+            name: this.state.nomeItem,
+            n: this.state.contatore
+          })
+        } else {
+          global.store_Batt_IP.delete(this.state.id)
+        }
+      }
+    })
   }
-  downgrade () {
-    this.setState({ contatore: this.state.contatore - 1 })
+  componentDidUpdate () {
+    AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
   }
+
   inStore () {
-    //Funzione che aggiunge in lista elementi
-    global.store.push({
-      id: this.state.id,
+    global.store_Batt_IP.set(this.state.id, {
       name: this.state.nomeItem,
       n: this.state.contatore
     })
-    //console.log(JSON.stringify(global.store));
+    this.componentDidMount()
+    //console.log('elemento inserito')
   }
   render () {
     return (
@@ -35,14 +54,21 @@ export default class Item extends Component {
         </Text>
         <View style={{ flex: 0.3, borderWidth: 1, borderColor: 'white' }}>
           <Input
-            style={{ borderWidth: 1, color: 'white', }}
-            renderErrorMessage={false}
-            label={'n°'}
+            style={{ borderWidth: 1, color: 'white' }}
+            //renderErrorMessage={false}
+            //label={'n°'}
+            placeholder={this.state.contatore.toString()}
             keyboardType='number-pad'
             maxLength={1}
-            value={this.state.contatore}
-            onChangeText={value => this.setState({ contatore: value })}
+            //value={this.state.contatore}
+            onChangeText={value => {
+              if (value <= this.props.nMax && value!= '') {
+                this.setState({ contatore: parseInt(value) })
+              }
+            }}
             onSubmitEditing={() => this.inStore()}
+            errorStyle={{ color: 'red', textAlign: 'center', fontSize:10 }}
+            errorMessage={'max ' + this.props.nMax}
           />
         </View>
       </View>
@@ -60,3 +86,5 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 })
+
+export default Item

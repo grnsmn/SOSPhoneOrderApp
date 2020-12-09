@@ -1,22 +1,22 @@
 import React, { Component } from 'react'
 import { StyleSheet, FlatList, View } from 'react-native'
 import { Button } from 'react-native-elements'
-import ShareExample from '../Sharing'
 import Item from '../Item'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-global.listBatt = ' ' //Variabile globale per la scrittura dell'ordine finale
+global.listBatt = '' //Variabile globale per la scrittura dell'ordine finale
 
 const list = [
-  { id: 0, nome: 'IPHONE 5', nMax: 2 },
-  { id: 1, nome: 'IPHONE 5S', nMax: 2 },
-  { id: 2, nome: 'IPHONE 6', nMax: 4 },
-  { id: 3, nome: 'IPHONE 6S', nMax: 4 },
-  { id: 4, nome: 'IPHONE 7', nMax: 4 },
-  { id: 5, nome: 'IPHONE 8', nMax: 2 },
-  { id: 6, nome: 'IPHONE X', nMax: 2 },
-  { id: 7, nome: 'IPHONE 6/6S PLUS', nMax: 2 },
-  { id: 8, nome: 'IPHONE 7 PLUS', nMax: 2 },
-  { id: 9, nome: 'IPHONE 8 PLUS', nMax: 2 }
+  { id: 'S0Z', nome: 'IPHONE 5', nMax: 2 },
+  { id: 'v8E', nome: 'IPHONE 5S', nMax: 2 },
+  { id: '3EV', nome: 'IPHONE 6', nMax: 4 },
+  { id: '34K', nome: 'IPHONE 6S', nMax: 4 },
+  { id: '5Q6', nome: 'IPHONE 7', nMax: 4 },
+  { id: 'NQH', nome: 'IPHONE 8', nMax: 2 },
+  { id: 'XVW', nome: 'IPHONE X', nMax: 2 },
+  { id: 'H9K', nome: 'IPHONE 6/6S PLUS', nMax: 2 },
+  { id: 'PNB', nome: 'IPHONE 7 PLUS', nMax: 2 },
+  { id: 'IK8', nome: 'IPHONE 8 PLUS', nMax: 2 }
 ]
 export default class BattList extends Component {
   renderRow = ({ item }) => (
@@ -24,29 +24,45 @@ export default class BattList extends Component {
   )
 
   stampList () {
-    const jsonList = JSON.stringify(global.store)
-    const extractList = JSON.parse(jsonList, (key, value) => {
-      return value
+    global.listBatt = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
+    global.store_Batt_IP.forEach(element => {
+      global.listBatt += 'x' + element.n + ' BATT ' + element.name + '\n'
     })
-    extractList.forEach(
-      element => (global.listBatt += element.n + ' ' + element.name + '\n')
-    )
-    //console.log(global.listBatt)
-    alert('Lista stampata!')
+    alert('Ordine Inserito!')
+  }
+
+ clearListBatt () {
+    global.store_Batt_IP.clear()
+    global.listBatt = ''
+    list.forEach(element => {
+      //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
+      const item = {
+        id: element.id,
+        nomeItem: element.nome,
+        contatore: 0
+      }
+      AsyncStorage.mergeItem(element.id, JSON.stringify(item))
+    })
+    alert('Lista Svuotata')
   }
   render () {
     return (
       <View style={styles.container}>
         <FlatList data={list} renderItem={this.renderRow} />
- 
+
         <View style={{ flexDirection: 'row' }}>
           <Button
             title={'Lista'}
-            onPress={() => alert('Lista Batterie'+JSON.stringify(global.store))}
+            onPress={() =>
+              alert(
+                'Lista Batterie \n' +
+                  JSON.stringify([...global.store_Batt_IP.values()].sort())
+              )
+            }
             containerStyle={styles.buttonContainer}
             buttonStyle={{ backgroundColor: 'grey' }}
           />
-                <Button
+          <Button
             title={'Stampa'}
             onPress={() => {
               this.stampList()
@@ -57,9 +73,7 @@ export default class BattList extends Component {
           <Button
             title={'Svuota Lista'}
             onPress={() => {
-              global.store = []
-              global.listBatt = ' '
-              alert('Lista Svuotata')
+              this.clearListBatt()
             }}
             containerStyle={styles.buttonContainer}
             buttonStyle={{ backgroundColor: 'red' }}
@@ -80,10 +94,10 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
-    borderWidth:2,
+    borderWidth: 2
 
-//    borderBottomWidth: 3,
-  //  borderTopWidth: 1.5,
+    //    borderBottomWidth: 3,
+    //  borderTopWidth: 1.5,
     //borderLeftWidth: 2
   }
 })
