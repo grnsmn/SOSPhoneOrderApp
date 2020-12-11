@@ -8,18 +8,14 @@ class ShareExample extends Component {
   onShare = async () => {
     try {
       const data = new Date()
-
-      /*    AsyncStorage.getItem('ListExtra').then((result, err) =>
-        this.setState({ extra: result })
-      )
-      console.log(this.state.extra)
-*/
+      
       const result = await Share.share({
+        
         message:
           'Ordine del ' +
           data.getDate() +
-          '/' +
-          data.getMonth() +
+          '/' + 
+          parseInt(data.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
           '/' +
           data.getFullYear() +
           '\n\n' +

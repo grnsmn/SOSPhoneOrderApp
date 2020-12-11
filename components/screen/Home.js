@@ -19,7 +19,7 @@ export default class Home extends Component {
     //AsyncStorage.getItem('ListExtra').then((result, err) => console.log(result))
     //console.log(global.extra)
     this.state.input.current.clear()
-    alert('Inserito!')
+    //alert('Inserito!')
   }
 
   componentDidMount () {
@@ -97,6 +97,7 @@ export default class Home extends Component {
           leftIcon={{ type: 'ionicons', name: 'add', color: 'red', size: 25 }}
           //containerStyle={{borderWidth:1, borderColor:'white'}}
           style={styles.input}
+          //multiline={true}
           renderErrorMessage={false}
           ref={this.state.input} //Riferimento per poter ripulire l'input dopo l'invio con la funzione clear in this._save
           value={this.state.text}
@@ -111,28 +112,6 @@ export default class Home extends Component {
   }
 }
 
-/**<View
-            style={{
-              justifyContent: 'space-evenly',
-              alignItems: 'center',
-              flex: 1
-            }}
-          >
-            <Image
-              source={require('./huawei.png')}
-              style={{ width: 65, height: 65 }}
-            />
-            <Button
-              title='Batterie'
-              onPress={() => this.props.navigation.navigate('BatterieHW')}
-              icon={<Icon name='battery-unknown' size={28} color='white' />}
-            ></Button>
-            <Button
-              title='Display'
-              onPress={() => this.props.navigation.navigate('DisplayHW')}
-              icon={<Icon name='smartphone' size={28} color='white' />}
-            ></Button>
-          </View>*/
 const styles = StyleSheet.create({
   container: {
     flex: 1,

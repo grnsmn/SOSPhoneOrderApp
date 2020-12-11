@@ -10,8 +10,6 @@ class ItemLCD extends Item {
   //OGNI ELEMENTO IN QUESTA CLASSE TIENE CONTO DI UN CONTEGGIO A COLORE DEL DISPLAY (BIANCO E NERO)
   state = {
     id: '',
-    //id_BK: '',
-    //id_W: '',
     nomeItem: '',
     colore: '',
     contatoreW: 0,
@@ -22,47 +20,40 @@ class ItemLCD extends Item {
     super(props)
     this.state.nomeItem = this.props.NameItem
     this.state.id = this.props.id
-    //this.state.id_BK = this.props.id + 'BK'
-    //this.state.id_W = this.props.id + 'W'
   }
   componentDidMount () {
-    //global.store_Lcd_IP.forEach( (element, key) => console.log())
+    //console.log('Mount'+ this.state.nomeItem)
+    const id_W = this.state.id + 'W'
+    const id_BK = this.state.id + 'Bk'
     AsyncStorage.getItem(this.state.id).then(result => {
       try {
         const parseElement = JSON.parse(result)
         if (parseElement.id != null) {
-          if (parseElement.colore == 'BIANCO') {
-            const tmp = JSON.parse(result, (key, value) => {
-              //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
-              return value
+          const tmp = JSON.parse(result, (key, value) => {
+            //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
+            return value
+          })
+          this.setState({
+            contatoreW: tmp.contatoreW,
+            contatoreBK: tmp.contatoreBK
+          })
+          if (this.state.contatoreW != 0) {
+            global.store_Lcd_IP.set(id_W, {
+              name: this.state.nomeItem,
+              col: 'BIANCO',
+              n: this.state.contatoreW
             })
-            const id_W = tmp.id + 'W'
-            this.setState({ contatoreW: tmp.contatoreW })
-            if (this.state.contatoreW != 0) {
-              global.store_Lcd_IP.set(id_W, {
-                name: this.state.nomeItem,
-                col: tmp.colore,
-                n: this.state.contatoreW
-              })
-            } else {
-              global.store_Lcd_IP.delete(this.state.id_W)
-            }
-          } else if (parseElement.colore == 'NERO') {
-            const tmp = JSON.parse(result, (key, value) => {
-              //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
-              return value
+          } else if (this.state.contatoreW == 0) {
+            global.store_Lcd_IP.delete(id_W)
+          }
+          if (tmp.contatoreBK != 0) {
+            global.store_Lcd_IP.set(id_BK, {
+              name: this.state.nomeItem,
+              col: 'NERO',
+              n: this.state.contatoreBK
             })
-            const id_BK = tmp.id + 'Bk'
-            this.setState({ contatoreBK: tmp.contatoreBK })
-            if (this.state.contatoreBK != 0) {
-              global.store_Lcd_IP.set(id_BK, {
-                name: this.state.nomeItem,
-                col: tmp.colore,
-                n: this.state.contatoreBK
-              })
-            } else {
-              global.store_Lcd_IP.delete(this.state.id_BK)
-            }
+          } else if (tmp.contatoreBK == 0) {
+            global.store_Lcd_IP.delete(id_BK)
           }
         }
       } catch {}
@@ -70,15 +61,41 @@ class ItemLCD extends Item {
   }
   componentDidUpdate () {
     AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
-    this.componentDidMount()
+      .then
+      // console.log('update storage'+ JSON.stringify(this.state))
+      ()
+    const id_W = this.state.id + 'W'
+    const id_BK = this.state.id + 'Bk'
+    //elimina gli elementi da map se il valore inserito è 0
+    if (this.state.contatoreW == 0) global.store_Lcd_IP.delete(id_W)
+    if (this.state.contatoreBK == 0) global.store_Lcd_IP.delete(id_BK)
+    //aggiorna la quantità di elementi in contemporanea all'inserimento del valore desiderato
+    if (this.state.contatoreW != 0) {
+      global.store_Lcd_IP.set(id_W, {
+        name: this.state.nomeItem,
+        col: 'BIANCO',
+        n: this.state.contatoreW
+      })
+    }
+    if (this.state.contatoreBK != 0) {
+      global.store_Lcd_IP.set(id_BK, {
+        name: this.state.nomeItem,
+        col: 'NERO',
+        n: this.state.contatoreBK
+      })
+    }
   }
 
   inStore2 () {
-    //Funzione che aggiunge in lista gli elementi univocamente
-    AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
     this.componentDidMount()
   }
-
+  oneColor () {
+    if (this.state.nomeItem.includes('IPHONE X') || this.state.nomeItem.includes('IPHONE 11')) {
+      return true
+    } else {
+      return false
+    }
+  }
   render () {
     return (
       <View style={styles.container}>
@@ -104,6 +121,7 @@ class ItemLCD extends Item {
           <View style={{ flex: 0.8, borderWidth: 1, borderColor: 'white' }}>
             <Input
               label={'White'}
+              disabled={this.oneColor()}
               style={{ borderWidth: 1, color: 'white' }}
               //renderErrorMessage={false}
               placeholder={this.state.contatoreW.toString()}
@@ -112,14 +130,14 @@ class ItemLCD extends Item {
               maxLength={1}
               inputContainerStyle={{ color: 'red' }}
               onChangeText={value => {
-                if (value <= this.props.nMax && value!= '') {
+                if (value <= this.props.nMax && value != '') {
                   this.setState({
                     contatoreW: parseInt(value),
                     colore: 'BIANCO'
                   })
                 }
               }}
-              //onSubmitEditing={() => this.inStore2()}
+              onSubmitEditing={() => this.inStore2()}
               errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
               errorMessage={'max ' + this.props.nMax}
             />
@@ -134,14 +152,14 @@ class ItemLCD extends Item {
               maxLength={1}
               placeholderTextColor={'white'}
               onChangeText={value => {
-                if (value <= this.props.nMax && value!= '') {
+                if (value <= this.props.nMax && value != '') {
                   this.setState({
                     contatoreBK: parseInt(value),
                     colore: 'NERO'
                   })
-                } 
+                }
               }}
-              //onSubmitEditing={() => this.inStore2()}
+              onSubmitEditing={() => this.inStore2()}
               errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
               errorMessage={'max ' + this.props.nMax}
             />

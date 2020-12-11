@@ -29,10 +29,14 @@ export default class DisplayList extends Component {
   )
   stampList () {
     global.listDisplay = ''
-
     global.store_Lcd_IP.forEach(
-      element =>
-        global.listDisplay += 'x'+  element.n + ' LCD ' + element.name + ' ' + element.col + '\n'
+      element =>{
+        if(element.name.includes('IPHONE X') || element.name.includes('IPHONE 11')){
+          global.listDisplay += element.n +'x '+ ' LCD ' + element.name + ' ' + '\n'
+        }else{
+          global.listDisplay += element.n +'x '+ ' LCD ' + element.name + ' ' + element.col + '\n'
+        }
+      }
     )
     alert('Ordine Inserito!')
   }
@@ -41,20 +45,15 @@ export default class DisplayList extends Component {
     global.listDisplay = ''
     list.forEach(element => {
       //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
-      const itemW = {
+      const item = {
         id: element.id,
-        name: element.nome,
-        n: 0,
-        col: 'BIANCO'
+        nameItem: element.nome,
+        contatoreW: 0,
+        contatoreBK: 0,
+        col: ''
       }
-      const itemBK = {
-        id: element.id,
-        name: element.nome,
-        n: 0,
-        col: 'NERO'
-      }
-      AsyncStorage.multiRemove([element.id+'W', element.id+'Bk']).then(console.log("multirimozione eseguita"))
-      //AsyncStorage.mergeItem(element.id, JSON.stringify(item))
+      //AsyncStorage.multiRemove([element.id+'W', element.id+'Bk']).then(console.log("multirimozione eseguita"))
+      AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
     alert('Lista Svuotata')
   }

@@ -36,13 +36,16 @@ class Item extends Component {
   }
   componentDidUpdate () {
     AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
+    if (this.state.contatore == 0) global.store_Batt_IP.delete(this.state.id)
+    if (this.state.contatore != 0) {
+      global.store_Batt_IP.set(this.state.id, {
+        name: this.state.nomeItem,
+        n: this.state.contatore
+      })
+    }
   }
 
   inStore () {
-    global.store_Batt_IP.set(this.state.id, {
-      name: this.state.nomeItem,
-      n: this.state.contatore
-    })
     this.componentDidMount()
     //console.log('elemento inserito')
   }
@@ -60,14 +63,13 @@ class Item extends Component {
             placeholder={this.state.contatore.toString()}
             keyboardType='number-pad'
             maxLength={1}
-            //value={this.state.contatore}
             onChangeText={value => {
-              if (value <= this.props.nMax && value!= '') {
+              if (value <= this.props.nMax && value != '') {
                 this.setState({ contatore: parseInt(value) })
               }
             }}
             onSubmitEditing={() => this.inStore()}
-            errorStyle={{ color: 'red', textAlign: 'center', fontSize:10 }}
+            errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
             errorMessage={'max ' + this.props.nMax}
           />
         </View>

@@ -26,7 +26,7 @@ export default class BattList extends Component {
   stampList () {
     global.listBatt = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
     global.store_Batt_IP.forEach(element => {
-      global.listBatt += 'x' + element.n + ' BATT ' + element.name + '\n'
+      global.listBatt += element.n +'x '+ ' BATT ' + element.name + '\n'
     })
     alert('Ordine Inserito!')
   }
