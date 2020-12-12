@@ -26,9 +26,11 @@ class ShareExample extends Component {
           //'Lista Display:\n' +
           global.listDisplay +
           '\n' +
-        //  global.list_Display_Huawei +
+          //  global.list_Display_Huawei +
           'Lista Extra:\n' +
-          global.extra
+          global.extra +
+          '\n\nResi:\n' +
+          global.listResiBatt
       })
 
       if (result.action === Share.sharedAction) {

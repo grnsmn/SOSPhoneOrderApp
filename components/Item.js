@@ -3,10 +3,10 @@ import { Text, View, StyleSheet } from 'react-native'
 import { Input } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-global.store_Batt_IP = new Map() //Array globale che conterrà nomi e quantità di BATTERIE IPHONE da mettere in lista
-
+global.store_Batt_IP = new Map() //Oggetto map globale che conterrà nomi e quantità di BATTERIE IPHONE da mettere in lista
+global.resi_Batt_IP = new Map() //Per immagazzinamento lista resi
 class Item extends Component {
-  state = { id: '', nomeItem: '', contatore: 0 }
+  state = { id: '', nomeItem: '', contatore: 0, NumResi: 0 }
 
   constructor (props) {
     super(props)
@@ -21,15 +21,22 @@ class Item extends Component {
           //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
           return value
         })
-        this.setState({ contatore: tmp.contatore })
+        this.setState({ contatore: tmp.contatore, NumResi: tmp.NumResi })
+        if (this.state.contatore == 0) global.store_Batt_IP.delete(this.state.id)
         if (this.state.contatore != 0) {
           // console.log([...global.store_Batt_IP.get(this.state.id)])
           global.store_Batt_IP.set(this.state.id, {
             name: this.state.nomeItem,
             n: this.state.contatore
           })
-        } else {
-          global.store_Batt_IP.delete(this.state.id)
+        }
+
+        if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
+        if (this.state.NumResi != 0) {
+          global.resi_Batt_IP.set(this.state.id, {
+            name: this.state.nomeItem,
+            n: this.state.NumResi
+          })
         }
       }
     })
@@ -41,6 +48,13 @@ class Item extends Component {
       global.store_Batt_IP.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.contatore
+      })
+    }
+    if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
+    if (this.state.NumResi != 0) {
+      global.resi_Batt_IP.set(this.state.id, {
+        name: this.state.nomeItem,
+        n: this.state.NumResi
       })
     }
   }
@@ -55,23 +69,56 @@ class Item extends Component {
         <Text style={{ color: 'white', flex: 1, fontSize: 15, marginLeft: 10 }}>
           {this.props.NameItem}
         </Text>
-        <View style={{ flex: 0.3, borderWidth: 1, borderColor: 'white' }}>
-          <Input
-            style={{ borderWidth: 1, color: 'white' }}
-            //renderErrorMessage={false}
-            //label={'n°'}
-            placeholder={this.state.contatore.toString()}
-            keyboardType='number-pad'
-            maxLength={1}
-            onChangeText={value => {
-              if (value <= this.props.nMax && value != '') {
-                this.setState({ contatore: parseInt(value) })
-              }
-            }}
-            onSubmitEditing={() => this.inStore()}
-            errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
-            errorMessage={'max ' + this.props.nMax}
-          />
+        <View
+          style={{
+            flex: 1,
+            margin: 1.5,
+            flexDirection: 'row',
+            justifyContent: 'flex-end'
+          }}
+        >
+          <View style={{ flex: 0.4, borderLeftWidth: 1, borderColor: 'gold' }}>
+            <Input
+              style={{ borderWidth: 1, color: 'white' }}
+              renderErrorMessage={false}
+              labelStyle={{ color: 'white', textAlign: 'center', fontSize: 10 }}
+              label={'To Order'}
+              placeholder={this.state.contatore.toString()}
+              placeholderTextColor={'white'}
+              keyboardType='number-pad'
+              maxLength={1}
+              onChangeText={value => {
+                if (value <= this.props.nMax && value != '') {
+                  this.setState({ contatore: parseInt(value) })
+                }
+              }}
+              onSubmitEditing={() => this.inStore()}
+              errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
+              errorMessage={'max ' + this.props.nMax}
+            />
+          </View>
+          <View
+            style={{ flex: 0.3, borderLeftWidth: 0.5, borderColor: 'gold' }}
+          >
+            <Input
+              style={{ borderWidth: 1, color: 'white' }}
+              renderErrorMessage={false}
+              label={'Reso'}
+              labelStyle={{ color: 'lightgreen', textAlign: 'center', fontSize: 10 }}
+              placeholder={this.state.NumResi.toString()}
+              placeholderTextColor={'lightgreen'}
+              keyboardType='number-pad'
+              maxLength={1}
+              onChangeText={value => {
+                if (value != '') {
+                  this.setState({ NumResi: parseInt(value) })
+                }
+              }}
+              onSubmitEditing={() => this.inStore()}
+              // errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
+              // errorMessage={'max ' + this.props.nMax}
+            />
+          </View>
         </View>
       </View>
     )
@@ -83,7 +130,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     borderColor: 'white',
-    borderWidth: 1,
+    borderWidth: 0.25,
     margin: 1,
     alignItems: 'center'
   }

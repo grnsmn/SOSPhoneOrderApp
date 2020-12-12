@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { Component } from 'react'
-import { View, StyleSheet, FlatList } from 'react-native'
+import { View, StyleSheet, FlatList, SectionList } from 'react-native'
 import { Button } from 'react-native-elements'
 import ItemLCD from '../ItemLCD'
 
@@ -22,7 +22,16 @@ const list = [
   { id: 'JQ7', nome: 'IPHONE XR', nMax: 2 },
   { id: '2A4', nome: 'IPHONE 11', nMax: 2 }
 ]
-
+const sectionList = [
+  {
+    title: 'To Order',
+    data: list
+  },
+  // {
+  //   title: 'Resi',
+  //   data: list
+  // }
+]
 export default class DisplayList extends Component {
   renderRow = ({ item }) => (
     <ItemLCD NameItem={item.nome} nMax={item.nMax} id={item.id} />
@@ -60,7 +69,7 @@ export default class DisplayList extends Component {
   render () {
     return (
       <View style={styles.container}>
-        <FlatList data={list} renderItem={this.renderRow} />
+        <SectionList sections={sectionList} renderItem={this.renderRow} />
 
         <View style={{ flexDirection: 'row' }}>
           <Button

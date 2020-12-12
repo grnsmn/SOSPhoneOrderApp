@@ -128,7 +128,7 @@ class ItemLCD extends Item {
               placeholderTextColor={'white'}
               keyboardType='numeric'
               maxLength={1}
-              inputContainerStyle={{ color: 'red' }}
+              //inputContainerStyle={{ color: 'red' }}
               onChangeText={value => {
                 if (value <= this.props.nMax && value != '') {
                   this.setState({
