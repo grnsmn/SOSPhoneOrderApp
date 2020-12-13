@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 global.store_Batt_IP = new Map() //Oggetto map globale che conterrà nomi e quantità di BATTERIE IPHONE da mettere in lista
 global.resi_Batt_IP = new Map() //Per immagazzinamento lista resi
-class Item extends Component {
+export default class Item extends Component {
   state = { id: '', nomeItem: '', contatore: 0, NumResi: 0 }
 
   constructor (props) {
@@ -77,14 +77,14 @@ class Item extends Component {
             justifyContent: 'flex-end'
           }}
         >
-          <View style={{ flex: 0.4, borderLeftWidth: 1, borderColor: 'gold' }}>
+          <View style={{ flex: 0.4, borderLeftWidth: 0.5, borderColor: 'gold' }}>
             <Input
               style={{ borderWidth: 1, color: 'white' }}
               renderErrorMessage={false}
-              labelStyle={{ color: 'white', textAlign: 'center', fontSize: 10 }}
+              labelStyle={{ color: 'gold', textAlign: 'center', fontSize: 11 }}
               label={'To Order'}
               placeholder={this.state.contatore.toString()}
-              placeholderTextColor={'white'}
+              placeholderTextColor={'gold'}
               keyboardType='number-pad'
               maxLength={1}
               onChangeText={value => {
@@ -101,11 +101,11 @@ class Item extends Component {
             style={{ flex: 0.3, borderLeftWidth: 0.5, borderColor: 'gold' }}
           >
             <Input
+              label={'Reso'}
               style={{ borderWidth: 1, color: 'white' }}
               renderErrorMessage={false}
-              label={'Reso'}
               labelStyle={{ color: 'lightgreen', textAlign: 'center', fontSize: 10 }}
-              placeholder={this.state.NumResi.toString()}
+              placeholder={String(this.state.NumResi)}
               placeholderTextColor={'lightgreen'}
               keyboardType='number-pad'
               maxLength={1}
@@ -115,8 +115,6 @@ class Item extends Component {
                 }
               }}
               onSubmitEditing={() => this.inStore()}
-              // errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
-              // errorMessage={'max ' + this.props.nMax}
             />
           </View>
         </View>
@@ -136,4 +134,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Item
+

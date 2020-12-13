@@ -1,11 +1,11 @@
 {
-  "name": "SOSPhone Order App",
-  "displayName": "SOSPhone Order App ",
+  "name": "OrderApp",
+  "displayName": "OrderApp ",
   "expo": {
-    "name": "SOSPhone Order",
+    "name": "OrderApp",
     "icon": "./img/SOSPhone.png",
     "slug": "SOS",
-    "version": "1.1.1",
+    "version": "1.1.5",
     "assetBundlePatterns": [
       "**/*"
     ],

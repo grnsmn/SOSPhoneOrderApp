@@ -5,6 +5,7 @@ import Item from './Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 global.store_Lcd_IP = new Map() //Array globale che conterrà nomi e quantità di LCD IPHONE da mettere in lista
+global.resi_Lcd_IP = new Map() //Per immagazzinamento lista resi
 
 class ItemLCD extends Item {
   //OGNI ELEMENTO IN QUESTA CLASSE TIENE CONTO DI UN CONTEGGIO A COLORE DEL DISPLAY (BIANCO E NERO)
@@ -13,7 +14,9 @@ class ItemLCD extends Item {
     nomeItem: '',
     colore: '',
     contatoreW: 0,
-    contatoreBK: 0
+    contatoreBK: 0,
+    resiW:0,
+    resiBK:0,
   }
 
   constructor (props) {
@@ -35,8 +38,11 @@ class ItemLCD extends Item {
           })
           this.setState({
             contatoreW: tmp.contatoreW,
-            contatoreBK: tmp.contatoreBK
+            contatoreBK: tmp.contatoreBK,
+            resiW: tmp.resiW,
+            resiW: tmp.resiBK,
           })
+          //Aggiornamento lista ordine
           if (this.state.contatoreW != 0) {
             global.store_Lcd_IP.set(id_W, {
               name: this.state.nomeItem,
@@ -55,15 +61,33 @@ class ItemLCD extends Item {
           } else if (tmp.contatoreBK == 0) {
             global.store_Lcd_IP.delete(id_BK)
           }
+          
+          //Aggiornamento lista resi
+          //RESI BIANCHI
+          if (this.state.resiW == 0) global.resi_Lcd_IP.delete(id_W)
+          if (this.state.resiW != 0) {
+            global.resi_Lcd_IP.set(id_W,{
+              name: this.state.nomeItem,
+              col: 'BIANCO',
+              n: this.state.resiW
+            })
+          }
+          //RESI NERI
+          if (this.state.resiBK == 0) global.resi_Lcd_IP.delete(id_BK)
+          if (this.state.resiBK != 0) {
+            global.resi_Lcd_IP.set(id_BK, {
+              name: this.state.nomeItem,
+              col: 'NERO',
+              n: this.state.resiBK
+            })
+          }
+
         }
       } catch {}
     })
   }
   componentDidUpdate () {
     AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
-      .then
-      // console.log('update storage'+ JSON.stringify(this.state))
-      ()
     const id_W = this.state.id + 'W'
     const id_BK = this.state.id + 'Bk'
     //elimina gli elementi da map se il valore inserito è 0
@@ -84,6 +108,26 @@ class ItemLCD extends Item {
         n: this.state.contatoreBK
       })
     }
+    //Aggiornamento lista resi
+    //RESI BIANCHI
+    if (this.state.resiW == 0) global.resi_Lcd_IP.delete(id_W)
+    if (this.state.resiW != 0) {
+      global.resi_Lcd_IP.set(id_W, {
+        name: this.state.nomeItem,
+        col: 'BIANCO',
+        n: this.state.resiW
+      })
+    }
+    //RESI NERI
+    if (this.state.resiBK == 0) global.resi_Lcd_IP.delete(id_BK)
+    if (this.state.resiBK != 0) {
+      global.resi_Lcd_IP.set(id_BK, {
+        name: this.state.nomeItem,
+        col: 'NERO',
+        n: this.state.resiBK
+      })
+    }
+
   }
 
   inStore2 () {
@@ -104,7 +148,7 @@ class ItemLCD extends Item {
             color: 'white',
             flex: 1,
             marginLeft: 10,
-            fontSize: 15
+            fontSize: 15,
           }}
         >
           {this.props.NameItem}
@@ -118,17 +162,16 @@ class ItemLCD extends Item {
             justifyContent: 'flex-end'
           }}
         >
-          <View style={{ flex: 0.8, borderWidth: 1, borderColor: 'white' }}>
+          <View style={{ flex: 0.7, borderWidth: 1, borderLeftColor: 'white' }}>
             <Input
-              label={'White'}
+              label={'WHITE'}
+              labelStyle={{ color: 'black', textAlign: 'center', fontSize: 12, backgroundColor:'white' }}
               disabled={this.oneColor()}
-              style={{ borderWidth: 1, color: 'white' }}
               //renderErrorMessage={false}
               placeholder={this.state.contatoreW.toString()}
-              placeholderTextColor={'white'}
+              placeholderTextColor={'gold'}
               keyboardType='numeric'
               maxLength={1}
-              //inputContainerStyle={{ color: 'red' }}
               onChangeText={value => {
                 if (value <= this.props.nMax && value != '') {
                   this.setState({
@@ -141,16 +184,36 @@ class ItemLCD extends Item {
               errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
               errorMessage={'max ' + this.props.nMax}
             />
-          </View>
-          <View style={{ flex: 0.8, borderWidth: 1, borderColor: 'white' }}>
             <Input
-              label={'Black'}
+              label={'Reso'}
+              labelStyle={{ color: 'black', textAlign: 'center', fontSize: 10, backgroundColor:'lightgreen' }}
+              disabled={this.oneColor()}
+              placeholder={this.state.resiW.toString()}
+              placeholderTextColor={'lightgreen'}
+              keyboardType='numeric'
+              maxLength={1}
+              renderErrorMessage={false}
+              onChangeText={value => {
+                if (value != '') {
+                  this.setState({
+                    resiW: parseInt(value),
+                    colore: 'BIANCO'
+                  })
+                }
+              }}
+              onSubmitEditing={() => this.inStore2()}
+            />
+          </View>
+          <View style={{ flex: 0.7, borderWidth: 0.5, borderLeftColor: 'white' }}>
+            <Input
+              label={'BLACK'}
+              labelStyle={{ color: 'white', textAlign: 'center', fontSize: 12 }}
               placeholder={this.state.contatoreBK.toString()}
-              style={{ borderWidth: 1, color: 'white' }}
+              placeholderTextColor={'gold'}
+              //style={{ borderWidth: 0, color: 'white' }}
               renderErrorMessage={false}
               keyboardType='numeric'
               maxLength={1}
-              placeholderTextColor={'white'}
               onChangeText={value => {
                 if (value <= this.props.nMax && value != '') {
                   this.setState({
@@ -162,6 +225,24 @@ class ItemLCD extends Item {
               onSubmitEditing={() => this.inStore2()}
               errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
               errorMessage={'max ' + this.props.nMax}
+            />
+            <Input
+              label={'Reso'}
+              labelStyle={{ color: 'black', textAlign: 'center', fontSize: 10, backgroundColor:'lightgreen' }}
+              placeholder={this.state.resiBK.toString()}
+              placeholderTextColor={'lightgreen'}
+              keyboardType='numeric'
+              maxLength={1}
+              renderErrorMessage={false}
+              onChangeText={value => {
+                if (value != '') {
+                  this.setState({
+                    resiBK: parseInt(value),
+                    colore: 'NERO'
+                  })
+                }
+              }}
+              onSubmitEditing={() => this.inStore2()}
             />
           </View>
         </View>

@@ -29,7 +29,7 @@ export default function App () {
           name='Home'
           component={HomeScreen}
           options={{
-            title: 'SOS PHONE ORDER APP',
+            title: 'ORDER APP HOME',
             headerStyle: {
               backgroundColor: '#f4511D'
             },

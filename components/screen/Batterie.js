@@ -1,8 +1,16 @@
 import React, { Component } from 'react'
-import { StyleSheet, FlatList, View, SectionList, Text } from 'react-native'
-import { Button } from 'react-native-elements'
+import {
+  StyleSheet,
+  View,
+  SectionList,
+  Text,
+  Modal,
+  TouchableHighlight
+} from 'react-native'
 import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Appbar } from 'react-native-paper'
+
 
 global.listBatt = '' //Variabile globale per la scrittura dell'ordine finale
 global.listResiBatt = '' //Variabile globale per la scrittura della lista dei resi finale
@@ -18,46 +26,57 @@ const list = [
   { id: 'PNB', nome: 'IPHONE 7 PLUS', nMax: 2 },
   { id: 'IK8', nome: 'IPHONE 8 PLUS', nMax: 2 },
   { id: 'XVW', nome: 'IPHONE X', nMax: 2 },
-  { id: 'XVR', nome: 'IPHONE XR', nMax: 2 },
+  { id: 'XVR', nome: 'IPHONE XR', nMax: 2 }
 ]
 const sectionList = [
   {
     title: 'To Order',
     data: list
-  },
+  }
   // {
   //   title: 'Resi',
   //   data: list
   // }
 ]
 export default class BattList extends Component {
+  state = { modalVisible: false, modalVisibleResi: false }
+
+  setModalVisible = visible => {
+    this.setState({ modalVisible: visible })
+  }
+
+  setModalVisibleResi = visible => {
+    this.setState({ modalVisibleResi: visible })
+  }
   renderRow = ({ item }) => (
     <Item NameItem={item.nome} nMax={item.nMax} id={item.id} />
   )
 
   stampList () {
     global.listBatt = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
-    global.listResiBatt = ''
     global.store_Batt_IP.forEach(element => {
       global.listBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
     })
-    global.resi_Batt_IP.forEach(
-      element => {
-        global.listResiBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
-      } 
-    )
+    global.listResiBatt = ''
+    global.resi_Batt_IP.forEach(element => {
+      global.listResiBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
+    })
     alert('Ordine Inserito!')
   }
-
   clearListBatt () {
+    //Azzera lista ordine
     global.store_Batt_IP.clear()
     global.listBatt = ''
+    //Azzera lista resi
+    global.resi_Batt_IP.clear()
+    global.listResiBatt = ''
     list.forEach(element => {
       //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
       const item = {
         id: element.id,
         nomeItem: element.nome,
-        contatore: 0
+        contatore: 0,
+        NumResi: 0
       }
       AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
@@ -68,6 +87,66 @@ export default class BattList extends Component {
 
     return (
       <View style={styles.container}>
+        <Modal
+          animationType='slide'
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.')
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>
+                {JSON.stringify(
+                  [...global.store_Batt_IP.values()]
+                    .sort()
+                    .map(function (element) {
+                      return element
+                    })
+                )}
+              </Text>
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible)
+                }}
+              >
+                <Text style={styles.textStyle}>Hide List</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
+        <Modal
+          animationType='slide'
+          transparent={true}
+          visible={this.state.modalVisibleResi}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.')
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>
+                {JSON.stringify(
+                  [...global.resi_Batt_IP.values()]
+                    .sort()
+                    .map(function (element) {
+                      return element
+                    })
+                )}
+              </Text>
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+                onPress={() => {
+                  this.setModalVisibleResi(!this.state.modalVisibleResi)
+                }}
+              >
+                <Text style={styles.textStyle}>Hide List</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
         <SectionList
           sections={sectionList}
           renderItem={this.renderRow}
@@ -75,36 +154,34 @@ export default class BattList extends Component {
           //   <Text style={styles.header}>{title}</Text>
           // )}
         ></SectionList>
-        <View style={{ flexDirection: 'row' }}>
-          <Button
-            title={'Lista'}
-            onPress={() =>
-              alert(
-                'Lista Batterie \n' +
-                  JSON.stringify([...global.store_Batt_IP.values()].sort())
-                  //JSON.stringify([...global.resi_Batt_IP.values()].sort())  //LISTA RESI
-              )
-            }
-            containerStyle={styles.buttonContainer}
-            buttonStyle={{ backgroundColor: 'grey' }}
+        
+        <Appbar style={styles.bottom}>
+          <Appbar.Action
+            style={{ flex: 1 }}
+            icon='format-list-bulleted'
+            color={'gold'}
+            onPress={() => this.setModalVisible(true)}
           />
-          <Button
-            title={'Stampa'}
-            onPress={() => {
-              this.stampList()
-            }}
-            containerStyle={styles.buttonContainer}
-            buttonStyle={{ backgroundColor: 'green' }}
+          <Appbar.Action
+            style={{ flex: 1 }}
+            icon='recycle'
+            color={'lightgreen'}
+            onPress={() => this.setModalVisibleResi(true)}
           />
-          <Button
-            title={'Svuota Lista'}
+          <Appbar.Action
+            style={{ flex: 1 }}
+            icon='printer-wireless'
+            onPress={() =>  this.stampList()}
+          />
+          <Appbar.Action
+            style={{ flex: 1 }}
+            icon='delete'
+            color={'red'}
             onPress={() => {
               this.clearListBatt()
             }}
-            containerStyle={styles.buttonContainer}
-            buttonStyle={{ backgroundColor: 'red' }}
           />
-        </View>
+        </Appbar>
       </View>
     )
   }
@@ -129,5 +206,51 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 32,
     backgroundColor: '#fff'
+  },
+  bottom: {
+    borderColor:'#f4511D',
+    borderTopWidth:3,
+    backgroundColor: '#252850',
+    position: 'relative',
+    left: 0,
+    right: 0,
+    bottom: 0
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: '#252850',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  openButton: {
+    backgroundColor: '#F194FF',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    color:'white'
   }
 })
