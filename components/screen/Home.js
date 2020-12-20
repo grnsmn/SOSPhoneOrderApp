@@ -33,7 +33,7 @@ export default class Home extends Component {
         <View style={styles.modelSection}>
           <View
             style={{
-              justifyContent: 'space-evenly',
+              justifyContent: 'space-around',
               alignItems: 'center',
               flex: 1
             }}
@@ -47,15 +47,50 @@ export default class Home extends Component {
             </View>
             <Button
               title='Batterie'
+              buttonStyle={styles.button}
               onPress={() => this.props.navigation.navigate('Batterie')}
               icon={<Icon name='battery-unknown' size={28} color='white' />}
               //iconRight
             ></Button>
             <Button
               title='Display'
+              buttonStyle={styles.button}
               onPress={() => this.props.navigation.navigate('Display')}
               icon={<Icon name='smartphone' size={28} color='white' />}
             ></Button>
+          </View>
+          <View
+            style={{
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              flex: 1
+            }}
+          >
+            <View style={{ alignItems: 'center' }}>
+              <Image
+                source={require('./HUAWEI2.png')}
+                style={{ width: 66, height: 66, backgroundColor:'#fff', borderRadius: 11 }}
+              />
+              
+            </View>
+            <Button
+              title='Batterie'
+              buttonStyle={styles.button}
+              onPress={() => this.props.navigation.navigate('Batterie Huawei')}
+              icon={<Icon name='battery-unknown' size={28} color='white' />}
+              //iconRight
+            ></Button>
+            <Button
+              title='Display'
+              buttonStyle={styles.button}
+              onPress={() => this.props.navigation.navigate('Display Huawei')}
+              icon={<Icon name='smartphone' size={28} color='white' />}
+            ></Button>
+            {/* <Button
+              title=' Other'
+              onPress={() => this.props.navigation.navigate('Other')}
+              icon={<Icon name='more' size={28} color='white' />}
+            ></Button> */}
           </View>
         </View>
 
@@ -110,37 +145,6 @@ export default class Home extends Component {
   }
 }
 
-          // <View
-          //   style={{
-          //     justifyContent: 'space-evenly',
-          //     alignItems: 'center',
-          //     flex: 1
-          //   }}
-          // >
-          //   <View style={{ alignItems: 'center' }}>
-          //     <Image
-          //       source={require('./huawei.png')}
-          //       style={{ width: 70, height: 70 }}
-          //     />
-              
-          //   </View>
-          //   <Button
-          //     title='Batterie'
-          //     onPress={() => this.props.navigation.navigate('Batterie')}
-          //     icon={<Icon name='battery-unknown' size={28} color='white' />}
-          //     //iconRight
-          //   ></Button>
-          //   <Button
-          //     title='Display'
-          //     onPress={() => this.props.navigation.navigate('DisplayHuawei')}
-          //     icon={<Icon name='smartphone' size={28} color='white' />}
-          //   ></Button>
-          //   <Button
-          //     title=' Other'
-          //     onPress={() => this.props.navigation.navigate('Other')}
-          //     icon={<Icon name='more' size={28} color='white' />}
-          //   ></Button>
-          // </View>
 
 const styles = StyleSheet.create({
   container: {
@@ -170,5 +174,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     color: 'white',
     borderRadius: 10
+  },
+  button: {
+    backgroundColor: '#007AFF'
   }
 })

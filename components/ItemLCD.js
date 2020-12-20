@@ -4,8 +4,8 @@ import { Button, Input } from 'react-native-elements'
 import Item from './Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-global.store_Lcd_IP = new Map() //Array globale che conterrà nomi e quantità di LCD IPHONE da mettere in lista
-global.resi_Lcd_IP = new Map() //Per immagazzinamento lista resi
+global.store_Lcd = new Map() //Array globale che conterrà nomi e quantità di LCD IPHONE da mettere in lista
+global.resi_Lcd = new Map() //Per immagazzinamento lista resi
 
 export default class ItemLCD extends PureComponent{
   //OGNI ELEMENTO IN QUESTA CLASSE TIENE CONTO DI UN CONTEGGIO A COLORE DEL DISPLAY (BIANCO E NERO)
@@ -43,38 +43,38 @@ export default class ItemLCD extends PureComponent{
           })
           //Aggiornamento lista ordine
           if (this.state.contatoreW != 0) {
-            global.store_Lcd_IP.set(id_W, {
+            global.store_Lcd.set(id_W, {
               name: this.state.nomeItem,
               col: 'BIANCO',
               n: this.state.contatoreW
             })
           } else if (this.state.contatoreW == 0) {
-            global.store_Lcd_IP.delete(id_W)
+            global.store_Lcd.delete(id_W)
           }
           if (tmp.contatoreBK != 0) {
-            global.store_Lcd_IP.set(id_BK, {
+            global.store_Lcd.set(id_BK, {
               name: this.state.nomeItem,
               col: 'NERO',
               n: this.state.contatoreBK
             })
           } else if (tmp.contatoreBK == 0) {
-            global.store_Lcd_IP.delete(id_BK)
+            global.store_Lcd.delete(id_BK)
           }
           
           //Aggiornamento lista resi
           //RESI BIANCHI
-          if (this.state.resiW == 0) global.resi_Lcd_IP.delete(id_W)
+          if (this.state.resiW == 0) global.resi_Lcd.delete(id_W)
           if (this.state.resiW != 0) {
-            global.resi_Lcd_IP.set(id_W,{
+            global.resi_Lcd.set(id_W,{
               name: this.state.nomeItem,
               col: 'BIANCO',
               n: this.state.resiW
             })
           }
           //RESI NERI
-          if (this.state.resiBK == 0) global.resi_Lcd_IP.delete(id_BK)
+          if (this.state.resiBK == 0) global.resi_Lcd.delete(id_BK)
           if (this.state.resiBK != 0) {
-            global.resi_Lcd_IP.set(id_BK, {
+            global.resi_Lcd.set(id_BK, {
               name: this.state.nomeItem,
               col: 'NERO',
               n: this.state.resiBK
@@ -91,18 +91,18 @@ export default class ItemLCD extends PureComponent{
     const id_BK = this.state.id + 'Bk'
     //console.log("attualmente inseriti:" +  this.state.resiW)
     //elimina gli elementi da map se il valore inserito è 0
-    if (this.state.contatoreW == 0) global.store_Lcd_IP.delete(id_W)
-    if (this.state.contatoreBK == 0) global.store_Lcd_IP.delete(id_BK)
+    if (this.state.contatoreW == 0) global.store_Lcd.delete(id_W)
+    if (this.state.contatoreBK == 0) global.store_Lcd.delete(id_BK)
     //aggiorna la quantità di elementi in contemporanea all'inserimento del valore desiderato
     if (this.state.contatoreW != 0) {
-      global.store_Lcd_IP.set(id_W, {
+      global.store_Lcd.set(id_W, {
         name: this.state.nomeItem,
         col: 'BIANCO',
         n: this.state.contatoreW
       })
     }
     if (this.state.contatoreBK != 0) {
-      global.store_Lcd_IP.set(id_BK, {
+      global.store_Lcd.set(id_BK, {
         name: this.state.nomeItem,
         col: 'NERO',
         n: this.state.contatoreBK
@@ -110,18 +110,18 @@ export default class ItemLCD extends PureComponent{
     }
     //Aggiornamento lista resi
     //RESI BIANCHI
-    if (this.state.resiW == 0) global.resi_Lcd_IP.delete(id_W)
+    if (this.state.resiW == 0) global.resi_Lcd.delete(id_W)
     if (this.state.resiW != 0) {
-      global.resi_Lcd_IP.set(id_W, {
+      global.resi_Lcd.set(id_W, {
         name: this.state.nomeItem,
         col: 'BIANCO',
         n: this.state.resiW
       })
     }
     //RESI NERI
-    if (this.state.resiBK == 0) global.resi_Lcd_IP.delete(id_BK)
+    if (this.state.resiBK == 0) global.resi_Lcd.delete(id_BK)
     if (this.state.resiBK != 0) {
-      global.resi_Lcd_IP.set(id_BK, {
+      global.resi_Lcd.set(id_BK, {
         name: this.state.nomeItem,
         col: 'NERO',
         n: this.state.resiBK

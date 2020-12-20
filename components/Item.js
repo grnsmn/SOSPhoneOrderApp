@@ -3,7 +3,7 @@ import { Text, View, StyleSheet } from 'react-native'
 import { Input } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-global.store_Batt_IP = new Map() //Oggetto map globale che conterrà nomi e quantità di BATTERIE IPHONE da mettere in lista
+global.store_Batt = new Map() //Oggetto map globale che conterrà nomi e quantità di BATTERIE IPHONE da mettere in lista
 global.resi_Batt_IP = new Map() //Per immagazzinamento lista resi
 export default class Item extends PureComponent {
   state = { id: '', nomeItem: '', contatore: 0, NumResi: 0 }
@@ -22,10 +22,10 @@ export default class Item extends PureComponent {
           return value
         })
         this.setState({ contatore: tmp.contatore, NumResi: tmp.NumResi })
-        if (this.state.contatore == 0) global.store_Batt_IP.delete(this.state.id)
+        if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
         if (this.state.contatore != 0) {
-          // console.log([...global.store_Batt_IP.get(this.state.id)])
-          global.store_Batt_IP.set(this.state.id, {
+          // console.log([...global.store_Batt.get(this.state.id)])
+          global.store_Batt.set(this.state.id, {
             name: this.state.nomeItem,
             n: this.state.contatore
           })
@@ -43,9 +43,9 @@ export default class Item extends PureComponent {
   }
   componentDidUpdate () {
     AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
-    if (this.state.contatore == 0) global.store_Batt_IP.delete(this.state.id)
+    if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
     if (this.state.contatore != 0) {
-      global.store_Batt_IP.set(this.state.id, {
+      global.store_Batt.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.contatore
       })

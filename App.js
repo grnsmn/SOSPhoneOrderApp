@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet, Image, View, Text } from 'react-native'
 import HomeScreen from './components/screen/Home'
 import BattList from './components/screen/Batterie'
+import BattListHW from './components/screen/BatterieHW'
 import DisplayList from './components/screen/Display'
 import DisplayListHW from './components/screen/DisplayHW'
 import Other from './components/screen/Other'
@@ -33,7 +34,7 @@ export default function App () {
           options={{
             title: 'ORDER APP HOME',
             headerStyle: {
-              backgroundColor: '#f4511D'
+              backgroundColor: '#252850'
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -44,6 +45,19 @@ export default function App () {
         <Stack.Screen
           name='Batterie'
           component={BattList}
+          options={{
+            headerStyle: {
+              backgroundColor: '#f4511D'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            }
+          }}
+        />
+        <Stack.Screen
+          name='Batterie Huawei'
+          component={BattListHW}
           options={{
             headerStyle: {
               backgroundColor: '#f4511D'
@@ -68,7 +82,7 @@ export default function App () {
           }}
         />
         <Stack.Screen
-          name='DisplayHuawei'
+          name='Display Huawei'
           component={DisplayListHW}
           options={{
             headerStyle: {

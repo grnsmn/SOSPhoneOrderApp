@@ -1,61 +1,159 @@
-import React, { Component } from 'react'
-import { StyleSheet, FlatList, View } from 'react-native'
-import { Button } from 'react-native-elements'
-import ShareExample from '../Sharing'
+import React, { PureComponent } from 'react'
+import {
+  StyleSheet,
+  View,
+  SectionList,
+  Text,
+  Modal,
+  TouchableHighlight
+} from 'react-native'
 import Item from '../Item'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Appbar } from 'react-native-paper'
+import BattList from './Batterie'
 
 global.list_Batt_Huawei = ' ' //Variabile globale per la scrittura dell'ordine finale
-global.store_Huawei = []
-const list = [
-  { id: 0, nome: 'Huawei P9', nMax: 5 },
-  { id: 1, nome: 'Huawei Mate 10 lite', nMax: 2 },
- 
-]
-export default class BattListHW extends Component {
-  renderRow = ({ item }) => (
-    <Item NameItem={item.nome} nMax={item.nMax} id={item.id} storeName = {global.store_Huawei}/>
-  )
 
+const list = [
+  { id: 'cvG', nome: 'HUAWEI P9', nMax: 5 },
+  { id: 'x1L', nome: 'HUAWEI MATE 10 LITE', nMax: 2 }
+]
+const sectionList = [
+  {
+    title: 'To Order',
+    data: list
+  }
+  // {
+  //   title: 'Resi',
+  //   data: list
+  // }
+]
+export default class BattListHW extends BattList {
   stampList () {
-    const jsonList = JSON.stringify(global.store_Huawei)
-    const extractList = JSON.parse(jsonList, (key, value) => {
-      return value
+    global.list_Batt_Huawei = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
+    global.store_Batt.forEach(element => {
+      global.list_Batt_Huawei += element.n + 'x ' + ' BATT ' + element.name + '\n'
     })
-    extractList.forEach(
-      element => (global.list_Batt_Huawei += element.n + ' ' + element.name + '\n')
-    )
-    console.log(global.list_Batt_Huawei)
+    global.listResiBatt = ''
+    global.resi_Batt_IP.forEach(element => {
+      global.listResiBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
+    })
+    alert('Ordine Inserito!')
+  }
+  clearListBatt () {
+    //Azzera lista ordine
+    global.store_Batt.clear()
+    global.list_Batt_Huawei = ''
+    //Azzera lista resi
+    global.resi_Batt_IP.clear()
+    global.listResiBatt = ''
+    list.forEach(element => {
+      //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
+      const item = {
+        id: element.id,
+        nomeItem: element.nome,
+        contatore: 0,
+        NumResi: 0
+      }
+      AsyncStorage.mergeItem(element.id, JSON.stringify(item))
+    })
+    alert('Lista Svuotata')
   }
   render () {
     return (
       <View style={styles.container}>
-        <FlatList data={list} renderItem={this.renderRow} />
-        <View style={{ flexDirection: 'row' }}>
-        <Button
-            title={'Lista'}
-            onPress={() => alert(JSON.stringify(global.store_Huawei))}
-            containerStyle={styles.buttonContainer}
-            buttonStyle={{ backgroundColor: 'black' }}
+        <Modal
+          animationType='slide'
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.')
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>
+                IN ORDINE {'\n\n'}
+                {[...global.store_Batt.values()].sort().map(function (element) {
+                  console.log(element)
+                  return String(element.n + 'x ' + element.name + '\n')
+                })}
+              </Text>
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible)
+                }}
+              >
+                <Text style={styles.textStyle}>Chiudi</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
+        <Modal
+          animationType='slide'
+          transparent={true}
+          visible={this.state.modalVisibleResi}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.')
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>
+                RESI {'\n\n'}
+                {[...global.resi_Batt_IP.values()]
+                  .sort()
+                  .map(function (element) {
+                    return String(element.n + 'x ' + element.name + '\n')
+                  })}
+              </Text>
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+                onPress={() => {
+                  this.setModalVisibleResi(!this.state.modalVisibleResi)
+                }}
+              >
+                <Text style={styles.textStyle}>Chiui</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
+        <SectionList
+          sections={sectionList}
+          renderItem={this.renderRow}
+          // renderSectionHeader={({ section: { title } }) => (
+          //   <Text style={styles.header}>{title}</Text>
+          // )}
+        ></SectionList>
+
+        <Appbar style={styles.bottom}>
+          <Appbar.Action
+            style={{ flex: 1 }}
+            icon='format-list-bulleted'
+            color={'gold'}
+            onPress={() => this.setModalVisible(true)}
           />
-          <Button
-            title={'Stampa'}
+          <Appbar.Action
+            style={{ flex: 1 }}
+            icon='recycle'
+            color={'lightgreen'}
+            onPress={() => this.setModalVisibleResi(true)}
+          />
+          <Appbar.Action
+            style={{ flex: 1 }}
+            icon='printer-wireless'
+            onPress={() => this.stampList()}
+          />
+          <Appbar.Action
+            style={{ flex: 1 }}
+            icon='delete'
+            color={'red'}
             onPress={() => {
-              this.stampList()
+              this.clearListBatt()
             }}
-            containerStyle={styles.buttonContainer}
-            buttonStyle={{ backgroundColor: 'green' }}
           />
-          <Button
-            title={'Svuota Lista'}
-            onPress={() => {
-              global.store_Huawei = []
-              global.list_Batt_Huawei = ' '
-            }}
-            containerStyle={styles.buttonContainer}
-            buttonStyle={{ backgroundColor: 'red' }}
-          />
-        
-        </View>
+        </Appbar>
       </View>
     )
   }
@@ -71,11 +169,60 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
-    borderWidth:2,
-  
-  //    borderBottomWidth: 3,
-  //  borderTopWidth: 1.5,
+    borderWidth: 2
+
+    //    borderBottomWidth: 3,
+    //  borderTopWidth: 1.5,
     //borderLeftWidth: 2
+  },
+  header: {
+    fontSize: 32,
+    backgroundColor: '#fff'
+  },
+  bottom: {
+    borderColor: '#f4511D',
+    borderTopWidth: 3,
+    backgroundColor: '#252850',
+    position: 'relative',
+    left: 0,
+    right: 0,
+    bottom: 0
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: '#252850',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  openButton: {
+    backgroundColor: '#F194FF',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    color: 'white'
   }
-  })
-  
+})

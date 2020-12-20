@@ -56,7 +56,7 @@ export default class DisplayList extends PureComponent {
   )
   stampList () {
     global.listDisplay = ''
-    global.store_Lcd_IP.forEach(element => {
+    global.store_Lcd.forEach(element => {
       if (
         element.name.includes('IPHONE X') ||
         element.name.includes('IPHONE 11')
@@ -69,7 +69,7 @@ export default class DisplayList extends PureComponent {
       }
     })
     global.listResiDisplay = ''
-    global.resi_Lcd_IP.forEach(element => {
+    global.resi_Lcd.forEach(element => {
       if (
         element.name.includes('IPHONE X') ||
         element.name.includes('IPHONE 11')
@@ -85,10 +85,10 @@ export default class DisplayList extends PureComponent {
     alert('Ordine Inserito!')
   }
   clearListDisplay () {
-    global.store_Lcd_IP.clear()
+    global.store_Lcd.clear()
     global.listDisplay = ''
 
-    global.resi_Lcd_IP.clear()
+    global.resi_Lcd.clear()
     global.listResiDisplay = ''
     list.forEach(element => {
       //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
@@ -120,9 +120,10 @@ export default class DisplayList extends PureComponent {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
+              IN ORDINE {"\n\n"}
                 {
                   //Funzione che permette la stampa pulita della lista in ordine  
-                  [...global.store_Lcd_IP.values()]
+                  [...global.store_Lcd.values()]
                     .sort()
                     .map(function (element) {
                       return String(element.n + 'x '+ element.name + ' '+element.col+'\n')
@@ -135,7 +136,7 @@ export default class DisplayList extends PureComponent {
                   this.setModalVisible(!this.state.modalVisible)
                 }}
               >
-                <Text style={styles.textStyle}>Hide List</Text>
+                <Text style={styles.textStyle}>Chiudi</Text>
               </TouchableHighlight>
             </View>
           </View>
@@ -151,8 +152,9 @@ export default class DisplayList extends PureComponent {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
+              RESI {"\n\n"}
                 {
-                  [...global.resi_Lcd_IP.values()]
+                  [...global.resi_Lcd.values()]
                     .sort()
                     .map(function (element) {
                       return String(element.n + 'x '+ element.name + ' '+element.col+'\n')

@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   View,
   StyleSheet,
@@ -16,17 +16,17 @@ import { Appbar } from 'react-native-paper'
 global.list_Display_Huawei = ''
 global.list_Resi_Display_Huawei = ''
 const list = [
-  { id: 'g6p', nome: 'Huawei P8', nMax: 1 },
-  { id: 'hm4', nome: 'Huawei P8 Lite', nMax: 1 },
-  { id: 'wqq', nome: 'Huawei P9', nMax: 1 },
-  { id: 'iz8', nome: 'Huawei P9 Lite', nMax: 1 },
-  { id: '2o4', nome: 'Huawei P10', nMax: 1 },
-  { id: 'zo3', nome: 'Huawei P10 Lite', nMax: 1 },
-  { id: 'w37', nome: 'Huawei P20 Lite', nMax: 2 },
-  { id: 'xhm', nome: 'Huawei Mate 10 Lite', nMax: 2 },
-  { id: 'hhs', nome: 'Huawei Mate 20 Lite', nMax: 2 },
-  { id: 'tn4', nome: 'Huawei PSmart', nMax: 2 },
-  { id: 'xs9', nome: 'Huawei PSmart 2019', nMax: 2 }
+  { id: 'g6p', nome: 'HUAWEI P8', nMax: 1 },
+  { id: 'hm4', nome: 'HUAWEI P8 LITE', nMax: 1 },
+  { id: 'wqq', nome: 'HUAWEI P9', nMax: 1 },
+  { id: 'iz8', nome: 'HUAWEI P9 LITE', nMax: 1 },
+  { id: '2o4', nome: 'HUAWEI P10', nMax: 1 },
+  { id: 'zo3', nome: 'HUAWEI P10 LITE', nMax: 1 },
+  { id: 'w37', nome: 'HUAWEI P20 LITE', nMax: 2 },
+  { id: 'xhm', nome: 'HUAWEI MATE 10 LITE', nMax: 2 },
+  { id: 'hhs', nome: 'HUAWEI MATE 20 LITE', nMax: 2 },
+  { id: 'tn4', nome: 'HUAWEI PSMART', nMax: 2 },
+  { id: 'xs9', nome: 'HUAWEI PSMART 2019', nMax: 2 }
 ]
 const sectionList = [
   {
@@ -38,7 +38,7 @@ const sectionList = [
   //   data: list
   // }
 ]
-export default class DisplayListHW extends Component {
+export default class DisplayListHW extends PureComponent {
   state = { modalVisible: false, modalVisibleResi: false }
 
   setModalVisible = visible => {
@@ -52,18 +52,57 @@ export default class DisplayListHW extends Component {
     <ItemLCD NameItem={item.nome} nMax={item.nMax} id={item.id}/>
   )
   stampList () {
-    const jsonList = JSON.stringify(global.list_Resi_Display_Huawei)
-    const extractList = JSON.parse(jsonList, (key, value) => {
-      return value
+    global.list_Display_Huawei = ''
+    global.store_Lcd.forEach(element => {
+      if (
+        element.name.includes('') ||
+        element.name.includes('IPHONE 11')
+      ) {
+        global.list_Display_Huawei +=
+          element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
+      } else {
+        global.list_Display_Huawei +=
+          element.n + 'x ' + ' LCD ' + element.name + ' ' + element.col + '\n'
+      }
     })
-    extractList.forEach(
-      element =>
-        (global.list_Display_Huawei +=
-          element.n + ' ' + element.name + ' ' + element.colore + '\n')
-    )
-    console.log(global.list_Display_Huawei)
-  }
+    global.list_Resi_Display_Huawei = ''
+    global.resi_Lcd.forEach(element => {
+      if (
+        element.name.includes('IPHONE X') ||
+        element.name.includes('IPHONE 11')
+      ) {
+        global.list_Resi_Display_Huawei +=
+          element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
+      } else {
+        global.list_Resi_Display_Huawei +=
+          element.n + 'x ' + ' LCD ' + element.name + ' ' + element.col + '\n'
+      }
+    })
 
+    alert('Ordine Inserito!')
+  }
+  clearListDisplay () {
+    global.store_Lcd.clear()
+    global.list_Display_Huawei = ''
+
+    global.resi_Lcd.clear()
+    global.list_Resi_Display_Huawei = ''
+    list.forEach(element => {
+      //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
+      const item = {
+        id: element.id,
+        nameItem: element.nome,
+        contatoreW: 0,
+        contatoreBK: 0,
+        col: '',
+        resiW: 0,
+        resiBK:0
+      }
+      //AsyncStorage.multiRemove([element.id+'W', element.id+'Bk']).then(console.log("multirimozione eseguita"))
+      AsyncStorage.mergeItem(element.id, JSON.stringify(item))
+    })
+    alert('Lista Svuotata')
+  }
   render () {
     return (
       <View style={styles.container}>
@@ -78,13 +117,15 @@ export default class DisplayListHW extends Component {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
-              {JSON.stringify(
-                [...global.store_Lcd_IP.values()]
+            IN ORDINE {"\n\n"}
+              {
+                //Funzione che permette la stampa pulita della lista in ordine  
+                [...global.store_Lcd.values()]
                   .sort()
                   .map(function (element) {
-                    return element
+                    return String(element.n + 'x '+ element.name + ' '+element.col+'\n')
                   })
-              )}
+              }
             </Text>
             <TouchableHighlight
               style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
@@ -92,7 +133,7 @@ export default class DisplayListHW extends Component {
                 this.setModalVisible(!this.state.modalVisible)
               }}
             >
-              <Text style={styles.textStyle}>Hide List</Text>
+              <Text style={styles.textStyle}>Chiudi</Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -108,13 +149,14 @@ export default class DisplayListHW extends Component {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
-              {JSON.stringify(
-                [...global.resi_Lcd_IP.values()]
+            RESI {"\n\n"}
+              {
+                [...global.resi_Lcd.values()]
                   .sort()
                   .map(function (element) {
-                    return element
+                    return String(element.n + 'x '+ element.name + ' '+element.col+'\n')
                   })
-              )}
+              }
             </Text>
             <TouchableHighlight
               style={{ ...styles.openButton, backgroundColor: '#2196F3' }}

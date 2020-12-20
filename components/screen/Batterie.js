@@ -55,7 +55,7 @@ export default class BattList extends PureComponent {
 
   stampList () {
     global.listBatt = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
-    global.store_Batt_IP.forEach(element => {
+    global.store_Batt.forEach(element => {
       global.listBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
     })
     global.listResiBatt = ''
@@ -66,7 +66,7 @@ export default class BattList extends PureComponent {
   }
   clearListBatt () {
     //Azzera lista ordine
-    global.store_Batt_IP.clear()
+    global.store_Batt.clear()
     global.listBatt = ''
     //Azzera lista resi
     global.resi_Batt_IP.clear()
@@ -99,11 +99,11 @@ export default class BattList extends PureComponent {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
+              IN ORDINE {"\n\n"}
                 {
-                  [...global.store_Batt_IP.values()]
+                  [...global.store_Batt.values()]
                     .sort()
                     .map(function (element) {
-                      console.log(element)
                       return String(element.n + 'x '+ element.name + '\n')
                     })
                     }
@@ -114,7 +114,7 @@ export default class BattList extends PureComponent {
                   this.setModalVisible(!this.state.modalVisible)
                 }}
               >
-                <Text style={styles.textStyle}>Hide List</Text>
+                <Text style={styles.textStyle}>Chiudi</Text>
               </TouchableHighlight>
             </View>
           </View>
@@ -130,6 +130,8 @@ export default class BattList extends PureComponent {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
+              RESI {"\n\n"}
+
                 {
                   [...global.resi_Batt_IP.values()]
                     .sort()
@@ -144,7 +146,7 @@ export default class BattList extends PureComponent {
                   this.setModalVisibleResi(!this.state.modalVisibleResi)
                 }}
               >
-                <Text style={styles.textStyle}>Hide List</Text>
+                <Text style={styles.textStyle}>Chiui</Text>
               </TouchableHighlight>
             </View>
           </View>

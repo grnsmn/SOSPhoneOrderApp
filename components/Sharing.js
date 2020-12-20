@@ -22,11 +22,11 @@ class ShareExample extends Component {
         //'Lista Batterie:\n' +
         global.listBatt +
         '\n' +
-        //global.list_Batt_Huawei +
+        global.list_Batt_Huawei +
         //'Lista Display:\n' +
         global.listDisplay +
         '\n' +
-        //  global.list_Display_Huawei +
+         global.list_Display_Huawei +
         'Lista Extra:\n' +
         global.extra +
         '\n\nResi:\n' +
