@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component, PureComponent } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 import { Input } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 global.store_Batt_IP = new Map() //Oggetto map globale che conterrà nomi e quantità di BATTERIE IPHONE da mettere in lista
 global.resi_Batt_IP = new Map() //Per immagazzinamento lista resi
-export default class Item extends Component {
+export default class Item extends PureComponent {
   state = { id: '', nomeItem: '', contatore: 0, NumResi: 0 }
 
   constructor (props) {

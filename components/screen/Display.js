@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   View,
   StyleSheet,
@@ -41,7 +41,7 @@ const sectionList = [
   //   data: list
   // }
 ]
-export default class DisplayList extends Component {
+export default class DisplayList extends PureComponent {
   state = { modalVisible: false, modalVisibleResi: false }
 
   setModalVisible = visible => {
@@ -120,13 +120,14 @@ export default class DisplayList extends Component {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
-                {JSON.stringify(
+                {
+                  //Funzione che permette la stampa pulita della lista in ordine  
                   [...global.store_Lcd_IP.values()]
                     .sort()
                     .map(function (element) {
-                      return element
+                      return String(element.n + 'x '+ element.name + ' '+element.col+'\n')
                     })
-                )}
+                }
               </Text>
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
@@ -150,13 +151,13 @@ export default class DisplayList extends Component {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
-                {JSON.stringify(
+                {
                   [...global.resi_Lcd_IP.values()]
                     .sort()
                     .map(function (element) {
-                      return element
+                      return String(element.n + 'x '+ element.name + ' '+element.col+'\n')
                     })
-                )}
+                }
               </Text>
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}

@@ -2,10 +2,12 @@ import React from 'react'
 import { StyleSheet, Image, View, Text } from 'react-native'
 import HomeScreen from './components/screen/Home'
 import BattList from './components/screen/Batterie'
+import DisplayList from './components/screen/Display'
+import DisplayListHW from './components/screen/DisplayHW'
+import Other from './components/screen/Other'
 import 'react-native-gesture-handler'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import DisplayList from './components/screen/Display'
 
 const Stack = createStackNavigator()
 
@@ -48,7 +50,7 @@ export default function App () {
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
-              fontWeight: 'bold'
+              fontWeight: 'bold',
             }
           }}
         />
@@ -65,6 +67,32 @@ export default function App () {
             }
           }}
         />
+        <Stack.Screen
+          name='DisplayHuawei'
+          component={DisplayListHW}
+          options={{
+            headerStyle: {
+              backgroundColor: '#f4511D'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold'
+            }
+          }}
+        />
+        {/* <Stack.Screen
+          name='Other'
+          component={Other}
+          options={{
+            headerStyle: {
+              backgroundColor: '#f4511D'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold'
+            }
+          }}
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   )

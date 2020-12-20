@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 import { Button, Input } from 'react-native-elements'
 import Item from './Item'
@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 global.store_Lcd_IP = new Map() //Array globale che conterrà nomi e quantità di LCD IPHONE da mettere in lista
 global.resi_Lcd_IP = new Map() //Per immagazzinamento lista resi
 
-class ItemLCD extends Item {
+export default class ItemLCD extends PureComponent{
   //OGNI ELEMENTO IN QUESTA CLASSE TIENE CONTO DI UN CONTEGGIO A COLORE DEL DISPLAY (BIANCO E NERO)
   state = {
     id: '',
@@ -29,7 +29,6 @@ class ItemLCD extends Item {
     const id_W = this.state.id + 'W'
     const id_BK = this.state.id + 'Bk'
     AsyncStorage.getItem(this.state.id).then(result => {
-      try {
         const parseElement = JSON.parse(result)
         if (parseElement.id != null) {
           const tmp = JSON.parse(result, (key, value) => {
@@ -40,7 +39,7 @@ class ItemLCD extends Item {
             contatoreW: tmp.contatoreW,
             contatoreBK: tmp.contatoreBK,
             resiW: tmp.resiW,
-            resiW: tmp.resiBK,
+            resiBK: tmp.resiBK,
           })
           //Aggiornamento lista ordine
           if (this.state.contatoreW != 0) {
@@ -83,13 +82,14 @@ class ItemLCD extends Item {
           }
 
         }
-      } catch {}
-    })
+      } 
+    )
   }
   componentDidUpdate () {
     AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
     const id_W = this.state.id + 'W'
     const id_BK = this.state.id + 'Bk'
+    //console.log("attualmente inseriti:" +  this.state.resiW)
     //elimina gli elementi da map se il valore inserito è 0
     if (this.state.contatoreW == 0) global.store_Lcd_IP.delete(id_W)
     if (this.state.contatoreBK == 0) global.store_Lcd_IP.delete(id_BK)
@@ -168,7 +168,7 @@ class ItemLCD extends Item {
               labelStyle={{ color: 'black', textAlign: 'center', fontSize: 12, backgroundColor:'white' }}
               disabled={this.oneColor()}
               //renderErrorMessage={false}
-              placeholder={this.state.contatoreW.toString()}
+              placeholder={String(this.state.contatoreW)}
               placeholderTextColor={'gold'}
               keyboardType='numeric'
               maxLength={1}
@@ -188,7 +188,7 @@ class ItemLCD extends Item {
               label={'Reso'}
               labelStyle={{ color: 'black', textAlign: 'center', fontSize: 10, backgroundColor:'lightgreen' }}
               disabled={this.oneColor()}
-              placeholder={this.state.resiW.toString()}
+              placeholder={String(this.state.resiW)}
               placeholderTextColor={'lightgreen'}
               keyboardType='numeric'
               maxLength={1}
@@ -260,4 +260,3 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 })
-export default ItemLCD

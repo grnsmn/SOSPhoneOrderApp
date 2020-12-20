@@ -16,8 +16,6 @@ export default class Home extends Component {
   _save () {
     global.extra += this.state.text + ' \n'
     AsyncStorage.setItem('ListExtra', global.extra)
-    //AsyncStorage.getItem('ListExtra').then((result, err) => console.log(result))
-    //console.log(global.extra)
     this.state.input.current.clear()
     //alert('Inserito!')
   }
@@ -111,6 +109,38 @@ export default class Home extends Component {
     )
   }
 }
+
+          // <View
+          //   style={{
+          //     justifyContent: 'space-evenly',
+          //     alignItems: 'center',
+          //     flex: 1
+          //   }}
+          // >
+          //   <View style={{ alignItems: 'center' }}>
+          //     <Image
+          //       source={require('./huawei.png')}
+          //       style={{ width: 70, height: 70 }}
+          //     />
+              
+          //   </View>
+          //   <Button
+          //     title='Batterie'
+          //     onPress={() => this.props.navigation.navigate('Batterie')}
+          //     icon={<Icon name='battery-unknown' size={28} color='white' />}
+          //     //iconRight
+          //   ></Button>
+          //   <Button
+          //     title='Display'
+          //     onPress={() => this.props.navigation.navigate('DisplayHuawei')}
+          //     icon={<Icon name='smartphone' size={28} color='white' />}
+          //   ></Button>
+          //   <Button
+          //     title=' Other'
+          //     onPress={() => this.props.navigation.navigate('Other')}
+          //     icon={<Icon name='more' size={28} color='white' />}
+          //   ></Button>
+          // </View>
 
 const styles = StyleSheet.create({
   container: {

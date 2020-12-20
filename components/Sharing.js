@@ -12,27 +12,29 @@ class ShareExample extends Component {
       const result = await Share.share({
         
         message:
-          'Ordine del ' +
-          data.getDate() +
-          '/' + 
-          parseInt(data.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
-          '/' +
-          data.getFullYear() +
-          '\n\n' +
-          //'Lista Batterie:\n' +
-          global.listBatt +
-          '\n' +
-          //global.list_Batt_Huawei +
-          //'Lista Display:\n' +
-          global.listDisplay +
-          '\n' +
-          //  global.list_Display_Huawei +
-          'Lista Extra:\n' +
-          global.extra +
-          '\n\nResi:\n' +
-          global.listResiBatt
-      })
+        'Ordine del ' +
+        data.getDate() +
+        '/' + 
+        parseInt(data.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
+        '/' +
+        data.getFullYear() +
+        '\n\n' +
+        //'Lista Batterie:\n' +
+        global.listBatt +
+        '\n' +
+        //global.list_Batt_Huawei +
+        //'Lista Display:\n' +
+        global.listDisplay +
+        '\n' +
+        //  global.list_Display_Huawei +
+        'Lista Extra:\n' +
+        global.extra +
+        '\n\nResi:\n' +
+        global.listResiBatt +
+        global.listResiDisplay
 
+      })
+      console.log(message)
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // shared with activity type of result.activityType

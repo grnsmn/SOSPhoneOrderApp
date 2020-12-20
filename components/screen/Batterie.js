@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   StyleSheet,
   View,
@@ -18,6 +18,7 @@ global.listResiBatt = '' //Variabile globale per la scrittura della lista dei re
 const list = [
   { id: 'S0Z', nome: 'IPHONE 5', nMax: 2 },
   { id: 'v8E', nome: 'IPHONE 5S', nMax: 2 },
+  { id: 'v8L', nome: 'IPHONE SE', nMax: 2 },
   { id: '3EV', nome: 'IPHONE 6', nMax: 4 },
   { id: '34K', nome: 'IPHONE 6S', nMax: 4 },
   { id: '5Q6', nome: 'IPHONE 7', nMax: 4 },
@@ -38,7 +39,7 @@ const sectionList = [
   //   data: list
   // }
 ]
-export default class BattList extends Component {
+export default class BattList extends PureComponent {
   state = { modalVisible: false, modalVisibleResi: false }
 
   setModalVisible = visible => {
@@ -98,13 +99,14 @@ export default class BattList extends Component {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
-                {JSON.stringify(
+                {
                   [...global.store_Batt_IP.values()]
                     .sort()
                     .map(function (element) {
-                      return element
+                      console.log(element)
+                      return String(element.n + 'x '+ element.name + '\n')
                     })
-                )}
+                    }
               </Text>
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
@@ -128,13 +130,13 @@ export default class BattList extends Component {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
-                {JSON.stringify(
+                {
                   [...global.resi_Batt_IP.values()]
                     .sort()
                     .map(function (element) {
-                      return element
+                      return String(element.n + 'x '+ element.name + '\n')
                     })
-                )}
+                }
               </Text>
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
