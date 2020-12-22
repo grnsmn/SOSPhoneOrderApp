@@ -16,28 +16,33 @@ export default class Item extends PureComponent {
   componentDidMount () {
     AsyncStorage.getItem(this.state.id).then(result => {
       //console.log(JSON.parse(result).contatore)
-      if (JSON.parse(result).id != null) {
-        const tmp = JSON.parse(result, (key, value) => {
-          //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
-          return value
-        })
-        this.setState({ contatore: tmp.contatore, NumResi: tmp.NumResi })
-        if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
-        if (this.state.contatore != 0) {
-          // console.log([...global.store_Batt.get(this.state.id)])
-          global.store_Batt.set(this.state.id, {
-            name: this.state.nomeItem,
-            n: this.state.contatore
+      const parseElement = JSON.parse(result)
+      if(parseElement!=null){
+        if (JSON.parse(result).id != null) {
+          const tmp = JSON.parse(result, (key, value) => {
+            //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
+            return value
           })
+          this.setState({ contatore: tmp.contatore, NumResi: tmp.NumResi })
+          if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
+          if (this.state.contatore != 0) {
+            // console.log([...global.store_Batt.get(this.state.id)])
+            global.store_Batt.set(this.state.id, {
+              name: this.state.nomeItem,
+              n: this.state.contatore
+            })
+          }
+  
+          if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
+          if (this.state.NumResi != 0) {
+            global.resi_Batt_IP.set(this.state.id, {
+              name: this.state.nomeItem,
+              n: this.state.NumResi
+            })
+          }
         }
-
-        if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
-        if (this.state.NumResi != 0) {
-          global.resi_Batt_IP.set(this.state.id, {
-            name: this.state.nomeItem,
-            n: this.state.NumResi
-          })
-        }
+      }else{
+        
       }
     })
   }

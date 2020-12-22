@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Share, View, AsyncStorage } from 'react-native'
+import { Share, View } from 'react-native'
 import { Button } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 

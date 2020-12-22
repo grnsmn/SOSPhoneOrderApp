@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 global.store_Lcd = new Map() //Array globale che conterrà nomi e quantità di LCD IPHONE da mettere in lista
 global.resi_Lcd = new Map() //Per immagazzinamento lista resi
 
-export default class ItemLCD extends PureComponent{
+export default class ItemLCD extends PureComponent {
   //OGNI ELEMENTO IN QUESTA CLASSE TIENE CONTO DI UN CONTEGGIO A COLORE DEL DISPLAY (BIANCO E NERO)
   state = {
     id: '',
@@ -15,8 +15,8 @@ export default class ItemLCD extends PureComponent{
     colore: '',
     contatoreW: 0,
     contatoreBK: 0,
-    resiW:0,
-    resiBK:0,
+    resiW: 0,
+    resiBK: 0
   }
 
   constructor (props) {
@@ -29,7 +29,8 @@ export default class ItemLCD extends PureComponent{
     const id_W = this.state.id + 'W'
     const id_BK = this.state.id + 'Bk'
     AsyncStorage.getItem(this.state.id).then(result => {
-        const parseElement = JSON.parse(result)
+      const parseElement = JSON.parse(result)
+      if (parseElement != null) {
         if (parseElement.id != null) {
           const tmp = JSON.parse(result, (key, value) => {
             //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
@@ -39,7 +40,7 @@ export default class ItemLCD extends PureComponent{
             contatoreW: tmp.contatoreW,
             contatoreBK: tmp.contatoreBK,
             resiW: tmp.resiW,
-            resiBK: tmp.resiBK,
+            resiBK: tmp.resiBK
           })
           //Aggiornamento lista ordine
           if (this.state.contatoreW != 0) {
@@ -60,12 +61,12 @@ export default class ItemLCD extends PureComponent{
           } else if (tmp.contatoreBK == 0) {
             global.store_Lcd.delete(id_BK)
           }
-          
+
           //Aggiornamento lista resi
           //RESI BIANCHI
           if (this.state.resiW == 0) global.resi_Lcd.delete(id_W)
           if (this.state.resiW != 0) {
-            global.resi_Lcd.set(id_W,{
+            global.resi_Lcd.set(id_W, {
               name: this.state.nomeItem,
               col: 'BIANCO',
               n: this.state.resiW
@@ -80,10 +81,10 @@ export default class ItemLCD extends PureComponent{
               n: this.state.resiBK
             })
           }
-
         }
-      } 
-    )
+      } else {
+      }
+    })
   }
   componentDidUpdate () {
     AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
@@ -127,14 +128,21 @@ export default class ItemLCD extends PureComponent{
         n: this.state.resiBK
       })
     }
-
   }
 
   inStore2 () {
     this.componentDidMount()
   }
   oneColor () {
-    if (this.state.nomeItem.includes('IPHONE X') || this.state.nomeItem.includes('IPHONE 11')) {
+    if (
+      this.state.nomeItem.includes('IPHONE X') ||
+      this.state.nomeItem.includes('IPHONE 11') ||
+      this.state.nomeItem.includes('MATE 20 LITE')||
+      this.state.nomeItem.includes('P20 LITE')||
+      this.state.nomeItem.includes('P30 LITE')||
+      this.state.nomeItem.includes('PSMART Z')||
+      this.state.nomeItem.includes('PSMART 2019')
+    ) {
       return true
     } else {
       return false
@@ -148,7 +156,7 @@ export default class ItemLCD extends PureComponent{
             color: 'white',
             flex: 1,
             marginLeft: 10,
-            fontSize: 15,
+            fontSize: 15
           }}
         >
           {this.props.NameItem}
@@ -165,7 +173,12 @@ export default class ItemLCD extends PureComponent{
           <View style={{ flex: 0.7, borderWidth: 1, borderLeftColor: 'white' }}>
             <Input
               label={'WHITE'}
-              labelStyle={{ color: 'black', textAlign: 'center', fontSize: 12, backgroundColor:'white' }}
+              labelStyle={{
+                color: 'black',
+                textAlign: 'center',
+                fontSize: 12,
+                backgroundColor: 'white'
+              }}
               disabled={this.oneColor()}
               //renderErrorMessage={false}
               placeholder={String(this.state.contatoreW)}
@@ -186,7 +199,12 @@ export default class ItemLCD extends PureComponent{
             />
             <Input
               label={'Reso'}
-              labelStyle={{ color: 'black', textAlign: 'center', fontSize: 10, backgroundColor:'lightgreen' }}
+              labelStyle={{
+                color: 'black',
+                textAlign: 'center',
+                fontSize: 10,
+                backgroundColor: 'lightgreen'
+              }}
               disabled={this.oneColor()}
               placeholder={String(this.state.resiW)}
               placeholderTextColor={'lightgreen'}
@@ -204,7 +222,9 @@ export default class ItemLCD extends PureComponent{
               onSubmitEditing={() => this.inStore2()}
             />
           </View>
-          <View style={{ flex: 0.7, borderWidth: 0.5, borderLeftColor: 'white' }}>
+          <View
+            style={{ flex: 0.7, borderWidth: 0.5, borderLeftColor: 'white' }}
+          >
             <Input
               label={'BLACK'}
               labelStyle={{ color: 'white', textAlign: 'center', fontSize: 12 }}
@@ -228,7 +248,12 @@ export default class ItemLCD extends PureComponent{
             />
             <Input
               label={'Reso'}
-              labelStyle={{ color: 'black', textAlign: 'center', fontSize: 10, backgroundColor:'lightgreen' }}
+              labelStyle={{
+                color: 'black',
+                textAlign: 'center',
+                fontSize: 10,
+                backgroundColor: 'lightgreen'
+              }}
               placeholder={this.state.resiBK.toString()}
               placeholderTextColor={'lightgreen'}
               keyboardType='numeric'

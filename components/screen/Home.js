@@ -8,11 +8,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 global.extra = ''
 
 export default class Home extends Component {
-  state = { text: '', input: React.createRef() }
-/*
-    constructor(props){
-    AsyncStorage.setItem('ListExtra', global.extra)
-    }*/
+  state = { text: '', input: React.createRef(), toDay: new Date() }
+
+    // constructor(props){
+    //   super(props)
+    //   AsyncStorage.setItem('ListExtra', global.extra)
+    // }
   _save () {
     global.extra += this.state.text + ' \n'
     AsyncStorage.setItem('ListExtra', global.extra)
@@ -21,6 +22,10 @@ export default class Home extends Component {
   }
 
   componentDidMount () {
+    const gg = this.state.toDay.getDate()
+    //console.log(gg)
+    AsyncStorage.getItem('oldDate').then(result=> result!=gg?alert("AZZERO ORDINE") && AsyncStorage.clear():console.log('MANTENGO ORDINE '+result))
+    AsyncStorage.setItem('oldDate', JSON.stringify(gg))
     AsyncStorage.getItem('ListExtra').then(
       //Mantiene in memoria la lista scritta anche dopo il riavvio dell'app
       (result, err) => { if(result!=null) {(global.extra = result)}}

@@ -75,7 +75,6 @@ export default class BattListHW extends BattList {
               <Text style={styles.modalText}>
                 IN ORDINE {'\n\n'}
                 {[...global.store_Batt.values()].sort().map(function (element) {
-                  console.log(element)
                   return String(element.n + 'x ' + element.name + '\n')
                 })}
               </Text>
