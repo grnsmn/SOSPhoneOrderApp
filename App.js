@@ -47,7 +47,7 @@ export default function App () {
           component={BattList}
           options={{
             headerStyle: {
-              backgroundColor: '#f4511D'
+              backgroundColor: '#252850'
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -60,7 +60,7 @@ export default function App () {
           component={BattListHW}
           options={{
             headerStyle: {
-              backgroundColor: '#f4511D'
+              backgroundColor: '#252850'
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -73,7 +73,7 @@ export default function App () {
           component={DisplayList}
           options={{
             headerStyle: {
-              backgroundColor: '#f4511D'
+              backgroundColor: '#252850'
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -86,7 +86,7 @@ export default function App () {
           component={DisplayListHW}
           options={{
             headerStyle: {
-              backgroundColor: '#f4511D'
+              backgroundColor: '#252850'
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -99,7 +99,7 @@ export default function App () {
           component={Other}
           options={{
             headerStyle: {
-              backgroundColor: '#f4511D'
+              backgroundColor: '#252850'
             },
             headerTintColor: '#fff',
             headerTitleStyle: {

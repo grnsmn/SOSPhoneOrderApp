@@ -9,23 +9,38 @@ global.extra = ''
 
 export default class Home extends Component {
   state = { text: '', input: React.createRef(), toDay: new Date() }
-
-    // constructor(props){
-    //   super(props)
-    //   AsyncStorage.setItem('ListExtra', global.extra)
-    // }
-  _save () {
+    constructor(props){
+      super(props)
+      // const gg = this.state.toDay.getDate()  
+      // console.log(gg)
+      // AsyncStorage.getItem('oldDate').then(result=> result!=gg? AsyncStorage.clear().then(alert("ORDINE AZZERATO")):console.log('MANTENGO ORDINE DEL'+result))
+      // AsyncStorage.setItem('oldDate', JSON.stringify(gg))
+    }
+  
+    _save () {
     global.extra += this.state.text + ' \n'
     AsyncStorage.setItem('ListExtra', global.extra)
     this.state.input.current.clear()
     //alert('Inserito!')
   }
-
+  
+    _reset(){
+      console.log("inizio reset")
+      global.store_Batt = new Map() 
+      global.resi_Batt_IP = new Map() 
+      global.store_Lcd = new Map() 
+      global.resi_Lcd = new Map() 
+      global.extra = ''
+      global.listBatt = ''
+      global.listDisplay = ''
+      global.list_Batt_Huawei = ''
+      global.list_Display_Huawei = ''
+      global.listResiBatt = ''
+      global.listResiDisplay = ''
+      AsyncStorage.clear()
+      console.log("Reset eseguito")
+    }
   componentDidMount () {
-    const gg = this.state.toDay.getDate()
-    //console.log(gg)
-    AsyncStorage.getItem('oldDate').then(result=> result!=gg?alert("AZZERO ORDINE") && AsyncStorage.clear():console.log('MANTENGO ORDINE '+result))
-    AsyncStorage.setItem('oldDate', JSON.stringify(gg))
     AsyncStorage.getItem('ListExtra').then(
       //Mantiene in memoria la lista scritta anche dopo il riavvio dell'app
       (result, err) => { if(result!=null) {(global.extra = result)}}
@@ -76,7 +91,6 @@ export default class Home extends Component {
                 source={require('./HUAWEI2.png')}
                 style={{ width: 66, height: 66, backgroundColor:'#fff', borderRadius: 11 }}
               />
-              
             </View>
             <Button
               title='Batterie'
@@ -127,6 +141,17 @@ export default class Home extends Component {
               borderRightWidth: 2
             }}
             buttonStyle={{ backgroundColor: 'red' }}
+          />
+          <Button
+            icon={<Icon name='delete-forever' size={28} color='white' />}
+            onPress={() =>{ this._reset()} }
+            containerStyle={{
+              flex: 0.3,
+              //borderBottomWidth: 2,
+              borderTopWidth: 3,
+              borderRightWidth: 2
+            }}
+            buttonStyle={{ backgroundColor: 'darkred' }}
           />
           <ShareExample nomeLista={'Lista Extra'} />
         </View>

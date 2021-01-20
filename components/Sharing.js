@@ -27,7 +27,7 @@ class ShareExample extends Component {
         global.listDisplay +
         '\n' +
          global.list_Display_Huawei +
-        'Lista Extra:\n' +
+        '\nLista Extra:\n' +
         global.extra +
         '\n\nResi:\n' +
         global.listResiBatt +

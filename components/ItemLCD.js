@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 import { Button, Input } from 'react-native-elements'
 import Item from './Item'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-community/async-storage'
 
 global.store_Lcd = new Map() //Array globale che conterrà nomi e quantità di LCD IPHONE da mettere in lista
 global.resi_Lcd = new Map() //Per immagazzinamento lista resi

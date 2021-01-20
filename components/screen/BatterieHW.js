@@ -11,12 +11,17 @@ import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Appbar } from 'react-native-paper'
 import BattList from './Batterie'
-
+import SearchBattery  from '../SearchBattery'
 global.list_Batt_Huawei = ' ' //Variabile globale per la scrittura dell'ordine finale
 
 const list = [
-  { id: 'cvG', nome: 'HUAWEI P9', nMax: 5 },
-  { id: 'x1L', nome: 'HUAWEI MATE 10 LITE', nMax: 2 }
+  { id: 'cvG', nome: 'HUAWEI P8', nMax: 1 },
+  { id: 'po5', nome: 'HUAWEI P8 LITE', nMax: 1 },
+  { id: 'cfV', nome: 'HUAWEI P9', nMax: 5 },
+  { id: 'x1L', nome: 'HUAWEI MATE 20 LITE', nMax: 1 },
+  { id: 'xqg', nome: 'HUAWEI P20 PRO', nMax: 1 },
+  { id: 'z9y', nome: 'HUAWEI P20', nMax: 1 },
+  { id: 'x76', nome: 'HUAWEI MATE S', nMax: 1 }
 ]
 const sectionList = [
   {
@@ -29,10 +34,13 @@ const sectionList = [
   // }
 ]
 export default class BattListHW extends BattList {
+  state = { modalVisible: false, modalVisibleResi: false}
+
   stampList () {
     global.list_Batt_Huawei = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
     global.store_Batt.forEach(element => {
-      global.list_Batt_Huawei += element.n + 'x ' + ' BATT ' + element.name + '\n'
+      global.list_Batt_Huawei +=
+        element.n + 'x ' + ' BATT ' + element.name + '\n'
     })
     global.listResiBatt = ''
     global.resi_Batt_IP.forEach(element => {
@@ -60,6 +68,7 @@ export default class BattListHW extends BattList {
     alert('Lista Svuotata')
   }
   render () {
+    const { search } = this.state
     return (
       <View style={styles.container}>
         <Modal
@@ -118,6 +127,7 @@ export default class BattListHW extends BattList {
             </View>
           </View>
         </Modal>
+       
         <SectionList
           sections={sectionList}
           renderItem={this.renderRow}
@@ -125,7 +135,6 @@ export default class BattListHW extends BattList {
           //   <Text style={styles.header}>{title}</Text>
           // )}
         ></SectionList>
-
         <Appbar style={styles.bottom}>
           <Appbar.Action
             style={{ flex: 1 }}

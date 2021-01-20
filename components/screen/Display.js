@@ -3,13 +3,11 @@ import React, { PureComponent } from 'react'
 import {
   View,
   StyleSheet,
-  FlatList,
   SectionList,
   Modal,
   Text,
   TouchableHighlight
 } from 'react-native'
-import { Button } from 'react-native-elements'
 import ItemLCD from '../ItemLCD'
 import { Appbar } from 'react-native-paper'
 
@@ -167,7 +165,7 @@ export default class DisplayList extends PureComponent {
                   this.setModalVisibleResi(!this.state.modalVisibleResi)
                 }}
               >
-                <Text style={styles.textStyle}>Hide List</Text>
+                <Text style={styles.textStyle}>Chiudi</Text>
               </TouchableHighlight>
             </View>
           </View>

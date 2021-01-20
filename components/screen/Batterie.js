@@ -84,8 +84,6 @@ export default class BattList extends PureComponent {
     alert('Lista Svuotata')
   }
   render () {
-    //    <FlatList data={list} renderItem={this.renderRow} />
-
     return (
       <View style={styles.container}>
         <Modal
@@ -146,7 +144,7 @@ export default class BattList extends PureComponent {
                   this.setModalVisibleResi(!this.state.modalVisibleResi)
                 }}
               >
-                <Text style={styles.textStyle}>Chiui</Text>
+                <Text style={styles.textStyle}>Chiudi</Text>
               </TouchableHighlight>
             </View>
           </View>
