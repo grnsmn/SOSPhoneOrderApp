@@ -1,16 +1,27 @@
 {
-  "name": "Order App",
-  "displayName": "SOSPhone Order App ",
+  "name": "OrderApp",
+  "displayName": "OrderApp ",
   "expo": {
     "name": "OrderApp",
-    "icon":"./img/SOSPhone.png",
     "slug": "SOS",
-    "version": "1.0.4",
+    "icon": "./img/icon.png",
+    "version": "1.1.9",
+    "splash": {
+      "image": "./img/splashp.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
     "android": {
-      "package": "com.gscripts.SOS"
+      "package": "com.gscripts.SOS",
+      "adaptiveIcon": {
+        "foregroundImage": "./img/icon.png"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.gscripts.SOS"
     }
   }
 }

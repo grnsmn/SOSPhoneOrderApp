@@ -1,15 +1,29 @@
-import React from 'react'
-import { StyleSheet, Image, View, Text } from 'react-native'
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import HomeScreen from './components/screen/Home'
 import BattList from './components/screen/Batterie'
-import 'react-native-gesture-handler'
+import BattListHW from './components/screen/BatterieHW'
+import BattListSM from './components/screen/BatterieSM';
+import DisplayList from './components/screen/Display'
+import DisplayListHW from './components/screen/DisplayHW'
+import DisplayListSM from './components/screen/DisplaySM'
+//import Other from './components/screen/Other'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import DisplayList from './components/screen/Display'
-import BattListHW from './components/screen/BatterieHW'
-import DisplayListHW from './components/screen/DisplayHW'
-
 const Stack = createStackNavigator()
+
+function LogoTitle () {
+  return (
+    <View style= {{flexDirection:'row', alignItems:'center'}}>
+      <Image
+        style={{ width: 50, height: 50 }}
+        source={require('./img/SOSPhone.jpg')}
+      />
+      <Text style={{ fontWeight: 'bold', color:'white'}}>Order App</Text>
+    </View>
+  )
+}
 
 export default function App () {
   return (
@@ -19,10 +33,9 @@ export default function App () {
           name='Home'
           component={HomeScreen}
           options={{
-            title: 'SOS PHONE ORDER APP',
+            title: 'ORDER APP HOME',
             headerStyle: {
-              backgroundColor: '#f4511D',
-              height:60
+              backgroundColor: '#252850'
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -35,11 +48,37 @@ export default function App () {
           component={BattList}
           options={{
             headerStyle: {
-              backgroundColor: '#f4511D'
+              backgroundColor: '#252850'
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+            }
+          }}
+        />
+        <Stack.Screen
+          name='Batterie Huawei'
+          component={BattListHW}
+          options={{
+            headerStyle: {
+              backgroundColor: '#252850'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            }
+          }}
+        />
+        <Stack.Screen
+          name='Batterie Samsung'
+          component={BattListSM}
+          options={{
+            headerStyle: {
+              backgroundColor: '#252850'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
             }
           }}
         />
@@ -48,7 +87,7 @@ export default function App () {
           component={DisplayList}
           options={{
             headerStyle: {
-              backgroundColor: '#f4511D'
+              backgroundColor: '#252850'
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -56,25 +95,12 @@ export default function App () {
             }
           }}
         />
-          <Stack.Screen
-          name='BatterieHW'
-          component={BattListHW}
-          options={{
-            headerStyle: {
-              backgroundColor: '#f4511D'
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold'
-            }
-          }}
-        />
-          <Stack.Screen
-          name='DisplayHW'
+        <Stack.Screen
+          name='Display Huawei'
           component={DisplayListHW}
           options={{
             headerStyle: {
-              backgroundColor: '#f4511D'
+              backgroundColor: '#252850'
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -82,6 +108,32 @@ export default function App () {
             }
           }}
         />
+        <Stack.Screen
+          name='Display Samsung'
+          component={DisplayListSM}
+          options={{
+            headerStyle: {
+              backgroundColor: '#252850'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold'
+            }
+          }}
+        />
+        {/* <Stack.Screen
+          name='Other'
+          component={Other}
+          options={{
+            headerStyle: {
+              backgroundColor: '#252850'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold'
+            }
+          }}
+        />  */}
       </Stack.Navigator>
     </NavigationContainer>
   )

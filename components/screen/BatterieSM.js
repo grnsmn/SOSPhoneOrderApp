@@ -7,27 +7,20 @@ import {
   Modal,
   TouchableHighlight
 } from 'react-native'
-import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Appbar } from 'react-native-paper'
-
-
-global.listBatt = '' //Variabile globale per la scrittura dell'ordine finale
-global.listResiBatt = '' //Variabile globale per la scrittura della lista dei resi finale
+import BattList from './Batterie'
+import SearchBattery  from '../SearchBattery'
+global.list_Batt_Huawei = ' ' //Variabile globale per la scrittura dell'ordine finale
 
 const list = [
-  { id: 'S0Z', nome: 'IPHONE 5', nMax: 2 },
-  { id: 'v8E', nome: 'IPHONE 5S', nMax: 2 },
-  { id: 'v8L', nome: 'IPHONE SE', nMax: 2 },
-  { id: '3EV', nome: 'IPHONE 6', nMax: 4 },
-  { id: '34K', nome: 'IPHONE 6S', nMax: 4 },
-  { id: '5Q6', nome: 'IPHONE 7', nMax: 4 },
-  { id: 'NQH', nome: 'IPHONE 8', nMax: 2 },
-  { id: 'H9K', nome: 'IPHONE 6/6S PLUS', nMax: 2 },
-  { id: 'PNB', nome: 'IPHONE 7 PLUS', nMax: 2 },
-  { id: 'IK8', nome: 'IPHONE 8 PLUS', nMax: 2 },
-  { id: 'XVW', nome: 'IPHONE X', nMax: 2 },
-  { id: 'XVR', nome: 'IPHONE XR', nMax: 2 }
+  { id: 'p9z', nome: 'SAMSUNG S6', nMax: 1 },
+  // { id: 'po5', nome: 'HUAWEI P8 LITE', nMax: 1 },
+  // { id: 'cfV', nome: 'HUAWEI P9', nMax: 5 },
+  // { id: 'x1L', nome: 'HUAWEI MATE 20 LITE', nMax: 1 },
+  // { id: 'xqg', nome: 'HUAWEI P20 PRO', nMax: 1 },
+  // { id: 'z9y', nome: 'HUAWEI P20', nMax: 1 },
+  // { id: 'x76', nome: 'HUAWEI MATE S', nMax: 1 }
 ]
 const sectionList = [
   {
@@ -39,24 +32,14 @@ const sectionList = [
   //   data: list
   // }
 ]
-export default class BattList extends PureComponent {
-  state = { modalVisible: false, modalVisibleResi: false }
-
-  setModalVisible = visible => {
-    this.setState({ modalVisible: visible })
-  }
-
-  setModalVisibleResi = visible => {
-    this.setState({ modalVisibleResi: visible })
-  }
-  renderRow = ({ item }) => (
-    <Item NameItem={item.nome} nMax={item.nMax} id={item.id} />
-  )
+export default class BattListSM extends BattList {
+  state = { modalVisible: false, modalVisibleResi: false}
 
   stampList () {
-    global.listBatt = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
+    global.list_Batt_Huawei = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
     global.store_Batt.forEach(element => {
-      global.listBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
+      global.list_Batt_Huawei +=
+        element.n + 'x ' + ' BATT ' + element.name + '\n'
     })
     global.listResiBatt = ''
     global.resi_Batt_IP.forEach(element => {
@@ -67,7 +50,7 @@ export default class BattList extends PureComponent {
   clearListBatt () {
     //Azzera lista ordine
     global.store_Batt.clear()
-    global.listBatt = ''
+    global.list_Batt_Huawei = ''
     //Azzera lista resi
     global.resi_Batt_IP.clear()
     global.listResiBatt = ''
@@ -84,6 +67,7 @@ export default class BattList extends PureComponent {
     alert('Lista Svuotata')
   }
   render () {
+    const { search } = this.state
     return (
       <View style={styles.container}>
         <Modal
@@ -97,14 +81,10 @@ export default class BattList extends PureComponent {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
-              IN ORDINE {"\n\n"}
-                {
-                  [...global.store_Batt.values()]
-                    .sort()
-                    .map(function (element) {
-                      return String(element.n + 'x '+ element.name + '\n')
-                    })
-                    }
+                IN ORDINE {'\n\n'}
+                {[...global.store_Batt.values()].sort().map(function (element) {
+                  return String(element.n + 'x ' + element.name + '\n')
+                })}
               </Text>
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
@@ -128,15 +108,12 @@ export default class BattList extends PureComponent {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
-              RESI {"\n\n"}
-
-                {
-                  [...global.resi_Batt_IP.values()]
-                    .sort()
-                    .map(function (element) {
-                      return String(element.n + 'x '+ element.name + '\n')
-                    })
-                }
+                RESI {'\n\n'}
+                {[...global.resi_Batt_IP.values()]
+                  .sort()
+                  .map(function (element) {
+                    return String(element.n + 'x ' + element.name + '\n')
+                  })}
               </Text>
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
@@ -144,11 +121,12 @@ export default class BattList extends PureComponent {
                   this.setModalVisibleResi(!this.state.modalVisibleResi)
                 }}
               >
-                <Text style={styles.textStyle}>Chiudi</Text>
+                <Text style={styles.textStyle}>Chiui</Text>
               </TouchableHighlight>
             </View>
           </View>
         </Modal>
+
         <SectionList
           sections={sectionList}
           renderItem={this.renderRow}
@@ -156,7 +134,6 @@ export default class BattList extends PureComponent {
           //   <Text style={styles.header}>{title}</Text>
           // )}
         ></SectionList>
-        
         <Appbar style={styles.bottom}>
           <Appbar.Action
             style={{ flex: 1 }}
@@ -173,7 +150,7 @@ export default class BattList extends PureComponent {
           <Appbar.Action
             style={{ flex: 1 }}
             icon='printer-wireless'
-            onPress={() =>  this.stampList()}
+            onPress={() => this.stampList()}
           />
           <Appbar.Action
             style={{ flex: 1 }}
@@ -210,8 +187,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   bottom: {
-    borderColor:'#f4511D',
-    borderTopWidth:3,
+    borderColor: '#f4511D',
+    borderTopWidth: 3,
     backgroundColor: '#252850',
     position: 'relative',
     left: 0,
@@ -253,6 +230,6 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
-    color:'white'
+    color: 'white'
   }
 })

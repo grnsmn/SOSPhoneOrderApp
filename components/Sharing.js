@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Share, View, AsyncStorage } from 'react-native'
+import { Share, View } from 'react-native'
 import { Button } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
@@ -8,33 +8,33 @@ class ShareExample extends Component {
   onShare = async () => {
     try {
       const data = new Date()
-
-      /*    AsyncStorage.getItem('ListExtra').then((result, err) =>
-        this.setState({ extra: result })
-      )
-      console.log(this.state.extra)
-*/
+      
       const result = await Share.share({
+        
         message:
-          'Ordine del ' +
-          data.getDate() +
-          '/' +
-          data.getMonth() +
-          '/' +
-          data.getFullYear() +
-          '\n\n' +
-          'Lista Batterie:\n' +
-          global.listBatt +
-          '\n' +
-          global.list_Batt_Huawei +
-          '\nLista Display:\n' +
-          global.listDisplay +
-          '\n' +
-          global.list_Display_Huawei +
-          'Lista Extra:\n' +
-          global.extra
-      })
+        'Ordine del ' +
+        data.getDate() +
+        '/' + 
+        parseInt(data.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
+        '/' +
+        data.getFullYear() +
+        '\n\n' +
+        //'Lista Batterie:\n' +
+        global.listBatt +
+        '\n' +
+        global.list_Batt_Huawei +
+        //'Lista Display:\n' +
+        global.listDisplay +
+        '\n' +
+         global.list_Display_Huawei +
+        '\nLista Extra:\n' +
+        global.extra +
+        '\n\nResi:\n' +
+        global.listResiBatt +
+        global.listResiDisplay
 
+      })
+      console.log(message)
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // shared with activity type of result.activityType
