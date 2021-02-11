@@ -94,11 +94,11 @@ export default class BattList extends PureComponent {
   stampList () {
     global.listBatt = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
     global.store_Batt.forEach(element => {
-      global.listBatt += element.n + 'x ' + 'BATT ' + element.name + '\n'
+      global.listBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
     })
     global.listResiBatt = ''
     global.resi_Batt_IP.forEach(element => {
-      global.listResiBatt += element.n + 'x ' + 'BATT ' + element.name + '\n'
+      global.listResiBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
     })
     this.onShareBatt()
   }

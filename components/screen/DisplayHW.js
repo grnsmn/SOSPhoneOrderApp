@@ -132,7 +132,23 @@ export default class DisplayListHW extends DisplayList {
                 [...global.store_Lcd.values()]
                   .sort()
                   .map(function (element) {
-                    return String(element.n + 'x '+ element.name + ' '+element.col+'\n')
+                    if (
+                    element.name.includes('IPHONE X') ||
+                    element.name.includes('IPHONE 11') ||
+                    element.name.includes('P20 LITE') ||
+                    element.name.includes('P30 LITE') ||
+                    element.name.includes('MATE 20 LITE') ||
+                    element.name.includes('PSMART 2019') ||
+                    element.name.includes('PSMART Z')
+                  ) {
+                    return String(
+                      element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
+                    )
+                  } else {
+                    return String(
+                      element.n + 'x ' + ' LCD ' + element.name + ' ' + element.col + '\n'
+                    )
+                  }
                   })
               }
             </Text>
@@ -163,7 +179,23 @@ export default class DisplayListHW extends DisplayList {
                 [...global.resi_Lcd.values()]
                   .sort()
                   .map(function (element) {
-                    return String(element.n + 'x '+ element.name + ' '+element.col+'\n')
+                    if (
+                    element.name.includes('IPHONE X') ||
+                    element.name.includes('IPHONE 11') ||
+                    element.name.includes('P20 LITE') ||
+                    element.name.includes('P30 LITE') ||
+                    element.name.includes('MATE 20 LITE') ||
+                    element.name.includes('PSMART 2019') ||
+                    element.name.includes('PSMART Z')
+                  ) {
+                    return String(
+                      element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
+                    )
+                  } else {
+                    return String(
+                      element.n + 'x ' + ' LCD ' + element.name + ' ' + element.col + '\n'
+                    )
+                  }
                   })
               }
             </Text>

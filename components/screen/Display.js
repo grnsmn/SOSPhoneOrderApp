@@ -103,10 +103,10 @@ export default class DisplayList extends PureComponent {
         element.name.includes('PSMART Z')
       ) {
         global.listDisplay +=
-          element.n + 'x ' + 'LCD ' + element.name + ' ' + '\n'
+          element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
       } else {
         global.listDisplay +=
-          element.n + 'x ' + 'LCD ' + element.name + ' ' + element.col + '\n'
+          element.n + 'x ' + ' LCD ' + element.name + ' ' + element.col + '\n'
       }
     })
     global.listResiDisplay = ''
@@ -168,9 +168,23 @@ export default class DisplayList extends PureComponent {
                 IN ORDINE {'\n\n'}
                 {//Funzione che permette la stampa pulita della lista in ordine
                 [...global.store_Lcd.values()].sort().map(function (element) {
-                  return String(
-                    element.n + 'x ' + element.name + ' ' + element.col + '\n'
-                  )
+                  if (
+                    element.name.includes('IPHONE X') ||
+                    element.name.includes('IPHONE 11') ||
+                    element.name.includes('P20 LITE') ||
+                    element.name.includes('P30 LITE') ||
+                    element.name.includes('MATE 20 LITE') ||
+                    element.name.includes('PSMART 2019') ||
+                    element.name.includes('PSMART Z')
+                  ) {
+                    return String(
+                      element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
+                    )
+                  } else {
+                    return String(
+                      element.n + 'x ' + ' LCD ' + element.name + ' ' + element.col + '\n'
+                    )
+                  }
                 })}
               </Text>
               <TouchableHighlight
@@ -197,9 +211,23 @@ export default class DisplayList extends PureComponent {
               <Text style={styles.modalText}>
                 RESI {'\n\n'}
                 {[...global.resi_Lcd.values()].sort().map(function (element) {
-                  return String(
-                    element.n + 'x ' + element.name + ' ' + element.col + '\n'
-                  )
+                  if (
+                    element.name.includes('IPHONE X') ||
+                    element.name.includes('IPHONE 11') ||
+                    element.name.includes('P20 LITE') ||
+                    element.name.includes('P30 LITE') ||
+                    element.name.includes('MATE 20 LITE') ||
+                    element.name.includes('PSMART 2019') ||
+                    element.name.includes('PSMART Z')
+                  ) {
+                    return String(
+                      element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
+                    )
+                  } else {
+                    return String(
+                      element.n + 'x ' + ' LCD ' + element.name + ' ' + element.col + '\n'
+                    )
+                  }
                 })}
               </Text>
               <TouchableHighlight
