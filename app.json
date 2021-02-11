@@ -5,7 +5,7 @@
     "name": "OrderApp",
     "slug": "SOS",
     "icon": "./img/icon.png",
-    "version": "1.1.9",
+    "version": "1.2.0",
     "splash": {
       "image": "./img/splashp.png",
       "resizeMode": "contain",

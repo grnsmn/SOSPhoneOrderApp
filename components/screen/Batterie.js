@@ -5,7 +5,8 @@ import {
   SectionList,
   Text,
   Modal,
-  TouchableHighlight
+  TouchableHighlight,
+  Share
 } from 'react-native'
 import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -27,7 +28,8 @@ const list = [
   { id: 'PNB', nome: 'IPHONE 7 PLUS', nMax: 2 },
   { id: 'IK8', nome: 'IPHONE 8 PLUS', nMax: 2 },
   { id: 'XVW', nome: 'IPHONE X', nMax: 2 },
-  { id: 'XVR', nome: 'IPHONE XR', nMax: 2 }
+  { id: 'XVR', nome: 'IPHONE XR', nMax: 2 },
+  { id: 'XQ4', nome: 'IPHONE XS MAX', nMax: 2 }
 ]
 const sectionList = [
   {
@@ -53,17 +55,54 @@ export default class BattList extends PureComponent {
     <Item NameItem={item.nome} nMax={item.nMax} id={item.id} />
   )
 
+  
+  onShareBatt = async () => {
+    try {
+      const data = new Date()
+      const tomorrow = new Date(data)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      if(tomorrow.getDay()==6) {
+        tomorrow.setDate(tomorrow.getDate() + 2)
+      }
+      const result = await Share.share({
+        message:
+        'Ordine del ' + 
+        tomorrow.getDate() +
+        '/' + 
+        parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
+        '/' +
+        tomorrow.getFullYear() +
+        '\n\n' +
+        global.listBatt +
+        '\nResi:\n' +
+        global.listResiBatt 
+        
+      })
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message)
+    }
+  }
   stampList () {
     global.listBatt = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
     global.store_Batt.forEach(element => {
-      global.listBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
+      global.listBatt += element.n + 'x ' + 'BATT ' + element.name + '\n'
     })
     global.listResiBatt = ''
     global.resi_Batt_IP.forEach(element => {
-      global.listResiBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
+      global.listResiBatt += element.n + 'x ' + 'BATT ' + element.name + '\n'
     })
-    alert('Ordine Inserito!')
+    this.onShareBatt()
   }
+  
   clearListBatt () {
     //Azzera lista ordine
     global.store_Batt.clear()
@@ -170,17 +209,24 @@ export default class BattList extends PureComponent {
             color={'lightgreen'}
             onPress={() => this.setModalVisibleResi(true)}
           />
-          <Appbar.Action
+          {/* <Appbar.Action
             style={{ flex: 1 }}
             icon='printer-wireless'
             onPress={() =>  this.stampList()}
-          />
+          /> */}
           <Appbar.Action
             style={{ flex: 1 }}
             icon='delete'
             color={'red'}
             onPress={() => {
               this.clearListBatt()
+            }}
+          />
+          <Appbar.Action
+            style={{ flex: 1 }}
+            icon='send'
+            onPress={() => {
+              this.stampList()
             }}
           />
         </Appbar>

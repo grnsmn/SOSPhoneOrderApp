@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react'
 import {
   View,
   StyleSheet,
+  FlatList,
   SectionList,
   Modal,
   Text,
@@ -11,6 +12,7 @@ import {
 import { Button } from 'react-native-elements'
 import ItemLCD from '../ItemLCD'
 import { Appbar } from 'react-native-paper'
+import DisplayList from './Display'
 
 global.list_Display_Huawei = ''
 global.list_Resi_Display_Huawei = ''
@@ -20,8 +22,7 @@ const list = [
   { id: 'hZ4', nome: 'HUAWEI P8 LITE 2017', nMax: 1 },
   { id: 'wqq', nome: 'HUAWEI P9', nMax: 1 },
   { id: 'iz8', nome: 'HUAWEI P9 LITE', nMax: 1 },
-  { id: '2o4', nome: 'HUAWEI P10', nMax: 2 },
-  { id: 'EL7', nome: 'HUAWEI P20', nMax: 2 },
+  { id: '2o4', nome: 'HUAWEI P10', nMax: 1 },
   { id: 'zo3', nome: 'HUAWEI P10 LITE', nMax: 1 },
   { id: 'w37', nome: 'HUAWEI P20 LITE', nMax: 2 },
   { id: 'w3H', nome: 'HUAWEI P30 LITE', nMax: 1 },
@@ -41,7 +42,7 @@ const sectionList = [
   //   data: list
   // }
 ]
-export default class DisplayListHW extends PureComponent {
+export default class DisplayListHW extends DisplayList {
   state = { modalVisible: false, modalVisibleResi: false }
 
   setModalVisible = visible => {
@@ -54,42 +55,41 @@ export default class DisplayListHW extends PureComponent {
   renderRow = ({ item }) => (
     <ItemLCD NameItem={item.nome} nMax={item.nMax} id={item.id}/>
   )
-  stampList () {
-    global.list_Display_Huawei = ''
-    global.store_Lcd.forEach(element => {
-      if (
-        element.name.includes('P20 LITE') ||
-        element.name.includes('P30 LITE') ||
-        element.name.includes('MATE 20 LITE') ||
-        element.name.includes('PSMART 2019') ||
-        element.name.includes('PSMART Z')
-        ) {
-          global.list_Display_Huawei +=
-          element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
-        } else {
-          global.list_Display_Huawei +=
-          element.n + 'x ' + ' LCD ' + element.name + ' ' + element.col + '\n'
-        }
-      })
-      global.list_Resi_Display_Huawei = ''
-      global.resi_Lcd.forEach(element => {
-        if (
-          element.name.includes('P20 LITE') ||
-          element.name.includes('P30 LITE')||
-          element.name.includes('MATE 20 LITE') ||
-        element.name.includes('PSMART 2019') ||
-        element.name.includes('PSMART Z')
-      ) {
-        global.list_Resi_Display_Huawei +=
-          element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
-      } else {
-        global.list_Resi_Display_Huawei +=
-          element.n + 'x ' + ' LCD ' + element.name + ' ' + element.col + '\n'
-      }
-    })
-
-    alert('Ordine Inserito!')
-  }
+  // stampList () {
+  //   global.list_Display_Huawei = ''
+  //   global.store_Lcd.forEach(element => {
+  //     if (
+  //       element.name.includes('P20 LITE') ||
+  //       element.name.includes('P30 LITE') ||
+  //       element.name.includes('MATE 20 LITE') ||
+  //       element.name.includes('PSMART 2019') ||
+  //       element.name.includes('PSMART Z')
+  //       ) {
+  //         global.list_Display_Huawei +=
+  //         element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
+  //       } else {
+  //         global.list_Display_Huawei +=
+  //         element.n + 'x ' + ' LCD ' + element.name + ' ' + element.col + '\n'
+  //       }
+  //     })
+  //     global.list_Resi_Display_Huawei = ''
+  //     global.resi_Lcd.forEach(element => {
+  //       if (
+  //         element.name.includes('P20 LITE') ||
+  //         element.name.includes('P30 LITE')||
+  //         element.name.includes('MATE 20 LITE') ||
+  //       element.name.includes('PSMART 2019') ||
+  //       element.name.includes('PSMART Z')
+  //     ) {
+  //       global.list_Resi_Display_Huawei +=
+  //         element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
+  //     } else {
+  //       global.list_Resi_Display_Huawei +=
+  //         element.n + 'x ' + ' LCD ' + element.name + ' ' + element.col + '\n'
+  //     }
+  //   })
+  //   this.onShareDisplay()
+  // }
   clearListDisplay () {
     global.store_Lcd.clear()
     global.list_Display_Huawei = ''
@@ -194,16 +194,16 @@ export default class DisplayListHW extends PureComponent {
         />
         <Appbar.Action
           style={{ flex: 1 }}
-          icon='printer-wireless'
-          onPress={() => this.stampList()}
-        />
-        <Appbar.Action
-          style={{ flex: 1 }}
           icon='delete'
           color={'red'}
           onPress={() => {
             this.clearListDisplay()
           }}
+        />
+        <Appbar.Action
+          style={{ flex: 1 }}
+          icon='send'
+          onPress={() => this.stampList()}
         />
       </Appbar>
       

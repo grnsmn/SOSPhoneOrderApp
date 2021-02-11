@@ -21,37 +21,35 @@ const list = [
   { id: 'x1L', nome: 'HUAWEI MATE 20 LITE', nMax: 1 },
   { id: 'xqg', nome: 'HUAWEI P20 PRO', nMax: 1 },
   { id: 'z9y', nome: 'HUAWEI P20', nMax: 1 },
-  { id: 'x76', nome: 'HUAWEI MATE S', nMax: 1 }
+  { id: 'x76', nome: 'HUAWEI MATE S', nMax: 1 },
+  { id: 'T72', nome: 'HUAWEI MATE 10', nMax: 1 },
+
 ]
 const sectionList = [
   {
     title: 'To Order',
     data: list
   }
-  // {
-  //   title: 'Resi',
-  //   data: list
-  // }
 ]
 export default class BattListHW extends BattList {
   state = { modalVisible: false, modalVisibleResi: false}
 
-  stampList () {
-    global.list_Batt_Huawei = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
-    global.store_Batt.forEach(element => {
-      global.list_Batt_Huawei +=
-        element.n + 'x ' + ' BATT ' + element.name + '\n'
-    })
-    global.listResiBatt = ''
-    global.resi_Batt_IP.forEach(element => {
-      global.listResiBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
-    })
-    alert('Ordine Inserito!')
-  }
+  // stampList () {
+  //   global.list_Batt_Huawei = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
+  //   global.store_Batt.forEach(element => {
+  //     global.list_Batt_Huawei +=
+  //       element.n + 'x ' + ' BATT ' + element.name + '\n'
+  //   })
+  //   global.listResiBatt = ''
+  //   global.resi_Batt_IP.forEach(element => {
+  //     global.listResiBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
+  //   })
+  //   this.onShareBatt()
+  // }
   clearListBatt () {
     //Azzera lista ordine
     global.store_Batt.clear()
-    global.list_Batt_Huawei = ''
+    global.listBatt = ''
     //Azzera lista resi
     global.resi_Batt_IP.clear()
     global.listResiBatt = ''
@@ -150,16 +148,16 @@ export default class BattListHW extends BattList {
           />
           <Appbar.Action
             style={{ flex: 1 }}
-            icon='printer-wireless'
-            onPress={() => this.stampList()}
-          />
-          <Appbar.Action
-            style={{ flex: 1 }}
             icon='delete'
             color={'red'}
             onPress={() => {
               this.clearListBatt()
             }}
+          />
+          <Appbar.Action
+            style={{ flex: 1 }}
+            icon='send'
+            onPress={() => this.stampList()}
           />
         </Appbar>
       </View>

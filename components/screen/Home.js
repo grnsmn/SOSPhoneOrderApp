@@ -127,6 +127,11 @@ export default class Home extends Component {
               icon={<Icon name='smartphone' size={28} color='white' />}
             ></Button>
           </View>
+            {/* <Button
+              title=' Other'
+              onPress={() => this.props.navigation.navigate('Other')}
+              icon={<Icon name='more' size={28} color='white' />}
+            ></Button>  */}
           <View
             style={{
               justifyContent: 'space-around',
@@ -158,11 +163,6 @@ export default class Home extends Component {
               onPress={() => this.props.navigation.navigate('Display Huawei')}
               icon={<Icon name='smartphone' size={28} color='white' />}
             ></Button>
-            {/* <Button
-              title=' Other'
-              onPress={() => this.props.navigation.navigate('Other')}
-              icon={<Icon name='more' size={28} color='white' />}
-            ></Button>  */}
           </View>
           {/* <View
             style={{

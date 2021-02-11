@@ -1,16 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react'
+import { StyleSheet, Image, View, Text } from 'react-native'
 import HomeScreen from './components/screen/Home'
 import BattList from './components/screen/Batterie'
 import BattListHW from './components/screen/BatterieHW'
-import BattListSM from './components/screen/BatterieSM';
 import DisplayList from './components/screen/Display'
 import DisplayListHW from './components/screen/DisplayHW'
-import DisplayListSM from './components/screen/DisplaySM'
-//import Other from './components/screen/Other'
+import Other from './components/screen/Other'
+import 'react-native-gesture-handler'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+
 const Stack = createStackNavigator()
 
 function LogoTitle () {
@@ -70,19 +69,6 @@ export default function App () {
           }}
         />
         <Stack.Screen
-          name='Batterie Samsung'
-          component={BattListSM}
-          options={{
-            headerStyle: {
-              backgroundColor: '#252850'
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            }
-          }}
-        />
-        <Stack.Screen
           name='Display'
           component={DisplayList}
           options={{
@@ -108,20 +94,7 @@ export default function App () {
             }
           }}
         />
-        <Stack.Screen
-          name='Display Samsung'
-          component={DisplayListSM}
-          options={{
-            headerStyle: {
-              backgroundColor: '#252850'
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold'
-            }
-          }}
-        />
-        {/* <Stack.Screen
+         <Stack.Screen
           name='Other'
           component={Other}
           options={{
@@ -133,7 +106,7 @@ export default function App () {
               fontWeight: 'bold'
             }
           }}
-        />  */}
+        /> 
       </Stack.Navigator>
     </NavigationContainer>
   )
