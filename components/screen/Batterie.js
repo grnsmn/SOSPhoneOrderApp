@@ -24,7 +24,7 @@ const list = [
   { id: '34K', nome: 'IPHONE 6S', nMax: 4 },
   { id: '5Q6', nome: 'IPHONE 7', nMax: 4 },
   { id: 'NQH', nome: 'IPHONE 8', nMax: 2 },
-  { id: 'H9K', nome: 'IPHONE 6/6S PLUS', nMax: 2 },
+  { id: 'H9K', nome: 'IPHONE [6/6S] PLUS', nMax: 2 },
   { id: 'PNB', nome: 'IPHONE 7 PLUS', nMax: 2 },
   { id: 'IK8', nome: 'IPHONE 8 PLUS', nMax: 2 },
   { id: 'XVW', nome: 'IPHONE X', nMax: 2 },
@@ -61,8 +61,8 @@ export default class BattList extends PureComponent {
       const data = new Date()
       const tomorrow = new Date(data)
       tomorrow.setDate(tomorrow.getDate() + 1)
-      if(tomorrow.getDay()==6) {
-        tomorrow.setDate(tomorrow.getDate() + 2)
+      if(tomorrow.getDay()==0) {
+        tomorrow.setDate(tomorrow.getDate() + 1)
       }
       const result = await Share.share({
         message:

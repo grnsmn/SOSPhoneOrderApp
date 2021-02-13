@@ -10,8 +10,8 @@ class ShareExample extends Component {
       const data = new Date()
       const tomorrow = new Date(data)
       tomorrow.setDate(tomorrow.getDate() + 1)
-      if(tomorrow.getDay()==6) {
-        tomorrow.setDate(tomorrow.getDate() + 2)
+      if(tomorrow.getDay()==0) {
+        tomorrow.setDate(tomorrow.getDate() + 1)
       }
 
       const result = await Share.share({
