@@ -74,6 +74,12 @@ export default class Home extends Component {
             icon='delete-forever'
             onPress={() => this._reset()}
           />
+          <FAB
+            style={styles.fab2}
+            animated
+            icon='toolbox'
+            onPress={() => this.props.navigation.navigate('Accessori')}
+          />
           <Modal
             animationType='slide'
             transparent={true}
@@ -359,5 +365,12 @@ const styles = StyleSheet.create({
     right: 150,
     bottom: -10,
     backgroundColor: 'darkred'
+  },
+  fab2: {
+    position: 'absolute',
+    margin: 20,
+    right: 143,
+    bottom: 150,
+    backgroundColor: '#007AFF'
   }
 })

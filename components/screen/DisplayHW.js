@@ -26,6 +26,7 @@ const list = [
   { id: 'zo3', nome: 'HUAWEI P10 LITE', nMax: 1 },
   { id: 'w37', nome: 'HUAWEI P20 LITE', nMax: 2 },
   { id: 'w3H', nome: 'HUAWEI P30 LITE', nMax: 1 },
+  { id: 'V7v', nome: 'HUAWEI P40 LITE', nMax: 1 },
   { id: 'xhm', nome: 'HUAWEI MATE 10 LITE', nMax: 2 },
   { id: 'hhs', nome: 'HUAWEI MATE 20 LITE', nMax: 2 },
   { id: 'tn4', nome: 'HUAWEI PSMART', nMax: 2 },

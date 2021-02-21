@@ -9,6 +9,7 @@ import Other from './components/screen/Other'
 import 'react-native-gesture-handler'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import Accessori from './components/screen/Accessori'
 
 const Stack = createStackNavigator()
 
@@ -97,6 +98,19 @@ export default function App () {
          <Stack.Screen
           name='Other'
           component={Other}
+          options={{
+            headerStyle: {
+              backgroundColor: '#252850'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold'
+            }
+          }}
+        /> 
+         <Stack.Screen
+          name='Accessori'
+          component={Accessori}
           options={{
             headerStyle: {
               backgroundColor: '#252850'

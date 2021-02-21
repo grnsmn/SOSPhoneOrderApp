@@ -98,6 +98,7 @@ export default class DisplayList extends PureComponent {
         element.name.includes('IPHONE 11') ||
         element.name.includes('P20 LITE') ||
         element.name.includes('P30 LITE') ||
+        element.name.includes('P40 LITE') ||
         element.name.includes('MATE 20 LITE') ||
         element.name.includes('PSMART 2019') ||
         element.name.includes('PSMART Z')
@@ -116,6 +117,7 @@ export default class DisplayList extends PureComponent {
         element.name.includes('IPHONE 11') ||
         element.name.includes('P20 LITE') ||
         element.name.includes('P30 LITE') ||
+        element.name.includes('P40 LITE') ||
         element.name.includes('MATE 20 LITE') ||
         element.name.includes('PSMART 2019') ||
         element.name.includes('PSMART Z')
@@ -173,6 +175,7 @@ export default class DisplayList extends PureComponent {
                     element.name.includes('IPHONE 11') ||
                     element.name.includes('P20 LITE') ||
                     element.name.includes('P30 LITE') ||
+                    element.name.includes('P40 LITE') ||
                     element.name.includes('MATE 20 LITE') ||
                     element.name.includes('PSMART 2019') ||
                     element.name.includes('PSMART Z')
@@ -216,6 +219,7 @@ export default class DisplayList extends PureComponent {
                     element.name.includes('IPHONE 11') ||
                     element.name.includes('P20 LITE') ||
                     element.name.includes('P30 LITE') ||
+                    element.name.includes('P40 LITE') ||
                     element.name.includes('MATE 20 LITE') ||
                     element.name.includes('PSMART 2019') ||
                     element.name.includes('PSMART Z')

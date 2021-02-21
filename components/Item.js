@@ -1,6 +1,6 @@
-import React, { Component, PureComponent } from 'react'
+import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet, Modal, TouchableHighlight } from 'react-native'
-import { Input, CheckBox } from 'react-native-elements'
+import { Input } from 'react-native-elements'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -13,7 +13,6 @@ export default class Item extends PureComponent {
     contatore: 0,
     NumResi: 0,
     modalVisible: false,
-    checkedFab: false
   }
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
@@ -134,15 +133,6 @@ export default class Item extends PureComponent {
               errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
               errorMessage={'max ' + this.props.nMax}
             />
-          {/* <CheckBox
-            containerStyle= {{backgroundColor:'gold', height:40, width:50}}
-            center
-            title='F'
-            checkedIcon='dot-circle-o'
-            uncheckedIcon='circle-o'
-            checked={this.state.checkedFab}
-            onPress = {() => this.setState({checkedFab: !this.state.checkedFab})}
-          /> */}
           </View>
           <View
             style={{ flex: 0.3, borderLeftWidth: 0.5, borderColor: 'gold' }}

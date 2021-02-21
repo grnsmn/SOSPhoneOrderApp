@@ -140,6 +140,7 @@ export default class ItemLCD extends PureComponent {
       this.state.nomeItem.includes('MATE 20 LITE')||
       this.state.nomeItem.includes('P20 LITE')||
       this.state.nomeItem.includes('P30 LITE')||
+      this.state.nomeItem.includes('P40 LITE')||
       this.state.nomeItem.includes('PSMART Z')||
       this.state.nomeItem.includes('PSMART 2019')
     ) {

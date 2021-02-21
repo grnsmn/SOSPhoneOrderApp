@@ -1,20 +1,18 @@
 import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet, Modal, TouchableHighlight } from 'react-native'
-import { Input, CheckBox} from 'react-native-elements'
+import { Input } from 'react-native-elements'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-global.store_Other = new Map() 
+global.store_accessori = new Map() 
 global.resi_Other = new Map() //Per immagazzinamento lista resi
-export default class ItemOther extends PureComponent {
+export default class ItemAccessori extends PureComponent {
   state = {
     id: '',
     nomeItem: '',
     nomeSection: '',
     contatore: 0,
-    NumResi: 0,
     modalVisible: false,
-    checkedFab: false
   }
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
@@ -36,10 +34,10 @@ export default class ItemOther extends PureComponent {
             return value
           })
           this.setState({ contatore: tmp.contatore, NumResi: tmp.NumResi })
-          if (this.state.contatore == 0) global.store_Other.delete(this.state.id)
+          if (this.state.contatore == 0) global.store_accessori.delete(this.state.id)
           if (this.state.contatore != 0) {
-            // console.log([...global.store_Other.get(this.state.id)])
-            global.store_Other.set(this.state.id, {
+            // console.log([...global.store_accessori.get(this.state.id)])
+            global.store_accessori.set(this.state.id, {
               name: this.state.nomeItem,
               n: this.state.contatore
             })
@@ -59,9 +57,9 @@ export default class ItemOther extends PureComponent {
   }
   componentDidUpdate () {
     AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
-    if (this.state.contatore == 0) global.store_Other.delete(this.state.id)
+    if (this.state.contatore == 0) global.store_accessori.delete(this.state.id)
     if (this.state.contatore != 0) {
-      global.store_Other.set(this.state.id, {
+      global.store_accessori.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.contatore
       })
@@ -122,7 +120,7 @@ export default class ItemOther extends PureComponent {
               style={{ borderWidth: 1, color: 'white' }}
               renderErrorMessage={false}
               labelStyle={{ color: 'gold', textAlign: 'center', fontSize: 11 }}
-              label={'To Order'}
+              label={'Ultimi'}
               placeholder={this.state.contatore.toString()}
               placeholderTextColor={'gold'}
               keyboardType='number-pad'
@@ -136,40 +134,7 @@ export default class ItemOther extends PureComponent {
               errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
               errorMessage={'max ' + this.props.nMax}
             />
-          {/* <CheckBox
-            containerStyle= {{backgroundColor:'gold', height:40, width:50}}
-            center
-            title='F'
-            checkedIcon='dot-circle-o'
-            uncheckedIcon='circle-o'
-            checked={this.state.checkedFab}
-            onPress = {() => this.setState({checkedFab: !this.state.checkedFab})}
-          /> */}
           </View>
-          {/* <View
-            style={{ flex: 0.3, borderLeftWidth: 0.5, borderColor: 'gold' }}
-          >
-            <Input
-              label={'Reso'}
-              style={{ borderWidth: 1, color: 'white' }}
-              renderErrorMessage={false}
-              labelStyle={{
-                color: 'lightgreen',
-                textAlign: 'center',
-                fontSize: 10
-              }}
-              placeholder={String(this.state.NumResi)}
-              placeholderTextColor={'lightgreen'}
-              keyboardType='number-pad'
-              maxLength={1}
-              onChangeText={value => {
-                if (value != '') {
-                  this.setState({ NumResi: parseInt(value) })
-                }
-              }}
-              onSubmitEditing={() => this.inStore()}
-            />
-          </View> */}
         </View>
       </View>
     )
