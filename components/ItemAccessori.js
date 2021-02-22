@@ -5,7 +5,7 @@ import { Input } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 global.store_accessori = new Map() 
-global.resi_Other = new Map() //Per immagazzinamento lista resi
+
 export default class ItemAccessori extends PureComponent {
   state = {
     id: '',

@@ -5,7 +5,8 @@ import {
   SectionList,
   Text,
   Modal,
-  TouchableHighlight
+  TouchableHighlight,
+  Share
 } from 'react-native'
 import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -29,18 +30,23 @@ const list_banco_vendita = [
   { id: 'qè3', nome: 'PENDRIVE 16GB', nMax: 2 },
   { id: 'qè4', nome: 'PENDRIVE 32GB', nMax: 2 },
   { id: 'qè5', nome: 'PENDRIVE 64GB', nMax: 2 },
+  { id: 'qò5', nome: 'AURICOLARI LIGHTNING (IPHONE)', nMax: 2 },
+  { id: 'qò1', nome: 'AURICOLARI JACK 3.5', nMax: 2 },
+  { id: 'qò2', nome: 'AURICOLARI BLUETOOTH', nMax: 2 },
+  { id: 'qò3', nome: 'AIRPODS COMPATIBILI', nMax: 2 },
 ]
 
 const list_magazzino = [
     { id: 'za8', nome: 'PELLICOLE ZAGG SMALL', nMax: 5 },
     { id: 'zaG', nome: 'PELLICOLE ZAGG LARGE', nMax: 2 },
     { id: 'zaS', nome: 'SPRAY ZAGG', nMax: 2 },
-    { id: 'VT1', nome: 'V.TEMP IP 7', nMax: 5 },
-    { id: 'VT2', nome: 'V.TEMP IP 7 PLUS', nMax: 5 },
-    { id: 'VT3', nome: 'V.TEMP IP X', nMax: 5 },
-    { id: 'VT4', nome: 'V.TEMP IP XR/11', nMax: 5 },
+    { id: 'VT1', nome: 'V.TEMP IPHONE 7', nMax: 5 },
+    { id: 'VT2', nome: 'V.TEMP IPHONE 7P', nMax: 5 },
+    { id: 'VT3', nome: 'V.TEMP IPHONE X', nMax: 5 },
+    { id: 'VT4', nome: 'V.TEMP IPHONE XR/11', nMax: 5 },
     { id: 'BL1', nome: 'ARIA COMPRESSA', nMax: 5 },
     { id: 'BL2', nome: 'ALCOOL ISOPROPILICO', nMax: 5 },
+    { id: 'BL3', nome: 'COLLA B-7000 110ml', nMax: 1 },
   ]
 
   const sectionList = [
@@ -49,7 +55,7 @@ const list_magazzino = [
       data: list_magazzino
     },
     {
-      title: 'Banco Vendita',
+      title: 'Accessori e utilità ',
       data: list_banco_vendita
     },
     // {
@@ -57,14 +63,78 @@ const list_magazzino = [
     //   data: T_HomeList
     // }
   ]
-
+  global.list_accessori = ''
   export default class Accessori extends PureComponent {
     state = { modalVisible: false, modalVisibleResi: false }
   
     setModalVisible = visible => {
       this.setState({ modalVisible: visible })
     }
-  
+    onShareAccessori = async () => {
+      try {
+        const data = new Date()
+        const tomorrow = new Date(data)
+        tomorrow.setDate(tomorrow.getDate() + 1)
+        if(tomorrow.getDay()==0) {
+          tomorrow.setDate(tomorrow.getDate() + 1)
+        }
+        const result = await Share.share({
+          message:
+          'Ordine del ' + 
+          tomorrow.getDate() +
+          '/' + 
+          parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
+          '/' +
+          tomorrow.getFullYear() +
+          '\n\n' +
+          global.list_accessori
+          
+        })
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            // shared with activity type of result.activityType
+          } else {
+            // shared
+          }
+        } else if (result.action === Share.dismissedAction) {
+          // dismissed
+        }
+      } catch (error) {
+        alert(error.message)
+      }
+    }
+    stampList () {
+      global.list_accessori = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
+      global.store_accessori.forEach(element => {
+        global.list_accessori += element.name + ' ('+element.n + ') '+ '\n'
+      })
+      this.onShareAccessori()
+    }
+    
+    clearListAccessori () {
+      //Azzera lista ordine
+      global.store_accessori.clear()
+      global.list_accessori = ''
+      list_banco_vendita.forEach(element => {
+        //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
+        const item = {
+          id: element.id,
+          nomeItem: element.nome,
+          contatore: 0
+        }
+        AsyncStorage.mergeItem(element.id, JSON.stringify(item))
+      })
+      list_magazzino.forEach(element => {
+        //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
+        const item = {
+          id: element.id,
+          nomeItem: element.nome,
+          contatore: 0
+        }
+        AsyncStorage.mergeItem(element.id, JSON.stringify(item))
+      })
+      alert('Lista Svuotata')
+    }
     setModalVisibleResi = visible => {
       this.setState({ modalVisibleResi: visible })
     }
@@ -74,6 +144,37 @@ const list_magazzino = [
     render () {
       return (
         <View style={styles.container}>
+        <Modal
+          animationType='slide'
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.')
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>
+              IN ORDINE {"\n\n"}
+                {
+                  [...global.store_accessori.values()]
+                    .sort()
+                    .map(function (element) {
+                      return String( element.name + ' ('+element.n + ') '+ '\n')
+                    })
+                    }
+              </Text>
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible)
+                }}
+              >
+                <Text style={styles.textStyle}>Chiudi</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
           <SectionList
             sections={sectionList}
             renderItem={this.renderRow}
@@ -86,26 +187,18 @@ const list_magazzino = [
               style={{ flex: 1 }}
               icon='format-list-bulleted'
               color={'gold'}
-              // onPress={() => this.setModalVisible(true)}
-            />
-            <Appbar.Action
-              style={{ flex: 1 }}
-              icon='recycle'
-              color={'lightgreen'}
-              // onPress={() => this.setModalVisibleResi(true)}
+              onPress={() => this.setModalVisible(true)}
             />
             <Appbar.Action
               style={{ flex: 1 }}
               icon='printer-wireless'
-              // onPress={() =>  this.stampList()}
+              onPress={() =>  this.stampList()}
             />
             <Appbar.Action
               style={{ flex: 1 }}
               icon='delete'
               color={'red'}
-              // onPress={() => {
-              //   this.clearListBatt()
-              // }}
+              onPress={() => this.clearListAccessori() }
             />
           </Appbar>
         </View>
