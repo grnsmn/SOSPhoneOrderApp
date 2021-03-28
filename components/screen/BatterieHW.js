@@ -7,6 +7,7 @@ import {
   Modal,
   TouchableHighlight
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Appbar } from 'react-native-paper'
@@ -18,11 +19,12 @@ const list = [
   { id: 'cvG', nome: 'HUAWEI P8', nMax: 1 },
   { id: 'po5', nome: 'HUAWEI P8 LITE', nMax: 1 },
   { id: 'cfV', nome: 'HUAWEI P9', nMax: 5 },
-  { id: 'x1L', nome: 'HUAWEI MATE 20 LITE', nMax: 1 },
   { id: 'xqg', nome: 'HUAWEI P20 PRO', nMax: 1 },
   { id: 'z9y', nome: 'HUAWEI P20', nMax: 1 },
-  { id: 'x76', nome: 'HUAWEI MATE S', nMax: 1 },
   { id: 'T72', nome: 'HUAWEI MATE 10', nMax: 1 },
+  { id: 'F79', nome: 'HUAWEI MATE 10 LITE', nMax: 1 },
+  { id: 'x1L', nome: 'HUAWEI MATE 20 LITE', nMax: 1 },
+  { id: 'x76', nome: 'HUAWEI MATE S', nMax: 1 },
 
 ]
 const sectionList = [

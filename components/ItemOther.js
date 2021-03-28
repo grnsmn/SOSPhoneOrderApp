@@ -12,9 +12,7 @@ export default class ItemOther extends PureComponent {
     nomeItem: '',
     nomeSection: '',
     contatore: 0,
-    NumResi: 0,
     modalVisible: false,
-    checkedFab: false
   }
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
@@ -22,10 +20,11 @@ export default class ItemOther extends PureComponent {
   constructor (props) {
     super(props)
     this.state.nomeItem = this.props.NameItem
-    //this.state.nomeSection = this.props.NameSection
+    this.state.nomeSection = this.props.NameSection
     this.state.id = this.props.id
   }
   componentDidMount () {
+    // console.log('il nome della sezione è:' + this.state.nomeSection)
     AsyncStorage.getItem(this.state.id).then(result => {
       //console.log(JSON.parse(result).contatore)
       const parseElement = JSON.parse(result)
@@ -35,21 +34,15 @@ export default class ItemOther extends PureComponent {
             //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
             return value
           })
-          this.setState({ contatore: tmp.contatore, NumResi: tmp.NumResi })
+          console.log(tmp)
+          this.setState({ contatore: tmp.contatore })
           if (this.state.contatore == 0) global.store_Other.delete(this.state.id)
           if (this.state.contatore != 0) {
             // console.log([...global.store_Other.get(this.state.id)])
             global.store_Other.set(this.state.id, {
               name: this.state.nomeItem,
+              section: this.state.nomeSection,
               n: this.state.contatore
-            })
-          }
-
-          if (this.state.NumResi == 0) global.resi_Other.delete(this.state.id)
-          if (this.state.NumResi != 0) {
-            global.resi_Other.set(this.state.id, {
-              name: this.state.nomeItem,
-              n: this.state.NumResi
             })
           }
         }
@@ -60,17 +53,11 @@ export default class ItemOther extends PureComponent {
   componentDidUpdate () {
     AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
     if (this.state.contatore == 0) global.store_Other.delete(this.state.id)
-    if (this.state.contatore != 0) {
+    if (this.state.contatore != 0 && this.state.nomeSection) {
       global.store_Other.set(this.state.id, {
         name: this.state.nomeItem,
+        section: this.state.nomeSection,
         n: this.state.contatore
-      })
-    }
-    if (this.state.NumResi == 0) global.resi_Other.delete(this.state.id)
-    if (this.state.NumResi != 0) {
-      global.resi_Other.set(this.state.id, {
-        name: this.state.nomeItem,
-        n: this.state.NumResi
       })
     }
   }
@@ -116,7 +103,7 @@ export default class ItemOther extends PureComponent {
           }}
         >
           <View
-            style={{ flex: 0.4, borderLeftWidth: 0.5, borderColor: 'gold' }}
+            style={{ flex: 0.8, borderLeftWidth: 0.5, borderColor: 'gold' }}
           >
             <Input
               style={{ borderWidth: 1, color: 'white' }}
@@ -134,7 +121,7 @@ export default class ItemOther extends PureComponent {
               }}
               onSubmitEditing={() => this.inStore()}
               errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
-              errorMessage={'max ' + this.props.nMax}
+              //errorMessage={'max ' + this.props.nMax}
             />
           {/* <CheckBox
             containerStyle= {{backgroundColor:'gold', height:40, width:50}}

@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet, Modal, TouchableHighlight } from 'react-native'
 import { Input } from 'react-native-elements'
-
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 global.store_accessori = new Map() 
@@ -20,7 +19,6 @@ export default class ItemAccessori extends PureComponent {
   constructor (props) {
     super(props)
     this.state.nomeItem = this.props.NameItem
-    //this.state.nomeSection = this.props.NameSection
     this.state.id = this.props.id
   }
   componentDidMount () {
@@ -33,21 +31,12 @@ export default class ItemAccessori extends PureComponent {
             //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
             return value
           })
-          this.setState({ contatore: tmp.contatore, NumResi: tmp.NumResi })
+          this.setState({ contatore: tmp.contatore,})
           if (this.state.contatore == 0) global.store_accessori.delete(this.state.id)
           if (this.state.contatore != 0) {
-            // console.log([...global.store_accessori.get(this.state.id)])
             global.store_accessori.set(this.state.id, {
               name: this.state.nomeItem,
               n: this.state.contatore
-            })
-          }
-
-          if (this.state.NumResi == 0) global.resi_Other.delete(this.state.id)
-          if (this.state.NumResi != 0) {
-            global.resi_Other.set(this.state.id, {
-              name: this.state.nomeItem,
-              n: this.state.NumResi
             })
           }
         }
@@ -57,18 +46,11 @@ export default class ItemAccessori extends PureComponent {
   }
   componentDidUpdate () {
     AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
-    if (this.state.contatore == 0) global.store_accessori.delete(this.state.id)
+    if (this.state.contatore == 88 ) global.store_accessori.delete(this.state.id)
     if (this.state.contatore != 0) {
       global.store_accessori.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.contatore
-      })
-    }
-    if (this.state.NumResi == 0) global.resi_Other.delete(this.state.id)
-    if (this.state.NumResi != 0) {
-      global.resi_Other.set(this.state.id, {
-        name: this.state.nomeItem,
-        n: this.state.NumResi
       })
     }
   }
@@ -76,7 +58,6 @@ export default class ItemAccessori extends PureComponent {
   inStore () {
     //this.setModalVisible(!this.state.modalVisible)
     this.componentDidMount()
-    //console.log('elemento inserito')
   }
   render () {
     return (

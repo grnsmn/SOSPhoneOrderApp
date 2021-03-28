@@ -10,7 +10,7 @@ import 'react-native-gesture-handler'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import Accessori from './components/screen/Accessori'
-
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 const Stack = createStackNavigator()
 
 function LogoTitle () {

@@ -8,6 +8,7 @@ import {
   TouchableHighlight,
   Share
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Appbar } from 'react-native-paper'
@@ -54,8 +55,7 @@ export default class BattList extends PureComponent {
   renderRow = ({ item }) => (
     <Item NameItem={item.nome} nMax={item.nMax} id={item.id} />
   )
-
-  
+   
   onShareBatt = async () => {
     try {
       const data = new Date()
@@ -66,13 +66,13 @@ export default class BattList extends PureComponent {
       }
       const result = await Share.share({
         message:
-        'Ordine del ' + 
-        tomorrow.getDate() +
-        '/' + 
-        parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
-        '/' +
-        tomorrow.getFullYear() +
-        '\n\n' +
+        // 'Ordine del ' + 
+        // tomorrow.getDate() +
+        // '/' + 
+        // parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
+        // '/' +
+        // tomorrow.getFullYear() +
+        // '\n\n' +
         global.listBatt +
         '\nResi:\n' +
         global.listResiBatt 
@@ -101,8 +101,7 @@ export default class BattList extends PureComponent {
       global.listResiBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
     })
     this.onShareBatt()
-  }
-  
+  } 
   clearListBatt () {
     //Azzera lista ordine
     global.store_Batt.clear()

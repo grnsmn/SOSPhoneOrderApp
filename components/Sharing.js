@@ -16,13 +16,13 @@ class ShareExample extends Component {
 
       const result = await Share.share({
         message:
-        'Ordine del ' +
-        tomorrow.getDate() +
-        '/' + 
-        parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla tomorrow italiana
-        '/' +
-        tomorrow.getFullYear() +
-        '\n\n' +
+        // 'Ordine del ' +
+        // tomorrow.getDate() +
+        // '/' + 
+        // parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla tomorrow italiana
+        // '/' +
+        // tomorrow.getFullYear() +
+        '\n' +
         global.extra
       })
       if (result.action === Share.sharedAction) {

@@ -9,6 +9,7 @@ import {
   TouchableHighlight,
   Share
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import ItemLCD from '../ItemLCD'
 import { Appbar } from 'react-native-paper'
 
@@ -65,16 +66,14 @@ export default class DisplayList extends PureComponent {
 
       const result = await Share.share({
         message:
-          'Ordine del ' +
-          tomorrow.getDate() +
-          '/' +
-          parseInt(tomorrow.getMonth() + 1) + //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla tomorrow italiana
-          '/' +
-          tomorrow.getFullYear() +
-          '\n\n' +
-          global.listDisplay +
-          '\nResi:\n' +
-          global.listResiDisplay
+          // 'Ordine del ' +
+          // tomorrow.getDate() +
+          // '/' +
+          // parseInt(tomorrow.getMonth() + 1) + //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla tomorrow italiana
+          // '/' +
+          // tomorrow.getFullYear() +
+          // '\n\n' +
+          global.listDisplay + '\nResi:\n' + global.listResiDisplay
       })
       console.log(message)
       if (result.action === Share.sharedAction) {
@@ -93,21 +92,47 @@ export default class DisplayList extends PureComponent {
   stampList () {
     global.listDisplay = ''
     global.store_Lcd.forEach(element => {
-      if (
-        element.name.includes('IPHONE X') ||
-        element.name.includes('IPHONE 11') ||
-        element.name.includes('P20 LITE') ||
-        element.name.includes('P30 LITE') ||
-        element.name.includes('P40 LITE') ||
-        element.name.includes('MATE 20 LITE') ||
-        element.name.includes('PSMART 2019') ||
-        element.name.includes('PSMART Z')
-      ) {
-        global.listDisplay +=
-          element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
+      if (element.name.includes('HUAWEI')) {
+        if (
+          element.name.includes('P20 LITE') ||
+          element.name.includes('P30 LITE') ||
+          element.name.includes('P40 LITE') ||
+          element.name.includes('MATE 20 LITE') ||
+          element.name.includes('PSMART 2019') ||
+          element.name.includes('PSMART Z')
+        ) {
+          global.listDisplay +=
+            element.n +
+            'x ' +
+            ' LCD ' +
+            element.name +
+            ' ' +
+            element.frame +
+            '\n'
+        } else {
+          global.listDisplay +=
+            element.n +
+            'x ' +
+            ' LCD ' +
+            element.name +
+            ' ' +
+            element.col +
+            ' ' +
+            element.frame +
+            '\n'
+        }
       } else {
-        global.listDisplay +=
-          element.n + 'x ' + ' LCD ' + element.name + ' ' + element.col + '\n'
+        if (
+          element.name.includes('IPHONE X') ||
+          element.name.includes('IPHONE XR') ||
+          element.name.includes('IPHONE 11')
+        ) {
+          global.listDisplay +=
+            element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
+        } else {
+          global.listDisplay +=
+            element.n + 'x ' + ' LCD ' + element.name + ' ' + element.col + '\n'
+        }
       }
     })
     global.listResiDisplay = ''
@@ -164,29 +189,62 @@ export default class DisplayList extends PureComponent {
             Alert.alert('Modal has been closed.')
           }}
         >
-          <View style={styles.centeredView}>
+          <SafeAreaView style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
                 IN ORDINE {'\n\n'}
                 {//Funzione che permette la stampa pulita della lista in ordine
                 [...global.store_Lcd.values()].sort().map(function (element) {
-                  if (
-                    element.name.includes('IPHONE X') ||
-                    element.name.includes('IPHONE 11') ||
-                    element.name.includes('P20 LITE') ||
-                    element.name.includes('P30 LITE') ||
-                    element.name.includes('P40 LITE') ||
-                    element.name.includes('MATE 20 LITE') ||
-                    element.name.includes('PSMART 2019') ||
-                    element.name.includes('PSMART Z')
-                  ) {
-                    return String(
-                      element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
-                    )
+                  if (element.name.includes('IPHONE')) {
+                    if (
+                      element.name.includes('IPHONE X') ||
+                      element.name.includes('IPHONE XR') ||
+                      element.name.includes('IPHONE 11')
+                    ) {
+                      return String(
+                        element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
+                      )
+                    } else {
+                      return String(
+                        element.n +
+                          'x ' +
+                          ' LCD ' +
+                          element.name +
+                          ' ' +
+                          element.col +
+                          '\n'
+                      )
+                    }
                   } else {
-                    return String(
-                      element.n + 'x ' + ' LCD ' + element.name + ' ' + element.col + '\n'
-                    )
+                    if (
+                      element.name.includes('P20 LITE') ||
+                      element.name.includes('P30 LITE') ||
+                      element.name.includes('MATE 20 LITE') ||
+                      element.name.includes('PSMART 2019') ||
+                      element.name.includes('PSMART Z')
+                    ) {
+                      return String(
+                        element.n +
+                          'x ' +
+                          ' LCD ' +
+                          element.name +
+                          ' ' +
+                          element.frame +
+                          '\n'
+                      )
+                    } else {
+                      return String(
+                        element.n +
+                          'x ' +
+                          ' LCD ' +
+                          element.name +
+                          ' ' +
+                          element.col +
+                          ' ' +
+                          element.frame +
+                          '\n'
+                      )
+                    }
                   }
                 })}
               </Text>
@@ -199,7 +257,7 @@ export default class DisplayList extends PureComponent {
                 <Text style={styles.textStyle}>Chiudi</Text>
               </TouchableHighlight>
             </View>
-          </View>
+          </SafeAreaView>
         </Modal>
         <Modal
           animationType='slide'
@@ -229,7 +287,13 @@ export default class DisplayList extends PureComponent {
                     )
                   } else {
                     return String(
-                      element.n + 'x ' + ' LCD ' + element.name + ' ' + element.col + '\n'
+                      element.n +
+                        'x ' +
+                        ' LCD ' +
+                        element.name +
+                        ' ' +
+                        element.col +
+                        '\n'
                     )
                   }
                 })}

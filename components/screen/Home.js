@@ -5,7 +5,9 @@ import {
   StyleSheet,
   Image,
   Modal,
-  TouchableHighlight
+  TouchableHighlight,
+  Vibration,
+  StatusBar
 } from 'react-native'
 import { Button, Input } from 'react-native-elements'
 import { FAB } from 'react-native-paper'
@@ -50,6 +52,7 @@ export default class Home extends Component {
     global.listResiBatt = ''
     global.listResiDisplay = ''
     AsyncStorage.clear()
+    Vibration.vibrate()
     alert('Reset eseguito')
   }
   componentDidMount () {
@@ -66,6 +69,7 @@ export default class Home extends Component {
   render () {
     return (
       <View style={styles.container}>
+        <StatusBar animated={false}></StatusBar>
         <View style={styles.modelSection}>
           <FAB
             style={styles.fab}
@@ -132,12 +136,12 @@ export default class Home extends Component {
               onPress={() => this.props.navigation.navigate('Display')}
               icon={<Icon name='smartphone' size={28} color='white' />}
             ></Button>
-          </View>
             {/* <Button
               title=' Other'
               onPress={() => this.props.navigation.navigate('Other')}
               icon={<Icon name='more' size={28} color='white' />}
             ></Button>  */}
+          </View>
           <View
             style={{
               justifyContent: 'space-around',

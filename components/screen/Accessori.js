@@ -23,6 +23,7 @@ const list_banco_vendita = [
   { id: 'Aè1', nome: 'ALIM. 2.1A', nMax: 4 },
   { id: 'Aè2', nome: 'ALIM. USB 3A', nMax: 4 },
   { id: 'Aè3', nome: 'ALIM. TYPE-C 3A', nMax: 4 },
+  { id: 'pè3', nome: 'POWER-BANK', nMax: 4 },
   { id: 'Aè4', nome: 'ALIM. COMPUTER', nMax: 2 },
   { id: 'qèp', nome: 'SCHEDA SD 16GB', nMax: 2 },
   { id: 'qè1', nome: 'SCHEDA SD 32GB', nMax: 2 },
@@ -34,16 +35,24 @@ const list_banco_vendita = [
   { id: 'qò1', nome: 'AURICOLARI JACK 3.5', nMax: 2 },
   { id: 'qò2', nome: 'AURICOLARI BLUETOOTH', nMax: 2 },
   { id: 'qò3', nome: 'AIRPODS COMPATIBILI', nMax: 2 },
+  { id: 'b0à', nome: 'COVER TPU IPHONE [6/6S]', nMax: 5 },
+  { id: 'b1à', nome: 'COVER TPU IPHONE [7/8]', nMax: 5 },
+  { id: 'b2à', nome: 'COVER TPU IPHONE [X/XS]', nMax: 5 },
+  { id: 'b3à', nome: 'COVER TPU IPHONE XR', nMax: 5 },
+  { id: 'b4à', nome: 'COVER TPU IPHONE 11', nMax: 5 },
+  { id: 'b5à', nome: 'COVER TPU IPHONE 12', nMax: 5 },
+  { id: 'b6à', nome: 'COVER TPU IPHONE 6PLUS', nMax: 5 },
+  { id: 'b7à', nome: 'COVER TPU IPHONE 7PLUS', nMax: 5 },
 ]
 
 const list_magazzino = [
-    { id: 'za8', nome: 'PELLICOLE ZAGG SMALL', nMax: 5 },
+    { id: 'za8', nome: 'PELLICOLE ZAGG SMALL', nMax: 10 },
     { id: 'zaG', nome: 'PELLICOLE ZAGG LARGE', nMax: 2 },
     { id: 'zaS', nome: 'SPRAY ZAGG', nMax: 2 },
-    { id: 'VT1', nome: 'V.TEMP IPHONE 7', nMax: 5 },
-    { id: 'VT2', nome: 'V.TEMP IPHONE 7P', nMax: 5 },
-    { id: 'VT3', nome: 'V.TEMP IPHONE X', nMax: 5 },
-    { id: 'VT4', nome: 'V.TEMP IPHONE XR/11', nMax: 5 },
+    { id: 'VT1', nome: 'V.TEMP IPHONE 7', nMax: 10 },
+    { id: 'VT2', nome: 'V.TEMP IPHONE 7P', nMax: 10 },
+    { id: 'VT3', nome: 'V.TEMP IPHONE X', nMax: 10 },
+    { id: 'VT4', nome: 'V.TEMP IPHONE XR/11', nMax: 10 },
     { id: 'BL1', nome: 'ARIA COMPRESSA', nMax: 5 },
     { id: 'BL2', nome: 'ALCOOL ISOPROPILICO', nMax: 5 },
     { id: 'BL3', nome: 'COLLA B-7000 110ml', nMax: 1 },
@@ -80,13 +89,13 @@ const list_magazzino = [
         }
         const result = await Share.share({
           message:
-          'Ordine del ' + 
-          tomorrow.getDate() +
-          '/' + 
-          parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
-          '/' +
-          tomorrow.getFullYear() +
-          '\n\n' +
+          // 'Ordine del ' + 
+          // tomorrow.getDate() +
+          // '/' + 
+          // parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
+          // '/' +
+          // tomorrow.getFullYear() +
+          // '\n\n' +
           global.list_accessori
           
         })

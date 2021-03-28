@@ -4,10 +4,10 @@
   "expo": {
     "name": "OrderApp",
     "slug": "SOS",
-    "icon": "./img/icon.png",
-    "version": "1.2.0",
+    "icon": "./img/icon2.png",
+    "version": "1.2.2",
     "splash": {
-      "image": "./img/splashp.png",
+      "image": "./img/splashp2.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
@@ -17,7 +17,7 @@
     "android": {
       "package": "com.gscripts.SOS",
       "adaptiveIcon": {
-        "foregroundImage": "./img/icon.png"
+        "foregroundImage": "./img/icon2.png"
       }
     },
     "ios": {
