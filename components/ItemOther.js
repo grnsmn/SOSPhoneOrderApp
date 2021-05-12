@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet, Modal, TouchableHighlight } from 'react-native'
-import { Input, CheckBox} from 'react-native-elements'
+import { Input} from 'react-native-elements'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -21,7 +21,10 @@ export default class ItemOther extends PureComponent {
     super(props)
     this.state.nomeItem = this.props.NameItem
     this.state.nomeSection = this.props.NameSection
-    this.state.id = this.props.id
+    if(this.state.nomeSection == "Dock Ricarica"){ this.state.id = this.props.id + 'Dock' } 
+    else if(this.state.nomeSection == "Circuito Prossimità"){ this.state.id = this.props.id + 'CircProx' }
+    else if(this.state.nomeSection == "T. Home"){ this.state.id = this.props.id + 'Home' }
+    else if(this.state.nomeSection == "Backcover"){ this.state.id = this.props.id + 'BackCover' }
   }
   componentDidMount () {
     // console.log('il nome della sezione è:' + this.state.nomeSection)
@@ -34,7 +37,6 @@ export default class ItemOther extends PureComponent {
             //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
             return value
           })
-          console.log(tmp)
           this.setState({ contatore: tmp.contatore })
           if (this.state.contatore == 0) global.store_Other.delete(this.state.id)
           if (this.state.contatore != 0) {

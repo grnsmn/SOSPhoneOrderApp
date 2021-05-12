@@ -1,17 +1,16 @@
 import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 import { Button, Input } from 'react-native-elements'
-import Item from './Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-global.store_Lcd = new Map() //Array globale che conterrà nomi e quantità di LCD IPHONE da mettere in lista
-global.resi_Lcd = new Map() //Per immagazzinamento lista resi
+global.store_Other = new Map() //Array globale che conterrà nomi e quantità di LCD IPHONE da mettere in lista
 
-export default class ItemLCD extends PureComponent {
+export default class ItemOtherColor extends PureComponent {
   //OGNI ELEMENTO IN QUESTA CLASSE TIENE CONTO DI UN CONTEGGIO A COLORE DEL DISPLAY (BIANCO E NERO)
   state = {
     id: '',
     nomeItem: '',
+    nomeSection: '',
     colore: '',
     contatoreW: 0,
     contatoreBK: 0,
@@ -23,6 +22,8 @@ export default class ItemLCD extends PureComponent {
     super(props)
     this.state.nomeItem = this.props.NameItem
     this.state.id = this.props.id
+    if(this.state.nomeSection == "T. Home"){ this.state.id = this.props.id + 'Home' }
+    else if(this.state.nomeSection == "Backcover"){ this.state.id = this.props.id + 'BackCover' }
   }
   componentDidMount () {
     //console.log('Mount'+ this.state.nomeItem)
@@ -44,22 +45,24 @@ export default class ItemLCD extends PureComponent {
           })
           //Aggiornamento lista ordine
           if (this.state.contatoreW != 0) {
-            global.store_Lcd.set(id_W, {
+            global.store_Other.set(id_W, {
               name: this.state.nomeItem,
               col: 'BIANCO',
+              section: this.state.nomeSection,
               n: this.state.contatoreW
             })
           } else if (this.state.contatoreW == 0) {
-            global.store_Lcd.delete(id_W)
+            global.store_Other.delete(id_W)
           }
           if (tmp.contatoreBK != 0) {
-            global.store_Lcd.set(id_BK, {
+            global.store_Other.set(id_BK, {
               name: this.state.nomeItem,
               col: 'NERO',
+              section: this.state.nomeSection,
               n: this.state.contatoreBK
             })
           } else if (tmp.contatoreBK == 0) {
-            global.store_Lcd.delete(id_BK)
+            global.store_Other.delete(id_BK)
           }
 
           //Aggiornamento lista resi
@@ -92,20 +95,22 @@ export default class ItemLCD extends PureComponent {
     const id_BK = this.state.id + 'Bk'
     //console.log("attualmente inseriti:" +  this.state.resiW)
     //elimina gli elementi da map se il valore inserito è 0
-    if (this.state.contatoreW == 0) global.store_Lcd.delete(id_W)
-    if (this.state.contatoreBK == 0) global.store_Lcd.delete(id_BK)
+    if (this.state.contatoreW == 0) global.store_Other.delete(id_W)
+    if (this.state.contatoreBK == 0) global.store_Other.delete(id_BK)
     //aggiorna la quantità di elementi in contemporanea all'inserimento del valore desiderato
     if (this.state.contatoreW != 0) {
-      global.store_Lcd.set(id_W, {
+      global.store_Other.set(id_W, {
         name: this.state.nomeItem,
         col: 'BIANCO',
+        section: this.state.nomeSection,
         n: this.state.contatoreW
       })
     }
     if (this.state.contatoreBK != 0) {
-      global.store_Lcd.set(id_BK, {
+      global.store_Other.set(id_BK, {
         name: this.state.nomeItem,
         col: 'NERO',
+        section: this.state.nomeSection,
         n: this.state.contatoreBK
       })
     }
@@ -180,7 +185,7 @@ export default class ItemLCD extends PureComponent {
                 fontSize: 12,
                 backgroundColor: 'white'
               }}
-              disabled={this.oneColor()}
+              //disabled={this.oneColor()}
               //renderErrorMessage={false}
               placeholder={String(this.state.contatoreW)}
               placeholderTextColor={'gold'}

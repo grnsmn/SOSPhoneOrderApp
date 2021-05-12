@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ItemLCD from '../ItemLCD'
-import { Appbar } from 'react-native-paper'
+import { Appbar, Snackbar } from 'react-native-paper'
 
 global.listDisplay = ''
 global.listResiDisplay = ''
@@ -26,7 +26,7 @@ const list = [
   { id: 'G5G', nome: 'IPHONE 6S PLUS', nMax: 2 },
   { id: 'WYR', nome: 'IPHONE 7 PLUS', nMax: 2 },
   { id: 'M3P', nome: 'IPHONE 8 PLUS', nMax: 2 },
-  { id: '2TI', nome: 'IPHONE X', nMax: 4 },
+  { id: '2TI', nome: 'IPHONE X [ GX ]', nMax: 4 },
   { id: '5QM', nome: 'IPHONE XS MAX', nMax: 1 },
   { id: 'JQ7', nome: 'IPHONE XR', nMax: 2 },
   { id: '2A4', nome: 'IPHONE 11', nMax: 2 }
@@ -42,7 +42,7 @@ const sectionList = [
   // }
 ]
 export default class DisplayList extends PureComponent {
-  state = { modalVisible: false, modalVisibleResi: false }
+  state = { modalVisible: false, modalVisibleResi: false, clearList: false }
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
@@ -176,11 +176,17 @@ export default class DisplayList extends PureComponent {
       //AsyncStorage.multiRemove([element.id+'W', element.id+'Bk']).then(console.log("multirimozione eseguita"))
       AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
-    alert('Lista Svuotata')
+    this.setState({clearList: !this.state.clearList})
   }
   render () {
     return (
       <View style={styles.container}>
+      <Snackbar
+          visible={this.state.clearList}
+          onDismiss= {() => this.setState({clearList: false})}
+          duration={700}
+          style={{backgroundColor: '#252850', textAlign:'center'}}
+          > LISTA AZZERATA </Snackbar>
         <Modal
           animationType='slide'
           transparent={true}

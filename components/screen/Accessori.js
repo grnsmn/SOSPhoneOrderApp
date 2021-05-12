@@ -38,6 +38,7 @@ const list_banco_vendita = [
   { id: 'b0à', nome: 'COVER TPU IPHONE [6/6S]', nMax: 5 },
   { id: 'b1à', nome: 'COVER TPU IPHONE [7/8]', nMax: 5 },
   { id: 'b2à', nome: 'COVER TPU IPHONE [X/XS]', nMax: 5 },
+  { id: 'bùà', nome: 'COVER TPU IPHONE X TRASPARENTI', nMax: 5 },
   { id: 'b3à', nome: 'COVER TPU IPHONE XR', nMax: 5 },
   { id: 'b4à', nome: 'COVER TPU IPHONE 11', nMax: 5 },
   { id: 'b5à', nome: 'COVER TPU IPHONE 12', nMax: 5 },

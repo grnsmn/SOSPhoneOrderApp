@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet, Vibration } from 'react-native'
 import { Input } from 'react-native-elements'
 import { Checkbox } from 'react-native-paper'
-import Item from './Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
@@ -14,6 +13,7 @@ export default class ItemLCD extends PureComponent {
   state = {
     id: '',
     nomeItem: '',
+    section:'LCD',
     colore: '',
     contatoreW: 0,
     contatoreBK: 0,
@@ -162,7 +162,7 @@ export default class ItemLCD extends PureComponent {
         <View style={styles.TouchablesItem}>
           <TouchableOpacity
             style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }}
-            onLongPress={() => {
+            onPress={() => {
               if (this.state.noFrame == 'checked') {
                 Vibration.vibrate(3)
                 this.setState({ noFrame: 'indeterminate' })
@@ -174,25 +174,37 @@ export default class ItemLCD extends PureComponent {
           >
             <Text
               style={{
-                color: 'white',
+                color: '#F1F3F4',
                 marginLeft: 10,
                 fontSize: 16,
-                fontWeight: 'bold'
+                fontWeight: 'bold',
               }}
             >
               {this.props.NameItem}
             </Text>
           </TouchableOpacity>
         </View>
+              
         <View style={styles.container2}>
-          <Checkbox.Item
-            label='frame'
+            <Checkbox.Item
+            label= {this.state.noFrame == 'checked' ? '+ FRAME' : 'NO FRAME'}
+            color= 'gold'
             labelStyle={{
-              color: 'white',
-              flex: 0.2
+              color: '#BABCBE',
+              fontSize: 10,
             }}
             status={this.state.noFrame}
+            onPress={() => {
+              if (this.state.noFrame == 'checked') {
+                Vibration.vibrate(3)
+                this.setState({ noFrame: 'indeterminate' })
+              } else {
+                Vibration.vibrate(3)
+                this.setState({ noFrame: 'checked' })
+              }
+            }}
           />
+     
         </View>
         <View
           style={{
@@ -258,8 +270,8 @@ export default class ItemLCD extends PureComponent {
             style={{ flex: 0.7, borderWidth: 0.5, borderLeftColor: 'white' }}
           >
             <Input
-              label={'BLACK'}
-              labelStyle={{ color: 'white', textAlign: 'center', fontSize: 12 }}
+              label={'BLACK'}            
+              labelStyle={{ color: '#F1F3F4', textAlign: 'center', fontSize: 12 }}
               placeholder={this.state.contatoreBK.toString()}
               placeholderTextColor={'gold'}
               //style={{ borderWidth: 0, color: 'white' }}
@@ -311,10 +323,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    borderColor: 'white',
+    borderColor: '#F1F3F4',
     borderWidth: 1,
     margin: 1,
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#000'
   },
   TouchablesItem: {
     flex: 1,
@@ -323,8 +336,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   container2: {
-    flex: 0.3,
-    flexDirection: 'column',
-    alignItems: 'center'
+    flex: 0.8,
+    flexDirection: 'row',
+    alignItems: 'center',
   }
 })

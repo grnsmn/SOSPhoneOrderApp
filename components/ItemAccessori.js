@@ -129,7 +129,9 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderWidth: 0.25,
     margin: 1,
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#181818'
+
   },
   header: {
     fontSize: 32,

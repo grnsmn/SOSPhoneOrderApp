@@ -37,7 +37,7 @@ const BackoverList = [
   { id: 'ghw', nome: 'IPHONE 8', nMax: 2 },
   { id: 'l65', nome: 'IPHONE X', nMax: 2 },
   { id: 'Y3Z', nome: 'IPHONE XS', nMax: 2 },
-  { id: 'Y3Z', nome: 'IPHONE XR', nMax: 2 },
+  { id: 'Y4Z', nome: 'IPHONE XR', nMax: 2 },
   { id: 'YX0', nome: 'IPHONE XS MAX', nMax: 2 },
   { id: 'S5f', nome: 'IPHONE 8 PLUS', nMax: 2 }
 ]
@@ -50,16 +50,14 @@ const sectionList = [
     title: 'Circuito Prossimità',
     data: list
   },
-]
-const sectionListColor = [
-  {
-    title: 'T. Home',
-    data: T_HomeList
-  },
-  {
-    title: 'Backcover',
-    data: BackoverList
-  }
+  // {
+  //   title: 'T. Home',
+  //   data: T_HomeList
+  // },
+  // {
+  //   title: 'Backcover',
+  //   data: BackoverList
+  // }
 ]
 
 global.list_other = ''
@@ -74,9 +72,10 @@ export default class OtherList extends PureComponent {
     this.setState({ modalVisibleResi: visible })
   }
   renderRow = ({ section, item }) => (
-    <ItemOther NameItem={item.nome} NameSection= {section.title} nMax={item.nMax} id={item.id} />
-  )
-  renderRowColor = ({ item }) => (
+    section.title == 'Circuito Prossimità' || section.title == 'Dock Ricarica'? <ItemOther NameItem={item.nome} NameSection= {section.title} nMax={item.nMax} id={item.id} /> :
+    <ItemOtherColor NameItem={item.nome} NameSection= {section.title} nMax={item.nMax} id={item.id} />
+    )
+  renderRowColor = ({ section, item }) => (
     <ItemOtherColor NameItem={item.nome} nMax={item.nMax} id={item.id} />
   )
   componentDidMount () {
@@ -122,10 +121,51 @@ export default class OtherList extends PureComponent {
     })
     this.onShareOther()
   }
-
   render () {
     return (
       <View style={styles.container}>
+       <Modal
+          animationType='slide'
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.')
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>
+              IN ORDINE {"\n\n"}
+                {
+                  [...global.store_Other.values()]
+                    .sort()
+                    .map(function (element) {
+                      if(element.section=='Dock Ricarica' || element.section=='Circuito Prossimità') 
+                          return String(element.n + 'x ' + element.section + ' '+ element.name + '\n')
+                      else if(element.section=='T. Home' || element.section=='Backcover')
+                          return String(
+                          element.n +
+                          'x ' +
+                          ' ' + element.section +
+                          element.name +
+                          ' ' +
+                          element.col +
+                          '\n'
+                      )
+                    })
+                    }
+              </Text>
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible)
+                }}
+              >
+                <Text style={styles.textStyle}>Chiudi</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
         <View style={styles.container2}>
         <View style = {{flex: 1}}>
         <SectionList
@@ -152,12 +192,6 @@ export default class OtherList extends PureComponent {
             icon='format-list-bulleted'
             color={'gold'}
             onPress={() => this.setModalVisible(true)}
-          />
-          <Appbar.Action
-            style={{ flex: 1 }}
-            icon='recycle'
-            color={'lightgreen'}
-            // onPress={() => this.setModalVisibleResi(true)}
           />
           <Appbar.Action
             style={{ flex: 1 }}

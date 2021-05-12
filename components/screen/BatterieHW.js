@@ -16,16 +16,20 @@ import SearchBattery  from '../SearchBattery'
 global.list_Batt_Huawei = ' ' //Variabile globale per la scrittura dell'ordine finale
 
 const list = [
-  { id: 'cvG', nome: 'HUAWEI P8', nMax: 1 },
-  { id: 'po5', nome: 'HUAWEI P8 LITE', nMax: 1 },
-  { id: 'cfV', nome: 'HUAWEI P9', nMax: 5 },
-  { id: 'xqg', nome: 'HUAWEI P20 PRO', nMax: 1 },
-  { id: 'z9y', nome: 'HUAWEI P20', nMax: 1 },
-  { id: 'T72', nome: 'HUAWEI MATE 10', nMax: 1 },
-  { id: 'F79', nome: 'HUAWEI MATE 10 LITE', nMax: 1 },
-  { id: 'x1L', nome: 'HUAWEI MATE 20 LITE', nMax: 1 },
-  { id: 'x76', nome: 'HUAWEI MATE S', nMax: 1 },
-
+  { id: 'cvG', nome: 'HUAWEI P8', nMax: 2 },
+  { id: 'po5', nome: 'HUAWEI P8 LITE', nMax: 2 },
+  { id: 'cfV', nome: 'HUAWEI P9', compat:'P9 LITE - P8 LITE 2017 - P10 LITE - P20 LITE - HONOR 8 - P SMART - HONOR 9 LITE - Y6 2018 - GT3 - HONOR 7A', nMax: 5 },
+  { id: 'cfZ', nome: 'HUAWEI P9 PLUS', nMax: 2 },
+  { id: 'dtZ', nome: 'HUAWEI PSMART 2019', compat: 'HONOR 10 LITE - P SMART PLUS 2019',  nMax: 2 },
+  { id: 'cf0', nome: 'HUAWEI P10', compat: 'HONOR 9 STF-L09', nMax: 2 },
+  { id: 'z9y', nome: 'HUAWEI P20 [EML-L09]', compat:'HONOR 10 COL-L29', nMax: 2 },
+  { id: 'S9y', nome: 'HUAWEI P30', compat: 'MATE 20 PRO', nMax: 2 },
+  { id: 'T71', nome: 'HUAWEI MATE 9', compat:'Y7 2017 TRT-LX1 - Y7 2019 DUB-LX1', nMax: 2 },
+  { id: 'T72', nome: 'HUAWEI MATE 10', compat: 'MATE 10 PRO BLA-L09 L29 - P20 PRO CLT-L09 L29 - P SMART Z STK-LX1 LX2 - P30 PRO VOG-L29 - HONOR VIEW 20', nMax: 2 },
+  { id: 'F79', nome: 'HUAWEI MATE 10 LITE', compat: 'P30 LITE - HONOR 7X - P SMART PLUS', nMax: 2 },
+  { id: 'x1L', nome: 'HUAWEI MATE 20 LITE', compat: 'P10 PLUS - HONOR VIEW 10 - NOVA 5T', nMax: 2 },
+  { id: 'x76', nome: 'HUAWEI MATE S', nMax: 2 },
+  { id: 'x78', nome: 'HUAWEI NOVA YOUNG', compat:'HUAWEI Y6 PRO 2017 SLA-L02 L22 TL00 - Y5 2018 - Y6 2019 MRD-LX1 LX2 - Y6S JAT-L41', nMax: 2 },
 ]
 const sectionList = [
   {

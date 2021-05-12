@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Text, View, StyleSheet, Modal, TouchableHighlight } from 'react-native'
+import { Text, View, StyleSheet} from 'react-native'
 import { Input } from 'react-native-elements'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -10,6 +10,8 @@ export default class Item extends PureComponent {
   state = {
     id: '',
     nomeItem: '',
+    compat:'',
+    section: 'BATT',
     contatore: 0,
     NumResi: 0,
     modalVisible: false,
@@ -21,6 +23,7 @@ export default class Item extends PureComponent {
     super(props)
     this.state.nomeItem = this.props.NameItem
     this.state.id = this.props.id
+    this.state.compat = this.props.compat
   }
   componentDidMount () {
     AsyncStorage.getItem(this.state.id).then(result => {
@@ -80,30 +83,10 @@ export default class Item extends PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        <Modal
-          animationType='slide'
-          transparent={true}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible)
-                }}
-              >
-                <Text style={styles.textStyle}>Chiudi</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
-        <Text style={{ color: 'white', flex: 1, fontSize: 15, marginLeft: 10 }}>
+        <Text style={{color: '#F1F3F4', flex: 1, fontSize: 16, marginLeft: 10, fontWeight: 'bold' }}>
           {this.props.NameItem}
         </Text>
+        <Text style={{color: 'grey', flex: 1, fontSize: 10, marginLeft: 10, fontWeight: 'bold', textAlign: 'center' }}>{this.state.compat}</Text>
         <View
           style={{
             flex: 1,
@@ -113,7 +96,7 @@ export default class Item extends PureComponent {
           }}
         >
           <View
-            style={{ flex: 0.4, borderLeftWidth: 0.5, borderColor: 'gold' }}
+            style={{ flex: 0.8, borderLeftWidth: 0.5, borderColor: 'gold' }}
           >
             <Input
               style={{ borderWidth: 1, color: 'white' }}
@@ -135,7 +118,7 @@ export default class Item extends PureComponent {
             />
           </View>
           <View
-            style={{ flex: 0.3, borderLeftWidth: 0.5, borderColor: 'gold' }}
+            style={{ flex: 0.6, borderLeftWidth: 0.5, borderColor: 'lightgreen' }}
           >
             <Input
               label={'Reso'}
@@ -171,7 +154,8 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderWidth: 0.25,
     margin: 1,
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#000'
   },
   header: {
     fontSize: 32,

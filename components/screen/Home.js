@@ -10,9 +10,10 @@ import {
   StatusBar
 } from 'react-native'
 import { Button, Input } from 'react-native-elements'
-import { FAB } from 'react-native-paper'
+import { FAB, Snackbar } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import ShareExample from '../Sharing'
+import ListOrder from '../ListOrder'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 global.extra = ''
@@ -22,7 +23,9 @@ export default class Home extends Component {
     text: '',
     input: React.createRef(),
     toDay: new Date(),
-    modalVisible: false
+    modalVisible: false,
+    modalVisibleOrder: false,
+    reset: false
   }
   constructor (props) {
     super(props)
@@ -30,6 +33,9 @@ export default class Home extends Component {
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
+  }
+  setModalVisibleOrder = visible => {
+    this.setState({ modalVisibleOrder: visible })
   }
 
   _save () {
@@ -52,8 +58,8 @@ export default class Home extends Component {
     global.listResiBatt = ''
     global.listResiDisplay = ''
     AsyncStorage.clear()
+    this.setState({reset: !this.state.reset})
     Vibration.vibrate()
-    alert('Reset eseguito')
   }
   componentDidMount () {
     AsyncStorage.getItem('ListExtra').then(
@@ -64,12 +70,55 @@ export default class Home extends Component {
         }
       }
     )
+    // var i = 0
+    // AsyncStorage.getAllKeys().then(
+    //   (result, err) => {
+    //     const x = [...result]
+    //     console.log(x)
+    //     for(i = 0; i<x.length; i++){
+    //       AsyncStorage.getItem(x[i]).then( res =>{
+    //         if(JSON.parse(res).section == 'BATT' && JSON.parse(res).contatore !=0){ 
+    //           global.store_Batt.set(JSON.parse(res).id, {
+    //             name: JSON.parse(res).nomeItem,
+    //             n: JSON.parse(res).contatore,
+    //             section: JSON.parse(res).section
+    //           })
+    //         }
+    //         else if(JSON.parse(res).section == 'LCD' && (JSON.parse(res).contatoreW !=0)){ 
+    //           global.store_Lcd.set(JSON.parse(res).id_W, {
+    //             name: JSON.parse(res).nomeItem,
+    //             col: 'BIANCO',
+    //             n: JSON.parse(res).contatoreW,
+    //             frame: JSON.parse(res).noFrame == 'checked' ? '+ FRAME' : 'NO FRAME',
+    //             section: JSON.parse(res).section
+    //           })
+    //         }
+    //         else if(JSON.parse(res).section == 'LCD' && (JSON.parse(res).contatoreBK !=0)){ 
+    //           global.store_Lcd.set(JSON.parse(res).id_BK, {
+    //             name: JSON.parse(res).nomeItem,
+    //             col: 'nero',
+    //             n: JSON.parse(res).contatoreBK,
+    //             frame: JSON.parse(res).noFrame == 'checked' ? '+ FRAME' : 'NO FRAME',
+    //             section: JSON.parse(res).section
+    //           })
+    //         }
+    //        }
+    //          )
+    //     }
+    //     }
+    // )
   }
 
   render () {
     return (
       <View style={styles.container}>
         <StatusBar animated={false}></StatusBar>
+        <Snackbar
+          visible={this.state.reset}
+          onDismiss= {() => this.setState({reset: false})}
+          duration={700}
+          style={{backgroundColor: '#252850', textAlign:''}}
+          > RESET ESEGUITO </Snackbar>
         <View style={styles.modelSection}>
           <FAB
             style={styles.fab}
@@ -84,7 +133,7 @@ export default class Home extends Component {
             icon='toolbox'
             onPress={() => this.props.navigation.navigate('Accessori')}
           />
-          <Modal
+          <Modal    //modal Lista Extra
             animationType='slide'
             transparent={true}
             visible={this.state.modalVisible}
@@ -102,6 +151,28 @@ export default class Home extends Component {
                   style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
                   onPress={() => {
                     this.setModalVisible(!this.state.modalVisible)
+                  }}
+                >
+                  <Text style={styles.textStyle}>Chiudi</Text>
+                </TouchableHighlight>
+              </View>
+            </View>
+          </Modal>
+          <Modal    //modal chiusura Lista Extra
+            animationType='slide'
+            transparent={true}
+            visible={this.state.modalVisibleOrder}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.')
+            }}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <ListOrder/>
+                <TouchableHighlight
+                  style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+                  onPress={() => {
+                    this.setModalVisibleOrder(!this.state.modalVisibleOrder)
                   }}
                 >
                   <Text style={styles.textStyle}>Chiudi</Text>
@@ -138,6 +209,7 @@ export default class Home extends Component {
             ></Button>
             {/* <Button
               title=' Other'
+              buttonStyle={styles.button}
               onPress={() => this.props.navigation.navigate('Other')}
               icon={<Icon name='more' size={28} color='white' />}
             ></Button>  */}
@@ -155,7 +227,7 @@ export default class Home extends Component {
                 style={{
                   width: 66,
                   height: 66,
-                  backgroundColor: '#fff',
+                  backgroundColor: '#F1F3F4',
                   borderRadius: 11
                 }}
               />
@@ -164,17 +236,17 @@ export default class Home extends Component {
               title='Batterie'
               buttonStyle={styles.button}
               onPress={() => this.props.navigation.navigate('Batterie Huawei')}
-              icon={<Icon name='battery-unknown' size={28} color='white' />}
+              icon={<Icon name='battery-unknown' size={28} color='#F1F3F4' />}
               //iconRight
             ></Button>
             <Button
               title='Display'
               buttonStyle={styles.button}
               onPress={() => this.props.navigation.navigate('Display Huawei')}
-              icon={<Icon name='smartphone' size={28} color='white' />}
+              icon={<Icon name='smartphone' size={28} color='#F1F3F4' />}
             ></Button>
           </View>
-          {/* <View
+          <View
             style={{
               justifyContent: 'space-around',
               alignItems: 'center',
@@ -183,11 +255,12 @@ export default class Home extends Component {
           >
             <View style={{ alignItems: 'center' }}>
               <Image
-                source={require('./samsung2.png')}
+                source={require('./samsung.png')}
                 style={{
-                  width: 100,
-                  height: 65,
-                  borderRadius: 11
+                  width: 140,
+                  height: 30,
+                  marginTop:16,
+                  marginBottom:16
                 }}
               />
             </View>
@@ -204,10 +277,9 @@ export default class Home extends Component {
               onPress={() => this.props.navigation.navigate('Display Samsung')}
               icon={<Icon name='smartphone' size={28} color='white' />}
             ></Button>
-          </View> */}
+          </View>
         </View>
-
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row' }}>  
           <Button
             title={' Extra'}
             onPress={() => {
@@ -216,12 +288,26 @@ export default class Home extends Component {
             containerStyle={{
               flex: 1,
               //borderBottomWidth: 2,
-              borderTopWidth: 3
+              borderTopWidth: 3,
               //borderLeftWidth: 2
             }}
-            buttonStyle={{ backgroundColor: 'black' }}
-            icon={<Icon name='view-list' size={28} color='white' />}
+            buttonStyle={{ backgroundColor: '#181818' }}
+            icon={<Icon name='view-list' size={28} color='#F1F3F4' />}
           />
+          {/* <Button
+            title={' ORDER'}
+            onPress={() => {
+              this.setModalVisibleOrder(true)
+            }}
+            containerStyle={{
+              flex: 1,
+              //borderBottomWidth: 2,
+              borderTopWidth: 3,
+              //borderLeftWidth: 2
+            }}
+            buttonStyle={{ backgroundColor: '#181818' }}
+            icon={<Icon name='view-list' size={28} color='#F1F3F4' />}
+          /> */}
           <Button
             title={'Svuota Extra'}
             onPress={() => {
@@ -280,7 +366,8 @@ const styles = StyleSheet.create({
     //borderBottomWidth: 2,
     //alignItems: 'center',
     justifyContent: 'space-evenly',
-    backgroundColor: 'black'
+    backgroundColor: '#181818',
+    
   },
   modelSection: {
     borderColor: 'red',

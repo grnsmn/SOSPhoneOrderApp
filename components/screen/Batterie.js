@@ -6,7 +6,8 @@ import {
   Text,
   Modal,
   TouchableHighlight,
-  Share
+  Share,
+  KeyboardAvoidingView
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Item from '../Item'
@@ -25,11 +26,12 @@ const list = [
   { id: '34K', nome: 'IPHONE 6S', nMax: 4 },
   { id: '5Q6', nome: 'IPHONE 7', nMax: 4 },
   { id: 'NQH', nome: 'IPHONE 8', nMax: 2 },
-  { id: 'H9K', nome: 'IPHONE [6/6S] PLUS', nMax: 2 },
+  { id: 'H9K', nome: 'IPHONE 6 PLUS', nMax: 2 },
   { id: 'PNB', nome: 'IPHONE 7 PLUS', nMax: 2 },
   { id: 'IK8', nome: 'IPHONE 8 PLUS', nMax: 2 },
   { id: 'XVW', nome: 'IPHONE X', nMax: 2 },
   { id: 'XVR', nome: 'IPHONE XR', nMax: 2 },
+  { id: 'XSV', nome: 'IPHONE XS', nMax: 2 },
   { id: 'XQ4', nome: 'IPHONE XS MAX', nMax: 2 }
 ]
 const sectionList = [
@@ -53,7 +55,7 @@ export default class BattList extends PureComponent {
     this.setState({ modalVisibleResi: visible })
   }
   renderRow = ({ item }) => (
-    <Item NameItem={item.nome} nMax={item.nMax} id={item.id} />
+    <Item NameItem={item.nome} nMax={item.nMax} id={item.id} compat={item.compat}/>
   )
    
   onShareBatt = async () => {
@@ -238,7 +240,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     //flexDirection: 'row',
-    backgroundColor: 'black',
+    backgroundColor: '#181818',
     padding: 5
     //paddingTop: StatusBar.length
   },

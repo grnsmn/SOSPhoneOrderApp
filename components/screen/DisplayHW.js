@@ -3,14 +3,11 @@ import React, { PureComponent } from 'react'
 import {
   View,
   StyleSheet,
-  FlatList,
   SectionList,
   Modal,
   Text,
   TouchableHighlight
 } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { Button } from 'react-native-elements'
 import ItemLCD from '../ItemLCD'
 import { Appbar } from 'react-native-paper'
 import DisplayList from './Display'
@@ -39,10 +36,6 @@ const sectionList = [
     title: 'To Order',
     data: list
   }
-  // {
-  //   title: 'Resi',
-  //   data: list
-  // }
 ]
 export default class DisplayListHW extends DisplayList {
   state = { modalVisible: false, modalVisibleResi: false }
