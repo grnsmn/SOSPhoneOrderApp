@@ -1,31 +1,29 @@
 import React, { PureComponent } from 'react'
-import { Text, View, StyleSheet, Vibration } from 'react-native'
-import { Input } from 'react-native-elements'
-import { Checkbox } from 'react-native-paper'
+import { Text, View, StyleSheet } from 'react-native'
+import { Button, Input } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
-global.store_Lcd = new Map() //Array globale che conterrà nomi e quantità di LCD IPHONE da mettere in lista
-global.resi_Lcd = new Map() //Per immagazzinamento lista resi
+global.store_Other = new Map() //Array globale che conterrà nomi e quantità di LCD IPHONE da mettere in lista
 
-export default class ItemLCD extends PureComponent {
+export default class ItemOtherColor extends PureComponent {
   //OGNI ELEMENTO IN QUESTA CLASSE TIENE CONTO DI UN CONTEGGIO A COLORE DEL DISPLAY (BIANCO E NERO)
   state = {
     id: '',
     nomeItem: '',
-    section:'LCD',
+    nomeSection: '',
     colore: '',
     contatoreW: 0,
     contatoreBK: 0,
     resiW: 0,
-    resiBK: 0,
-    noFrame: 'indeterminate'
+    resiBK: 0
   }
 
   constructor (props) {
     super(props)
     this.state.nomeItem = this.props.NameItem
     this.state.id = this.props.id
+    if(this.state.nomeSection == "T. Home"){ this.state.id = this.props.id + 'Home' }
+    else if(this.state.nomeSection == "Backcover"){ this.state.id = this.props.id + 'BackCover' }
   }
   componentDidMount () {
     //console.log('Mount'+ this.state.nomeItem)
@@ -43,29 +41,28 @@ export default class ItemLCD extends PureComponent {
             contatoreW: tmp.contatoreW,
             contatoreBK: tmp.contatoreBK,
             resiW: tmp.resiW,
-            resiBK: tmp.resiBK,
-            noFrame: tmp.noFrame
+            resiBK: tmp.resiBK
           })
           //Aggiornamento lista ordine
           if (this.state.contatoreW != 0) {
-            global.store_Lcd.set(id_W, {
+            global.store_Other.set(id_W, {
               name: this.state.nomeItem,
               col: 'BIANCO',
-              n: this.state.contatoreW,
-              frame: this.state.noFrame == 'checked' ? '+ FRAME' : 'NO FRAME'
+              section: this.state.nomeSection,
+              n: this.state.contatoreW
             })
           } else if (this.state.contatoreW == 0) {
-            global.store_Lcd.delete(id_W)
+            global.store_Other.delete(id_W)
           }
           if (tmp.contatoreBK != 0) {
-            global.store_Lcd.set(id_BK, {
+            global.store_Other.set(id_BK, {
               name: this.state.nomeItem,
               col: 'NERO',
-              n: this.state.contatoreBK,
-              frame: this.state.noFrame == 'checked' ? '+ FRAME' : ' NO FRAME'
+              section: this.state.nomeSection,
+              n: this.state.contatoreBK
             })
           } else if (tmp.contatoreBK == 0) {
-            global.store_Lcd.delete(id_BK)
+            global.store_Other.delete(id_BK)
           }
 
           //Aggiornamento lista resi
@@ -98,23 +95,23 @@ export default class ItemLCD extends PureComponent {
     const id_BK = this.state.id + 'Bk'
     //console.log("attualmente inseriti:" +  this.state.resiW)
     //elimina gli elementi da map se il valore inserito è 0
-    if (this.state.contatoreW == 0) global.store_Lcd.delete(id_W)
-    if (this.state.contatoreBK == 0) global.store_Lcd.delete(id_BK)
+    if (this.state.contatoreW == 0) global.store_Other.delete(id_W)
+    if (this.state.contatoreBK == 0) global.store_Other.delete(id_BK)
     //aggiorna la quantità di elementi in contemporanea all'inserimento del valore desiderato
     if (this.state.contatoreW != 0) {
-      global.store_Lcd.set(id_W, {
+      global.store_Other.set(id_W, {
         name: this.state.nomeItem,
         col: 'BIANCO',
-        n: this.state.contatoreW,
-        frame: this.state.noFrame == 'checked' ? '+ FRAME' : 'NO FRAME'
+        section: this.state.nomeSection,
+        n: this.state.contatoreW
       })
     }
     if (this.state.contatoreBK != 0) {
-      global.store_Lcd.set(id_BK, {
+      global.store_Other.set(id_BK, {
         name: this.state.nomeItem,
         col: 'NERO',
-        n: this.state.contatoreBK,
-        frame: this.state.noFrame == 'checked' ? '+ FRAME' : 'NO FRAME'
+        section: this.state.nomeSection,
+        n: this.state.contatoreBK
       })
     }
     //Aggiornamento lista resi
@@ -137,6 +134,7 @@ export default class ItemLCD extends PureComponent {
       })
     }
   }
+
   inStore2 () {
     this.componentDidMount()
   }
@@ -144,11 +142,11 @@ export default class ItemLCD extends PureComponent {
     if (
       this.state.nomeItem.includes('IPHONE X') ||
       this.state.nomeItem.includes('IPHONE 11') ||
-      this.state.nomeItem.includes('MATE 20 LITE') ||
-      this.state.nomeItem.includes('P20 LITE') ||
-      this.state.nomeItem.includes('P30 LITE') ||
-      this.state.nomeItem.includes('P40 LITE') ||
-      this.state.nomeItem.includes('PSMART Z') ||
+      this.state.nomeItem.includes('MATE 20 LITE')||
+      this.state.nomeItem.includes('P20 LITE')||
+      this.state.nomeItem.includes('P30 LITE')||
+      this.state.nomeItem.includes('P40 LITE')||
+      this.state.nomeItem.includes('PSMART Z')||
       this.state.nomeItem.includes('PSMART 2019')
     ) {
       return true
@@ -159,62 +157,26 @@ export default class ItemLCD extends PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        <View style={styles.TouchablesItem}>
-          <TouchableOpacity
-            style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }}
-            onPress={() => {
-              if (this.state.noFrame == 'checked') {
-                Vibration.vibrate(3)
-                this.setState({ noFrame: 'indeterminate' })
-              } else {
-                Vibration.vibrate(3)
-                this.setState({ noFrame: 'checked' })
-              }
-            }}
-          >
-            <Text
-              style={{
-                color: '#F1F3F4',
-                marginLeft: 10,
-                fontSize: 16,
-                fontWeight: 'bold',
-              }}
-            >
-              {this.props.NameItem}
-            </Text>
-          </TouchableOpacity>
-        </View>
-              
-        <View style={styles.container2}>
-            <Checkbox.Item
-            label= {this.state.noFrame == 'checked' ? '+ FRAME' : 'NO FRAME'}
-            color= 'gold'
-            labelStyle={{
-              color: '#BABCBE',
-              fontSize: 10,
-            }}
-            status={this.state.noFrame}
-            onPress={() => {
-              if (this.state.noFrame == 'checked') {
-                Vibration.vibrate(3)
-                this.setState({ noFrame: 'indeterminate' })
-              } else {
-                Vibration.vibrate(3)
-                this.setState({ noFrame: 'checked' })
-              }
-            }}
-          />
-     
-        </View>
+        <Text
+          style={{
+            color: 'white',
+            flex: 1,
+            marginLeft: 10,
+            fontSize: 15
+          }}
+        >
+          {this.props.NameItem}
+        </Text>
+
         <View
           style={{
             flex: 1,
             margin: 2,
-            flexDirection: 'row',
+            // flexDirection: 'row',
             justifyContent: 'flex-end'
           }}
         >
-          <View style={{ flex: 0.7, borderWidth: 1, borderLeftColor: 'white' }}>
+          <View style={{ flex: 1, borderWidth: 1, borderLeftColor: 'white' }}>
             <Input
               label={'WHITE'}
               labelStyle={{
@@ -223,7 +185,7 @@ export default class ItemLCD extends PureComponent {
                 fontSize: 12,
                 backgroundColor: 'white'
               }}
-              disabled={this.oneColor()}
+              //disabled={this.oneColor()}
               //renderErrorMessage={false}
               placeholder={String(this.state.contatoreW)}
               placeholderTextColor={'gold'}
@@ -241,37 +203,13 @@ export default class ItemLCD extends PureComponent {
               errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
               errorMessage={'max ' + this.props.nMax}
             />
-            <Input
-              label={'Reso'}
-              labelStyle={{
-                color: 'black',
-                textAlign: 'center',
-                fontSize: 10,
-                backgroundColor: 'lightgreen'
-              }}
-              disabled={this.oneColor()}
-              placeholder={String(this.state.resiW)}
-              placeholderTextColor={'lightgreen'}
-              keyboardType='numeric'
-              maxLength={1}
-              renderErrorMessage={false}
-              onChangeText={value => {
-                if (value != '') {
-                  this.setState({
-                    resiW: parseInt(value),
-                    colore: 'BIANCO'
-                  })
-                }
-              }}
-              onSubmitEditing={() => this.inStore2()}
-            />
           </View>
           <View
-            style={{ flex: 0.7, borderWidth: 0.5, borderLeftColor: 'white' }}
+            style={{ flex: 1, borderWidth: 0.5, borderLeftColor: 'white' }}
           >
             <Input
-              label={'BLACK'}            
-              labelStyle={{ color: '#F1F3F4', textAlign: 'center', fontSize: 12 }}
+              label={'BLACK'}
+              labelStyle={{ color: 'white', textAlign: 'center', fontSize: 12 }}
               placeholder={this.state.contatoreBK.toString()}
               placeholderTextColor={'gold'}
               //style={{ borderWidth: 0, color: 'white' }}
@@ -290,29 +228,6 @@ export default class ItemLCD extends PureComponent {
               errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
               errorMessage={'max ' + this.props.nMax}
             />
-            <Input
-              label={'Reso'}
-              labelStyle={{
-                color: 'black',
-                textAlign: 'center',
-                fontSize: 10,
-                backgroundColor: 'lightgreen'
-              }}
-              placeholder={this.state.resiBK.toString()}
-              placeholderTextColor={'lightgreen'}
-              keyboardType='numeric'
-              maxLength={1}
-              renderErrorMessage={false}
-              onChangeText={value => {
-                if (value != '') {
-                  this.setState({
-                    resiBK: parseInt(value),
-                    colore: 'NERO'
-                  })
-                }
-              }}
-              onSubmitEditing={() => this.inStore2()}
-            />
           </View>
         </View>
       </View>
@@ -323,21 +238,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    borderColor: '#F1F3F4',
+    borderColor: 'white',
     borderWidth: 1,
     margin: 1,
-    alignItems: 'center',
-    backgroundColor: '#000'
-  },
-  TouchablesItem: {
-    flex: 1,
-    flexDirection: 'row',
-    margin: 1,
     alignItems: 'center'
-  },
-  container2: {
-    flex: 0.8,
-    flexDirection: 'row',
-    alignItems: 'center',
   }
 })

@@ -5,11 +5,13 @@ import {
   SectionList,
   Text,
   Modal,
-  TouchableHighlight
+  TouchableHighlight,
+  Share,
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Appbar } from 'react-native-paper'
+import { Appbar, Snackbar } from 'react-native-paper'
 
 
 global.listBatt = '' //Variabile globale per la scrittura dell'ordine finale
@@ -23,11 +25,13 @@ const list = [
   { id: '34K', nome: 'IPHONE 6S', nMax: 4 },
   { id: '5Q6', nome: 'IPHONE 7', nMax: 4 },
   { id: 'NQH', nome: 'IPHONE 8', nMax: 2 },
-  { id: 'H9K', nome: 'IPHONE 6/6S PLUS', nMax: 2 },
+  { id: 'H9K', nome: 'IPHONE 6 PLUS', nMax: 2 },
   { id: 'PNB', nome: 'IPHONE 7 PLUS', nMax: 2 },
   { id: 'IK8', nome: 'IPHONE 8 PLUS', nMax: 2 },
   { id: 'XVW', nome: 'IPHONE X', nMax: 2 },
-  { id: 'XVR', nome: 'IPHONE XR', nMax: 2 }
+  { id: 'XVR', nome: 'IPHONE XR', nMax: 2 },
+  { id: 'XSV', nome: 'IPHONE XS', nMax: 2 },
+  { id: 'XQ4', nome: 'IPHONE XS MAX', nMax: 2 }
 ]
 const sectionList = [
   {
@@ -40,7 +44,7 @@ const sectionList = [
   // }
 ]
 export default class BattList extends PureComponent {
-  state = { modalVisible: false, modalVisibleResi: false }
+  state = { modalVisible: false, modalVisibleResi: false, clearList:false }
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
@@ -50,9 +54,44 @@ export default class BattList extends PureComponent {
     this.setState({ modalVisibleResi: visible })
   }
   renderRow = ({ item }) => (
-    <Item NameItem={item.nome} nMax={item.nMax} id={item.id} />
+    <Item NameItem={item.nome} nMax={item.nMax} id={item.id} compat={item.compat}/>
   )
-
+   
+  onShareBatt = async () => {
+    try {
+      const data = new Date()
+      const tomorrow = new Date(data)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      if(tomorrow.getDay()==0) {
+        tomorrow.setDate(tomorrow.getDate() + 1)
+      }
+      const result = await Share.share({
+        message:
+        // 'Ordine del ' + 
+        // tomorrow.getDate() +
+        // '/' + 
+        // parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
+        // '/' +
+        // tomorrow.getFullYear() +
+        // '\n\n' +
+        global.listBatt +
+        '\nResi:\n' +
+        global.listResiBatt 
+        
+      })
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message)
+    }
+  }
   stampList () {
     global.listBatt = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
     global.store_Batt.forEach(element => {
@@ -62,8 +101,8 @@ export default class BattList extends PureComponent {
     global.resi_Batt_IP.forEach(element => {
       global.listResiBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
     })
-    alert('Ordine Inserito!')
-  }
+    this.onShareBatt()
+  } 
   clearListBatt () {
     //Azzera lista ordine
     global.store_Batt.clear()
@@ -81,11 +120,18 @@ export default class BattList extends PureComponent {
       }
       AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
-    alert('Lista Svuotata')
+    this.setState({clearList: !this.state.clearList})
+    
   }
   render () {
     return (
       <View style={styles.container}>
+            <Snackbar
+          visible={this.state.clearList}
+          onDismiss= {() => this.setState({clearList: false})}
+          duration={700}
+          style={{backgroundColor: '#252849', textAlign:'center'}}
+          > LISTA AZZERATA </Snackbar>
         <Modal
           animationType='slide'
           transparent={true}
@@ -170,17 +216,24 @@ export default class BattList extends PureComponent {
             color={'lightgreen'}
             onPress={() => this.setModalVisibleResi(true)}
           />
-          <Appbar.Action
+          {/* <Appbar.Action
             style={{ flex: 1 }}
             icon='printer-wireless'
             onPress={() =>  this.stampList()}
-          />
+          /> */}
           <Appbar.Action
             style={{ flex: 1 }}
             icon='delete'
             color={'red'}
             onPress={() => {
               this.clearListBatt()
+            }}
+          />
+          <Appbar.Action
+            style={{ flex: 1 }}
+            icon='send'
+            onPress={() => {
+              this.stampList()
             }}
           />
         </Appbar>
@@ -193,7 +246,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     //flexDirection: 'row',
-    backgroundColor: 'black',
+    backgroundColor: '#181818',
     padding: 5
     //paddingTop: StatusBar.length
   },

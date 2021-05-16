@@ -10,47 +10,54 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Appbar } from 'react-native-paper'
 import BattList from './Batterie'
-import SearchBattery  from '../SearchBattery'
-global.list_Batt_Huawei = ' ' //Variabile globale per la scrittura dell'ordine finale
+
 
 const list = [
-  { id: 'p9z', nome: 'SAMSUNG S6', nMax: 1 },
-  // { id: 'po5', nome: 'HUAWEI P8 LITE', nMax: 1 },
-  // { id: 'cfV', nome: 'HUAWEI P9', nMax: 5 },
-  // { id: 'x1L', nome: 'HUAWEI MATE 20 LITE', nMax: 1 },
-  // { id: 'xqg', nome: 'HUAWEI P20 PRO', nMax: 1 },
-  // { id: 'z9y', nome: 'HUAWEI P20', nMax: 1 },
-  // { id: 'x76', nome: 'HUAWEI MATE S', nMax: 1 }
+  { id: 'G920F', nome: 'SAMSUNG S6', nMax: 2 },
+  { id: 'G925F', nome: 'SAMSUNG S6 EDGE', nMax: 2 },
+  { id: 'G928F', nome: 'SAMSUNG S6 EDGE PLUS', nMax: 2 },
+  { id: 'G930F', nome: 'SAMSUNG S7', nMax: 2 },
+  { id: 'G935F', nome: 'SAMSUNG S7 EDGE', nMax: 2 },
+  { id: 'G950F', nome: 'SAMSUNG S8', nMax: 2 },
+  { id: 'N950F', nome: 'SAMSUNG NOTE 8', nMax: 2 },
+  { id: 'G955F', nome: 'SAMSUNG S8 PLUS', nMax: 2 },
+  { id: 'G960F', nome: 'SAMSUNG S9', nMax: 2 },
+  { id: 'N960F', nome: 'SAMSUNG NOTE 9', nMax: 2 },
+  { id: 'G965F', nome: 'SAMSUNG S9 PLUS', nMax: 2 },
+  { id: 'G970F', nome: 'SAMSUNG S10E', nMax: 2 },
+  { id: 'G975F', nome: 'SAMSUNG S10 PLUS', nMax: 2 },
+  { id: 'G980F', nome: 'SAMSUNG S20', nMax: 2 },
+  { id: 'G985F', nome: 'SAMSUNG S20 PLUS', nMax: 2 },
+  { id: 'A310', nome: 'SAMSUNG A3 2016', nMax: 2 },
+  { id: 'A320', nome: 'SAMSUNG A3 2017', nMax: 2 },
+  { id: 'A105', nome: 'SAMSUNG A10', compat: ' A7 2018 A750', nMax: 2 },
+  { id: 'A505', nome: 'SAMSUNG A30', compat: 'A20-A30-A30S-A50', nMax: 2 },
+  { id: 'A405', nome: 'SAMSUNG A40', nMax: 2 },
+  { id: 'A202', nome: 'SAMSUNG A20E', nMax: 2 },
+  { id: 'A705', nome: 'SAMSUNG A70', nMax: 2 },
+  { id: 'A510', nome: 'SAMSUNG A5 2016', nMax: 2 },
+  { id: 'A520', nome: 'SAMSUNG A5 2017', compat:'J5 2017 J530', nMax: 2 },
+  { id: 'A605', nome: 'SAMSUNG A6 PLUS 2018', nMax: 2 },
+  { id: 'J320', nome: 'SAMSUNG J3 2016',compat:'J5 2015 SM-J500F', nMax: 2 },
+  { id: 'J330', nome: 'SAMSUNG J3 2017',compat:'J5 2015 SM-J500F', nMax: 2 },
+  { id: 'J415', nome: 'SAMSUNG J4 PLUS',compat:'J6 PLUS', nMax: 2 },
+  { id: 'J510', nome: 'SAMSUNG J5 2016',compat:'J6 PLUS', nMax: 2 },
+  { id: 'J710', nome: 'SAMSUNG J7 2016',compat:'J6 PLUS', nMax: 2 },
+  { id: 'J730', nome: 'SAMSUNG J7 2017',compat:'J6 PLUS', nMax: 2 },
 ]
 const sectionList = [
   {
     title: 'To Order',
     data: list
   }
-  // {
-  //   title: 'Resi',
-  //   data: list
-  // }
 ]
 export default class BattListSM extends BattList {
   state = { modalVisible: false, modalVisibleResi: false}
 
-  stampList () {
-    global.list_Batt_Huawei = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
-    global.store_Batt.forEach(element => {
-      global.list_Batt_Huawei +=
-        element.n + 'x ' + ' BATT ' + element.name + '\n'
-    })
-    global.listResiBatt = ''
-    global.resi_Batt_IP.forEach(element => {
-      global.listResiBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
-    })
-    alert('Ordine Inserito!')
-  }
   clearListBatt () {
     //Azzera lista ordine
     global.store_Batt.clear()
-    global.list_Batt_Huawei = ''
+    global.listBatt = ''
     //Azzera lista resi
     global.resi_Batt_IP.clear()
     global.listResiBatt = ''
@@ -67,7 +74,6 @@ export default class BattListSM extends BattList {
     alert('Lista Svuotata')
   }
   render () {
-    const { search } = this.state
     return (
       <View style={styles.container}>
         <Modal
@@ -126,7 +132,7 @@ export default class BattListSM extends BattList {
             </View>
           </View>
         </Modal>
-
+       
         <SectionList
           sections={sectionList}
           renderItem={this.renderRow}
@@ -149,16 +155,16 @@ export default class BattListSM extends BattList {
           />
           <Appbar.Action
             style={{ flex: 1 }}
-            icon='printer-wireless'
-            onPress={() => this.stampList()}
-          />
-          <Appbar.Action
-            style={{ flex: 1 }}
             icon='delete'
             color={'red'}
             onPress={() => {
               this.clearListBatt()
             }}
+          />
+          <Appbar.Action
+            style={{ flex: 1 }}
+            icon='send'
+            onPress={() => this.stampList()}
           />
         </Appbar>
       </View>

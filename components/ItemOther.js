@@ -1,19 +1,17 @@
 import React, { PureComponent } from 'react'
-import { Text, View, StyleSheet} from 'react-native'
-import { Input } from 'react-native-elements'
+import { Text, View, StyleSheet, Modal, TouchableHighlight } from 'react-native'
+import { Input} from 'react-native-elements'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-global.store_Batt = new Map() //Oggetto map globale che conterrà nomi e quantità di BATTERIE IPHONE da mettere in lista
-global.resi_Batt_IP = new Map() //Per immagazzinamento lista resi
-export default class Item extends PureComponent {
+global.store_Other = new Map() 
+global.resi_Other = new Map() //Per immagazzinamento lista resi
+export default class ItemOther extends PureComponent {
   state = {
     id: '',
     nomeItem: '',
-    compat:'',
-    section: 'BATT',
+    nomeSection: '',
     contatore: 0,
-    NumResi: 0,
     modalVisible: false,
   }
   setModalVisible = visible => {
@@ -22,10 +20,14 @@ export default class Item extends PureComponent {
   constructor (props) {
     super(props)
     this.state.nomeItem = this.props.NameItem
-    this.state.id = this.props.id
-    this.state.compat = this.props.compat
+    this.state.nomeSection = this.props.NameSection
+    if(this.state.nomeSection == "Dock Ricarica"){ this.state.id = this.props.id + 'Dock' } 
+    else if(this.state.nomeSection == "Circuito Prossimità"){ this.state.id = this.props.id + 'CircProx' }
+    else if(this.state.nomeSection == "T. Home"){ this.state.id = this.props.id + 'Home' }
+    else if(this.state.nomeSection == "Backcover"){ this.state.id = this.props.id + 'BackCover' }
   }
   componentDidMount () {
+    // console.log('il nome della sezione è:' + this.state.nomeSection)
     AsyncStorage.getItem(this.state.id).then(result => {
       //console.log(JSON.parse(result).contatore)
       const parseElement = JSON.parse(result)
@@ -35,21 +37,14 @@ export default class Item extends PureComponent {
             //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
             return value
           })
-          this.setState({ contatore: tmp.contatore, NumResi: tmp.NumResi })
-          if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
+          this.setState({ contatore: tmp.contatore })
+          if (this.state.contatore == 0) global.store_Other.delete(this.state.id)
           if (this.state.contatore != 0) {
-            // console.log([...global.store_Batt.get(this.state.id)])
-            global.store_Batt.set(this.state.id, {
+            // console.log([...global.store_Other.get(this.state.id)])
+            global.store_Other.set(this.state.id, {
               name: this.state.nomeItem,
+              section: this.state.nomeSection,
               n: this.state.contatore
-            })
-          }
-
-          if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
-          if (this.state.NumResi != 0) {
-            global.resi_Batt_IP.set(this.state.id, {
-              name: this.state.nomeItem,
-              n: this.state.NumResi
             })
           }
         }
@@ -59,18 +54,12 @@ export default class Item extends PureComponent {
   }
   componentDidUpdate () {
     AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
-    if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
-    if (this.state.contatore != 0) {
-      global.store_Batt.set(this.state.id, {
+    if (this.state.contatore == 0) global.store_Other.delete(this.state.id)
+    if (this.state.contatore != 0 && this.state.nomeSection) {
+      global.store_Other.set(this.state.id, {
         name: this.state.nomeItem,
+        section: this.state.nomeSection,
         n: this.state.contatore
-      })
-    }
-    if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
-    if (this.state.NumResi != 0) {
-      global.resi_Batt_IP.set(this.state.id, {
-        name: this.state.nomeItem,
-        n: this.state.NumResi
       })
     }
   }
@@ -83,10 +72,30 @@ export default class Item extends PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        <Text style={{color: '#F1F3F4', flex: 1, fontSize: 16, marginLeft: 10, fontWeight: 'bold' }}>
+        <Modal
+          animationType='slide'
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.')
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible)
+                }}
+              >
+                <Text style={styles.textStyle}>Chiudi</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
+        <Text style={{ color: 'white', flex: 1, fontSize: 15, marginLeft: 10 }}>
           {this.props.NameItem}
         </Text>
-        <Text style={{color: 'grey', flex: 1, fontSize: 10, marginLeft: 10, fontWeight: 'bold', textAlign: 'center' }}>{this.state.compat}</Text>
         <View
           style={{
             flex: 1,
@@ -114,11 +123,20 @@ export default class Item extends PureComponent {
               }}
               onSubmitEditing={() => this.inStore()}
               errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
-              errorMessage={'max ' + this.props.nMax}
+              //errorMessage={'max ' + this.props.nMax}
             />
+          {/* <CheckBox
+            containerStyle= {{backgroundColor:'gold', height:40, width:50}}
+            center
+            title='F'
+            checkedIcon='dot-circle-o'
+            uncheckedIcon='circle-o'
+            checked={this.state.checkedFab}
+            onPress = {() => this.setState({checkedFab: !this.state.checkedFab})}
+          /> */}
           </View>
-          <View
-            style={{ flex: 0.6, borderLeftWidth: 0.5, borderColor: 'lightgreen' }}
+          {/* <View
+            style={{ flex: 0.3, borderLeftWidth: 0.5, borderColor: 'gold' }}
           >
             <Input
               label={'Reso'}
@@ -140,7 +158,7 @@ export default class Item extends PureComponent {
               }}
               onSubmitEditing={() => this.inStore()}
             />
-          </View>
+          </View> */}
         </View>
       </View>
     )
@@ -154,8 +172,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderWidth: 0.25,
     margin: 1,
-    alignItems: 'center',
-    backgroundColor: '#000'
+    alignItems: 'center'
   },
   header: {
     fontSize: 32,
