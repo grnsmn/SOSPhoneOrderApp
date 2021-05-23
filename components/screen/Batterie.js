@@ -6,13 +6,11 @@ import {
   Text,
   Modal,
   TouchableHighlight,
-  Share,
-  KeyboardAvoidingView
+  Share
 } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Appbar } from 'react-native-paper'
+import { Appbar, Snackbar } from 'react-native-paper'
 
 
 global.listBatt = '' //Variabile globale per la scrittura dell'ordine finale
@@ -39,46 +37,109 @@ const sectionList = [
     title: 'To Order',
     data: list
   }
-  // {
-  //   title: 'Resi',
-  //   data: list
-  // }
 ]
+
+// review = (visible, visibleResi) =>{
+// <View>
+// <Modal
+//           animationType='slide'
+//           transparent={true}
+//           visible={visible}
+//           onRequestClose={() => {
+//             Alert.alert('Modal has been closed.')
+//           }}
+//         >
+//           <View style={styles.centeredView}>
+//             <View style={styles.modalView}>
+//               <Text style={styles.modalText}>
+//                 IN ORDINE {'\n\n'}
+//                 {[...global.store_Batt.values()].sort().map(function (element) {
+//                   return String(element.n + 'x ' + element.name + '\n')
+//                 })}
+//               </Text>
+//               <TouchableHighlight
+//                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+//                 onPress={() => {
+//                   this.setModalVisible(!visible)
+//                 }}
+//               >
+//                 <Text style={styles.textStyle}>Chiudi</Text>
+//               </TouchableHighlight>
+//             </View>
+//           </View>
+//         </Modal>
+//         <Modal
+//           animationType='slide'
+//           transparent={true}
+//           visible={visibleResi}
+//           onRequestClose={() => {
+//             Alert.alert('Modal has been closed.')
+//           }}
+//         >
+//           <View style={styles.centeredView}>
+//             <View style={styles.modalView}>
+//               <Text style={styles.modalText}>
+//                 RESI {'\n\n'}
+//                 {[...global.resi_Batt_IP.values()]
+//                   .sort()
+//                   .map(function (element) {
+//                     return String(element.n + 'x ' + element.name + '\n')
+//                   })}
+//               </Text>
+//               <TouchableHighlight
+//                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+//                 onPress={() => {
+//                   this.setModalVisibleResi(!visibleResi)
+//                 }}
+//               >
+//                 <Text style={styles.textStyle}>Chiudi</Text>
+//               </TouchableHighlight>
+//             </View>
+//           </View>
+//         </Modal>
+// </View>
+// }
+
 export default class BattList extends PureComponent {
-  state = { modalVisible: false, modalVisibleResi: false }
+  state = { modalVisible: false, modalVisibleResi: false, clearList:false}
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
   }
-
   setModalVisibleResi = visible => {
     this.setState({ modalVisibleResi: visible })
   }
-  renderRow = ({ item }) => (
-    <Item NameItem={item.nome} nMax={item.nMax} id={item.id} compat={item.compat}/>
+  renderRow = ({ item, index }) => (
+    <Item
+      NameItem={item.nome}
+      nMax={item.nMax}
+      id={item.id}
+      compat={item.compat}
+      codice={item.codice}
+    />
   )
-   
+
   onShareBatt = async () => {
     try {
       const data = new Date()
       const tomorrow = new Date(data)
       tomorrow.setDate(tomorrow.getDate() + 1)
-      if(tomorrow.getDay()==0) {
+      if (tomorrow.getDay() == 0) {
         tomorrow.setDate(tomorrow.getDate() + 1)
       }
       const result = await Share.share({
         message:
-        // 'Ordine del ' + 
-        // tomorrow.getDate() +
-        // '/' + 
-        // parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
-        // '/' +
-        // tomorrow.getFullYear() +
-        // '\n\n' +
-        global.listBatt +
-        '\nResi:\n' +
-        global.listResiBatt 
-        
+          // 'Ordine del ' +
+          // tomorrow.getDate() +
+          // '/' +
+          // parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
+          // '/' +
+          // tomorrow.getFullYear() +
+          // '\n\n' +
+          global.listBatt +
+          (global.resi_Batt_IP.size == 0
+            ? ''
+            : '\nResi:\n' + global.listResiBatt)
       })
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -99,11 +160,14 @@ export default class BattList extends PureComponent {
       global.listBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
     })
     global.listResiBatt = ''
-    global.resi_Batt_IP.forEach(element => {
-      global.listResiBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
-    })
+    global.resi_Batt_IP.size == 0
+      ? (global.listResiBatt = '')
+      : global.resi_Batt_IP.forEach(element => {
+          global.listResiBatt +=
+            element.n + 'x ' + ' BATT ' + element.name + '\n'
+        })
     this.onShareBatt()
-  } 
+  }
   clearListBatt () {
     //Azzera lista ordine
     global.store_Batt.clear()
@@ -121,30 +185,26 @@ export default class BattList extends PureComponent {
       }
       AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
-    alert('Lista Svuotata')
+    this.setState({ clearList: !this.state.clearList })
   }
   render () {
     return (
-      <View style={styles.container}>
+      <View style={styles.container}> 
         <Modal
           animationType='slide'
           transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
+            this.setModalVisible(!this.state.modalVisible)
           }}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
-              IN ORDINE {"\n\n"}
-                {
-                  [...global.store_Batt.values()]
-                    .sort()
-                    .map(function (element) {
-                      return String(element.n + 'x '+ element.name + '\n')
-                    })
-                    }
+                IN ORDINE {'\n\n'}
+                {[...global.store_Batt.values()].sort().map(function (element) {
+                  return String(element.n + 'x ' + element.name + '\n')
+                })}
               </Text>
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
@@ -162,21 +222,18 @@ export default class BattList extends PureComponent {
           transparent={true}
           visible={this.state.modalVisibleResi}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
+            this.setModalVisible(!this.state.modalVisible)
           }}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
-              RESI {"\n\n"}
-
-                {
-                  [...global.resi_Batt_IP.values()]
-                    .sort()
-                    .map(function (element) {
-                      return String(element.n + 'x '+ element.name + '\n')
-                    })
-                }
+                RESI {'\n\n'}
+                {[...global.resi_Batt_IP.values()]
+                  .sort()
+                  .map(function (element) {
+                    return String(element.n + 'x ' + element.name + '\n')
+                  })}
               </Text>
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
@@ -189,6 +246,16 @@ export default class BattList extends PureComponent {
             </View>
           </View>
         </Modal>
+        <Snackbar
+          visible={this.state.clearList}
+          onDismiss={() => this.setState({ clearList: false })}
+          duration={700}
+          style={{ backgroundColor: '#252849', textAlign: 'center' }}
+        >
+          {' '}
+          LISTA AZZERATA{' '}
+        </Snackbar>
+       
         <SectionList
           sections={sectionList}
           renderItem={this.renderRow}
@@ -196,7 +263,7 @@ export default class BattList extends PureComponent {
           //   <Text style={styles.header}>{title}</Text>
           // )}
         ></SectionList>
-        
+
         <Appbar style={styles.bottom}>
           <Appbar.Action
             style={{ flex: 1 }}
@@ -257,8 +324,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   bottom: {
-    borderColor:'#f4511D',
-    borderTopWidth:3,
+    borderColor: '#f4511D',
+    borderTopWidth: 3,
     backgroundColor: '#252850',
     position: 'relative',
     left: 0,
@@ -300,6 +367,6 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
-    color:'white'
+    color: 'white'
   }
 })

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { } from 'react'
 import {
   StyleSheet,
   View,
@@ -8,10 +8,9 @@ import {
   TouchableHighlight
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Appbar } from 'react-native-paper'
+import { Appbar, Snackbar } from 'react-native-paper'
 import BattList from './Batterie'
 
-global.list_Batt_Huawei = ' ' //Variabile globale per la scrittura dell'ordine finale
 
 const list = [
   { id: 'G920F', nome: 'SAMSUNG S6', nMax: 2 },
@@ -53,20 +52,8 @@ const sectionList = [
   }
 ]
 export default class BattListSM extends BattList {
-  state = { modalVisible: false, modalVisibleResi: false}
+  state = { modalVisible: false, modalVisibleResi: false, clearList:false}
 
-  // stampList () {
-  //   global.list_Batt_Huawei = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
-  //   global.store_Batt.forEach(element => {
-  //     global.list_Batt_Huawei +=
-  //       element.n + 'x ' + ' BATT ' + element.name + '\n'
-  //   })
-  //   global.listResiBatt = ''
-  //   global.resi_Batt_IP.forEach(element => {
-  //     global.listResiBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
-  //   })
-  //   this.onShareBatt()
-  // }
   clearListBatt () {
     //Azzera lista ordine
     global.store_Batt.clear()
@@ -84,10 +71,9 @@ export default class BattListSM extends BattList {
       }
       AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
-    alert('Lista Svuotata')
+    this.setState({ clearList: !this.state.clearList })
   }
   render () {
-    const { search } = this.state
     return (
       <View style={styles.container}>
         <Modal
@@ -95,7 +81,7 @@ export default class BattListSM extends BattList {
           transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
+            this.setModalVisible(!this.state.modalVisible)
           }}
         >
           <View style={styles.centeredView}>
@@ -122,7 +108,7 @@ export default class BattListSM extends BattList {
           transparent={true}
           visible={this.state.modalVisibleResi}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
+            this.setModalVisible(!this.state.modalVisible)
           }}
         >
           <View style={styles.centeredView}>
@@ -146,7 +132,15 @@ export default class BattListSM extends BattList {
             </View>
           </View>
         </Modal>
-       
+        <Snackbar
+          visible={this.state.clearList}
+          onDismiss={() => this.setState({ clearList: false })}
+          duration={700}
+          style={{ backgroundColor: '#252849', textAlign: 'center' }}
+        >
+          {' '}
+          LISTA AZZERATA{' '}
+        </Snackbar>
         <SectionList
           sections={sectionList}
           renderItem={this.renderRow}

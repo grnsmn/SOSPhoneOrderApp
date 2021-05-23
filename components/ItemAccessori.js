@@ -32,13 +32,13 @@ export default class ItemAccessori extends PureComponent {
             return value
           })
           this.setState({ contatore: tmp.contatore,})
-          if (this.state.contatore == 0) global.store_accessori.delete(this.state.id)
-          if (this.state.contatore != 0) {
+          //if (this.state.contatore == 0) global.store_accessori.delete(this.state.id)
+         // if (this.state.contatore != 0) {
             global.store_accessori.set(this.state.id, {
               name: this.state.nomeItem,
               n: this.state.contatore
             })
-          }
+         // }
         }
       } else {
       }
@@ -46,13 +46,13 @@ export default class ItemAccessori extends PureComponent {
   }
   componentDidUpdate () {
     AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
-    if (this.state.contatore == 88 ) global.store_accessori.delete(this.state.id)
-    if (this.state.contatore != 0) {
+   // if (this.state.contatore == 0 ) global.store_accessori.delete(this.state.id)
+    //if (this.state.contatore != 0) {
       global.store_accessori.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.contatore
       })
-    }
+    //}
   }
 
   inStore () {

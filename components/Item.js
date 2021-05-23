@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet} from 'react-native'
 import { Input } from 'react-native-elements'
-
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 global.store_Batt = new Map() //Oggetto map globale che conterrà nomi e quantità di BATTERIE IPHONE da mettere in lista
 global.resi_Batt_IP = new Map() //Per immagazzinamento lista resi
+
 export default class Item extends PureComponent {
   state = {
     id: '',
@@ -83,10 +83,12 @@ export default class Item extends PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        <Text style={{color: '#F1F3F4', flex: 1, fontSize: 16, marginLeft: 10, fontWeight: 'bold' }}>
+        <Text style={{color: '#F1F3F4', flex: 1.1, fontSize: 16, marginLeft: 10, fontWeight: 'bold'}}>
           {this.props.NameItem}
+          {this.props.codice?<Text style={{color:'#2196F3', fontSize:11, textAlign:'center'}}>{'\n'+this.props.codice}</Text>:<Text></Text>}
+          
         </Text>
-        <Text style={{color: 'grey', flex: 1, fontSize: 10, marginLeft: 10, fontWeight: 'bold', textAlign: 'center' }}>{this.state.compat}</Text>
+        <Text style={{color: 'grey', flex: 0.75, fontSize: 10, fontWeight: 'bold', textAlign: 'right' }}>{this.state.compat}</Text>
         <View
           style={{
             flex: 1,
@@ -96,7 +98,7 @@ export default class Item extends PureComponent {
           }}
         >
           <View
-            style={{ flex: 0.8, borderLeftWidth: 0.5, borderColor: 'gold' }}
+            style={{ flex: 0.5, borderLeftWidth: 0, borderColor: 'gold' }}
           >
             <Input
               style={{ borderWidth: 1, color: 'white' }}
@@ -118,7 +120,7 @@ export default class Item extends PureComponent {
             />
           </View>
           <View
-            style={{ flex: 0.6, borderLeftWidth: 0.5, borderColor: 'lightgreen' }}
+            style={{ flex: 0.4, borderLeftWidth: 0.5, borderColor: 'lightgreen' }}
           >
             <Input
               label={'Reso'}
@@ -151,9 +153,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    borderColor: 'white',
-    borderWidth: 0.25,
-    margin: 1,
+    borderColor: '#2196F3',
+    borderWidth: 0.3,
+    borderRadius: 10,
+    margin: 2,
     alignItems: 'center',
     backgroundColor: '#000'
   },

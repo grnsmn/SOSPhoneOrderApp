@@ -49,16 +49,19 @@ export default class ItemLCD extends PureComponent {
           //Aggiornamento lista ordine
           if (this.state.contatoreW != 0) {
             global.store_Lcd.set(id_W, {
+              id:id_W,
               name: this.state.nomeItem,
               col: 'BIANCO',
               n: this.state.contatoreW,
               frame: this.state.noFrame == 'checked' ? '+ FRAME' : 'NO FRAME'
             })
+
           } else if (this.state.contatoreW == 0) {
             global.store_Lcd.delete(id_W)
           }
           if (tmp.contatoreBK != 0) {
             global.store_Lcd.set(id_BK, {
+              id:id_BK,
               name: this.state.nomeItem,
               col: 'NERO',
               n: this.state.contatoreBK,
@@ -103,6 +106,7 @@ export default class ItemLCD extends PureComponent {
     //aggiorna la quantità di elementi in contemporanea all'inserimento del valore desiderato
     if (this.state.contatoreW != 0) {
       global.store_Lcd.set(id_W, {
+        id:id_W,
         name: this.state.nomeItem,
         col: 'BIANCO',
         n: this.state.contatoreW,
@@ -221,7 +225,7 @@ export default class ItemLCD extends PureComponent {
                 color: 'black',
                 textAlign: 'center',
                 fontSize: 12,
-                backgroundColor: 'white'
+                backgroundColor: '#F1F3F4'
               }}
               disabled={this.oneColor()}
               //renderErrorMessage={false}
@@ -323,8 +327,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    borderColor: '#F1F3F4',
-    borderWidth: 1,
+    borderColor: '#2196F3',
+    borderWidth: 0.5,
+    borderRadius: 10,
     margin: 1,
     alignItems: 'center',
     backgroundColor: '#000'

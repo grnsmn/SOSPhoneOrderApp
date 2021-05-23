@@ -73,7 +73,8 @@ export default class DisplayList extends PureComponent {
           // '/' +
           // tomorrow.getFullYear() +
           // '\n\n' +
-          global.listDisplay + '\nResi:\n' + global.listResiDisplay
+          global.listDisplay +
+          (global.resi_Lcd.size==0?'' :  '\nResi:\n' + global.listResiDisplay) 
       })
       console.log(message)
       if (result.action === Share.sharedAction) {
@@ -192,7 +193,7 @@ export default class DisplayList extends PureComponent {
           transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
+            this.setModalVisible(!this.state.modalVisible)
           }}
         >
           <SafeAreaView style={styles.centeredView}>
@@ -270,7 +271,7 @@ export default class DisplayList extends PureComponent {
           transparent={true}
           visible={this.state.modalVisibleResi}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
+            this.setModalVisible(!this.state.modalVisible)
           }}
         >
           <View style={styles.centeredView}>

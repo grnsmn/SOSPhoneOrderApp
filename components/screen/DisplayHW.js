@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import React, { PureComponent } from 'react'
+import React from 'react'
 import {
   View,
   StyleSheet,
@@ -9,11 +9,9 @@ import {
   TouchableHighlight
 } from 'react-native'
 import ItemLCD from '../ItemLCD'
-import { Appbar } from 'react-native-paper'
+import { Appbar, Snackbar } from 'react-native-paper'
 import DisplayList from './Display'
 
-global.list_Display_Huawei = ''
-global.list_Resi_Display_Huawei = ''
 const list = [
   { id: 'g6p', nome: 'HUAWEI P8', nMax: 1 },
   { id: 'hm4', nome: 'HUAWEI P8 LITE', nMax: 1 },
@@ -38,7 +36,7 @@ const sectionList = [
   }
 ]
 export default class DisplayListHW extends DisplayList {
-  state = { modalVisible: false, modalVisibleResi: false }
+  state = { modalVisible: false, modalVisibleResi: false, clearList:false }
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
@@ -71,17 +69,26 @@ export default class DisplayListHW extends DisplayList {
       //AsyncStorage.multiRemove([element.id+'W', element.id+'Bk']).then(console.log("multirimozione eseguita"))
       AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
-    alert('Lista Svuotata')
+    this.setState({clearList: !this.state.clearList})
   }
   render () {
     return (
       <View style={styles.container}>
+        <Snackbar
+          visible={this.state.clearList}
+          onDismiss={() => this.setState({ clearList: false })}
+          duration={700}
+          style={{ backgroundColor: '#252850', textAlign: 'center' }}
+        >
+          {' '}
+          LISTA AZZERATA{' '}
+        </Snackbar>
         <Modal
           animationType='slide'
           transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
+            this.setModalVisible(!this.state.modalVisible)
           }}
         >
           <View style={styles.centeredView}>
@@ -159,7 +166,7 @@ export default class DisplayListHW extends DisplayList {
           transparent={true}
           visible={this.state.modalVisibleResi}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
+            this.setModalVisible(!this.state.modalVisible)
           }}
         >
           <View style={styles.centeredView}>

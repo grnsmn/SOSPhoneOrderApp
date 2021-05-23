@@ -12,6 +12,8 @@ import 'react-native-gesture-handler'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import Accessori from './components/screen/Accessori'
+import { MenuProvider } from 'react-native-popup-menu';
+
 const Stack = createStackNavigator()
 
 function LogoTitle () {
@@ -28,7 +30,8 @@ function LogoTitle () {
 
 export default function App () {
   return (
-    <NavigationContainer>
+  <MenuProvider>
+      <NavigationContainer>
       <Stack.Navigator initialRouteName='Home'>
         <Stack.Screen
           name='Home'
@@ -150,6 +153,7 @@ export default function App () {
         />
       </Stack.Navigator>
     </NavigationContainer>
+  </MenuProvider>
   )
 }
 

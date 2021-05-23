@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   Text,
   View,
@@ -18,19 +18,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 global.extra = ''
 
-export default class Home extends Component {
+export default class Home extends PureComponent {
   state = {
     text: '',
     input: React.createRef(),
     toDay: new Date(),
     modalVisible: false,
     modalVisibleOrder: false,
-    reset: false
+    reset: false,
+    resetExtra: false
   }
   constructor (props) {
     super(props)
   }
+componentDidMount(){
+  console.log(database)
 
+}
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
   }
@@ -42,7 +46,7 @@ export default class Home extends Component {
     global.extra += this.state.text + ' \n'
     AsyncStorage.setItem('ListExtra', global.extra)
     this.state.input.current.clear()
-    //alert('Inserito!')
+    Vibration.vibrate()
   }
 
   _reset () {
@@ -53,8 +57,6 @@ export default class Home extends Component {
     global.extra = ''
     global.listBatt = ''
     global.listDisplay = ''
-    global.list_Batt_Huawei = ''
-    global.list_Display_Huawei = ''
     global.listResiBatt = ''
     global.listResiDisplay = ''
     AsyncStorage.clear()
@@ -74,7 +76,6 @@ export default class Home extends Component {
     // AsyncStorage.getAllKeys().then(
     //   (result, err) => {
     //     const x = [...result]
-    //     console.log(x)
     //     for(i = 0; i<x.length; i++){
     //       AsyncStorage.getItem(x[i]).then( res =>{
     //         if(JSON.parse(res).section == 'BATT' && JSON.parse(res).contatore !=0){ 
@@ -84,19 +85,22 @@ export default class Home extends Component {
     //             section: JSON.parse(res).section
     //           })
     //         }
-    //         else if(JSON.parse(res).section == 'LCD' && (JSON.parse(res).contatoreW !=0)){ 
-    //           global.store_Lcd.set(JSON.parse(res).id_W, {
+    //         if(JSON.parse(res).section == 'LCD' && ((JSON.parse(res).contatoreW !=0))){ 
+    //           console.log(JSON.parse(res))
+    //           global.store_Lcd.set(JSON.parse(res).id+'W', {
+    //             id: JSON.parse(res).id,
     //             name: JSON.parse(res).nomeItem,
-    //             col: 'BIANCO',
+    //             col: JSON.parse(res).colore,
     //             n: JSON.parse(res).contatoreW,
     //             frame: JSON.parse(res).noFrame == 'checked' ? '+ FRAME' : 'NO FRAME',
     //             section: JSON.parse(res).section
     //           })
     //         }
-    //         else if(JSON.parse(res).section == 'LCD' && (JSON.parse(res).contatoreBK !=0)){ 
-    //           global.store_Lcd.set(JSON.parse(res).id_BK, {
+    //         if(JSON.parse(res).section == 'LCD' && (JSON.parse(res).contatoreBK !=0)){ 
+    //           global.store_Lcd.set(JSON.parse(res)+'Bk', {
+    //             id: JSON.parse(res).id,
     //             name: JSON.parse(res).nomeItem,
-    //             col: 'nero',
+    //             col: JSON.parse(res).colore,
     //             n: JSON.parse(res).contatoreBK,
     //             frame: JSON.parse(res).noFrame == 'checked' ? '+ FRAME' : 'NO FRAME',
     //             section: JSON.parse(res).section
@@ -108,7 +112,6 @@ export default class Home extends Component {
     //     }
     // )
   }
-
   render () {
     return (
       <View style={styles.container}>
@@ -119,6 +122,12 @@ export default class Home extends Component {
           duration={700}
           style={{backgroundColor: '#252850', textAlign:''}}
           > RESET ESEGUITO </Snackbar>
+        <Snackbar
+          visible={this.state.resetExtra}
+          onDismiss= {() => this.setState({resetExtra: false})}
+          duration={700}
+          style={{backgroundColor: '#252850', textAlign:''}}
+          > RESET LISTA EXTRA </Snackbar>
         <View style={styles.modelSection}>
           <FAB
             style={styles.fab}
@@ -138,7 +147,7 @@ export default class Home extends Component {
             transparent={true}
             visible={this.state.modalVisible}
             onRequestClose={() => {
-              Alert.alert('Modal has been closed.')
+              this.setModalVisible(!this.state.modalVisible)
             }}
           >
             <View style={styles.centeredView}>
@@ -163,7 +172,8 @@ export default class Home extends Component {
             transparent={true}
             visible={this.state.modalVisibleOrder}
             onRequestClose={() => {
-              Alert.alert('Modal has been closed.')
+            this.setModalVisible(!this.state.modalVisible)
+              
             }}
           >
             <View style={styles.centeredView}>
@@ -313,7 +323,8 @@ export default class Home extends Component {
             onPress={() => {
               global.extra = ''
               AsyncStorage.removeItem('ListaExtra').then(() =>
-                alert('lista svuotata')
+                  this.setState({resetExtra: !this.state.resetExtra})
+                
               )
             }}
             containerStyle={{
