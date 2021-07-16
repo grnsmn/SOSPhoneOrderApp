@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Appbar, Snackbar } from 'react-native-paper'
+import { Appbar, Searchbar, Snackbar } from 'react-native-paper'
 
 
 global.listBatt = '' //Variabile globale per la scrittura dell'ordine finale
@@ -38,70 +38,14 @@ const sectionList = [
     data: list
   }
 ]
-
-// review = (visible, visibleResi) =>{
-// <View>
-// <Modal
-//           animationType='slide'
-//           transparent={true}
-//           visible={visible}
-//           onRequestClose={() => {
-//             Alert.alert('Modal has been closed.')
-//           }}
-//         >
-//           <View style={styles.centeredView}>
-//             <View style={styles.modalView}>
-//               <Text style={styles.modalText}>
-//                 IN ORDINE {'\n\n'}
-//                 {[...global.store_Batt.values()].sort().map(function (element) {
-//                   return String(element.n + 'x ' + element.name + '\n')
-//                 })}
-//               </Text>
-//               <TouchableHighlight
-//                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
-//                 onPress={() => {
-//                   this.setModalVisible(!visible)
-//                 }}
-//               >
-//                 <Text style={styles.textStyle}>Chiudi</Text>
-//               </TouchableHighlight>
-//             </View>
-//           </View>
-//         </Modal>
-//         <Modal
-//           animationType='slide'
-//           transparent={true}
-//           visible={visibleResi}
-//           onRequestClose={() => {
-//             Alert.alert('Modal has been closed.')
-//           }}
-//         >
-//           <View style={styles.centeredView}>
-//             <View style={styles.modalView}>
-//               <Text style={styles.modalText}>
-//                 RESI {'\n\n'}
-//                 {[...global.resi_Batt_IP.values()]
-//                   .sort()
-//                   .map(function (element) {
-//                     return String(element.n + 'x ' + element.name + '\n')
-//                   })}
-//               </Text>
-//               <TouchableHighlight
-//                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
-//                 onPress={() => {
-//                   this.setModalVisibleResi(!visibleResi)
-//                 }}
-//               >
-//                 <Text style={styles.textStyle}>Chiudi</Text>
-//               </TouchableHighlight>
-//             </View>
-//           </View>
-//         </Modal>
-// </View>
-// }
-
 export default class BattList extends PureComponent {
-  state = { modalVisible: false, modalVisibleResi: false, clearList:false}
+  state = {
+    modalVisible: false,
+    modalVisibleResi: false,
+    clearList: false,
+    listFiltered: sectionList,
+    searchModel: ''
+  }
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
@@ -109,6 +53,7 @@ export default class BattList extends PureComponent {
   setModalVisibleResi = visible => {
     this.setState({ modalVisibleResi: visible })
   }
+
   renderRow = ({ item, index }) => (
     <Item
       NameItem={item.nome}
@@ -118,7 +63,16 @@ export default class BattList extends PureComponent {
       codice={item.codice}
     />
   )
-
+  search (model) {
+    this.setState({
+      listFiltered: [
+        {
+          title: 'To order',
+          data: list.filter(elem => elem.nome.includes(model.toUpperCase()))
+        }
+      ]
+    })
+  }
   onShareBatt = async () => {
     try {
       const data = new Date()
@@ -189,7 +143,7 @@ export default class BattList extends PureComponent {
   }
   render () {
     return (
-      <View style={styles.container}> 
+      <View style={styles.container}>
         <Modal
           animationType='slide'
           transparent={true}
@@ -205,6 +159,14 @@ export default class BattList extends PureComponent {
                 {[...global.store_Batt.values()].sort().map(function (element) {
                   return String(element.n + 'x ' + element.name + '\n')
                 })}
+              </Text>
+              <Text style={styles.modalTextResi}>
+                RESI {'\n'}
+                {[...global.resi_Batt_IP.values()]
+                  .sort()
+                  .map(function (element) {
+                    return String(element.n + 'x ' + element.name + '\n')
+                  })}
               </Text>
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
@@ -255,15 +217,17 @@ export default class BattList extends PureComponent {
           {' '}
           LISTA AZZERATA{' '}
         </Snackbar>
-       
         <SectionList
-          sections={sectionList}
+          sections={this.state.listFiltered}
           renderItem={this.renderRow}
           // renderSectionHeader={({ section: { title } }) => (
           //   <Text style={styles.header}>{title}</Text>
           // )}
         ></SectionList>
-
+        <Searchbar
+          placeholder='Type Here...'
+          onChangeText={text => this.search(text)}
+        />
         <Appbar style={styles.bottom}>
           <Appbar.Action
             style={{ flex: 1 }}
@@ -271,12 +235,12 @@ export default class BattList extends PureComponent {
             color={'gold'}
             onPress={() => this.setModalVisible(true)}
           />
-          <Appbar.Action
+          {/* <Appbar.Action
             style={{ flex: 1 }}
             icon='recycle'
             color={'lightgreen'}
             onPress={() => this.setModalVisibleResi(true)}
-          />
+          /> */}
           {/* <Appbar.Action
             style={{ flex: 1 }}
             icon='printer-wireless'
@@ -314,10 +278,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex: 1,
     borderWidth: 2
-
-    //    borderBottomWidth: 3,
-    //  borderTopWidth: 1.5,
-    //borderLeftWidth: 2
   },
   header: {
     fontSize: 32,
@@ -365,8 +325,14 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   modalText: {
+    fontSize: 15,
     marginBottom: 15,
     textAlign: 'center',
-    color: 'white'
+    color: 'gold'
+  },
+  modalTextResi: {
+    marginBottom: 15,
+    textAlign: 'left',
+    color: 'lightgreen'
   }
 })

@@ -12,24 +12,25 @@ export default class ListOrder extends Component{
               <View>
                 <Text style={styles.modalText}>
                   IN ORDINE {'\n\n'}
-                  <Text style={{color:'#007AFF'}}>{'\n'}BATTERIE{'\n'}</Text> 
+                  <Text style={{color:'#007AFF'}}>{'\n\t'}BATTERIE{'\n'}</Text> 
                   {[...global.store_Batt.values()]    //Sezione batterie
                     .sort()
                     .map(function (element) {
                       return String(element.n + 'x '+ ' ' + element.name+ '\n')
                     })
                   }
-                  <Text style={{color:'#007AFF'}}> {'\n'}DISPLAY{'\n'} </Text> 
+                  <Text style={{color:'#007AFF'}}> {'\n\t'}DISPLAY{'\n'}</Text> 
                       {
                 [...global.store_Lcd.values()].sort().map(function (element) {
                   if (element.name.includes('IPHONE')) {
                     if (
                       element.name.includes('IPHONE X') ||
+                      element.name.includes('IPHONE XS MAX') ||
                       element.name.includes('IPHONE XR') ||
                       element.name.includes('IPHONE 11')
                     ) {
                       return String(
-                        element.n + 'x ' + element.name + ' '+ element.section + '\n'
+                        element.n + 'x ' + element.name + '\n'
                       )
                     } else {
                       return String(
@@ -76,7 +77,6 @@ export default class ListOrder extends Component{
                     return String(
                         element.n +
                           'x ' +
-                         
                           element.name +
                           ' ' +
                           element.col +
@@ -84,7 +84,10 @@ export default class ListOrder extends Component{
                       )
                   }
                 })}
-                  {'\n' }{[...global.extra] }
+                <Text style={{color:'#007AFF'}}> {'\n\t'}EXTRA{'\n'}</Text> 
+                  {[...global.extra].map(function(element){
+                    return element
+                  }) }
                 </Text>
               </View>
         )

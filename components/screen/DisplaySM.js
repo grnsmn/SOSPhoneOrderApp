@@ -9,7 +9,7 @@ import {
   TouchableHighlight
 } from 'react-native'
 import ItemLCD_SM from '../ItemLCD_SM'
-import { Appbar, Snackbar } from 'react-native-paper'
+import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
 import DisplayList from './Display'
 
 global.list_Display_Huawei = ''
@@ -54,7 +54,8 @@ const sectionList = [
   }
 ]
 export default class DisplayListSM extends DisplayList {
-  state = { modalVisible: false, modalVisibleResi: false, clearList: false }
+  state = { modalVisible: false, modalVisibleResi: false, clearList: false,  listFiltered: sectionList,
+    searchModel: '' }
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
@@ -89,7 +90,11 @@ export default class DisplayListSM extends DisplayList {
     return (
       <View style={styles.container}>
        
-        <SectionList sections={sectionList} renderItem={this.renderRow} />
+        <SectionList sections={this.state.listFiltered} renderItem={this.renderRow} />
+        <Searchbar
+          placeholder='Type Here...'
+          onChangeText={text => this.search(text)}
+        />
         <Snackbar
           visible={this.state.clearList}
           onDismiss={() => this.setState({ clearList: false })}

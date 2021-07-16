@@ -18,6 +18,7 @@ const list_banco_vendita = [
   { id: 'cè1', nome: 'CAVO LIGHTNING 2M', nMax: 4 },
   { id: 'cè8', nome: 'CAVO MICRO-USB', nMax: 4 },
   { id: 'cè2', nome: 'CAVO MICRO-USB 2M', nMax: 4 },
+  { id: 'cèM', nome: 'CAVO TYPE-C/LIGHTING', nMax: 4 },
   { id: 'cè9', nome: 'CAVO TYPE-C', nMax: 4 },
   { id: 'cè0', nome: 'CAVO TYPE-C 2M', nMax: 4 },
   { id: 'Aè1', nome: 'ALIM. 2.1A', nMax: 4 },
@@ -159,8 +160,8 @@ const list_magazzino = [
           transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
-          }}
+                  this.setModalVisible(!this.state.modalVisible)
+                }}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>

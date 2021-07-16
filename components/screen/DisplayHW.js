@@ -9,7 +9,7 @@ import {
   TouchableHighlight
 } from 'react-native'
 import ItemLCD from '../ItemLCD'
-import { Appbar, Snackbar } from 'react-native-paper'
+import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
 import DisplayList from './Display'
 
 const list = [
@@ -36,8 +36,19 @@ const sectionList = [
   }
 ]
 export default class DisplayListHW extends DisplayList {
-  state = { modalVisible: false, modalVisibleResi: false, clearList:false }
+  state = { modalVisible: false, modalVisibleResi: false, clearList:false, listFiltered: sectionList,
+    searchModel: '' }
 
+  search (model) {
+    this.setState({
+      listFiltered: [
+        {
+          title: 'To order',
+          data: list.filter(elem => (elem.nome.includes(model.toUpperCase())))
+        }
+      ]
+    })
+  }
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
   }
@@ -150,6 +161,34 @@ export default class DisplayListHW extends DisplayList {
                   }
                 })}
               </Text>
+              <Text style={styles.modalTextResi}>
+                RESI {'\n\n'}
+                {[...global.resi_Lcd.values()].sort().map(function (element) {
+                  if (
+                    element.name.includes('IPHONE X') ||
+                    element.name.includes('IPHONE 11') ||
+                    element.name.includes('P20 LITE') ||
+                    element.name.includes('P30 LITE') ||
+                    element.name.includes('MATE 20 LITE') ||
+                    element.name.includes('PSMART 2019') ||
+                    element.name.includes('PSMART Z')
+                  ) {
+                    return String(
+                      element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
+                    )
+                  } else {
+                    return String(
+                      element.n +
+                        'x ' +
+                        ' LCD ' +
+                        element.name +
+                        ' ' +
+                        element.col +
+                        '\n'
+                    )
+                  }
+                })}
+              </Text>
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
                 onPress={() => {
@@ -210,7 +249,11 @@ export default class DisplayListHW extends DisplayList {
             </View>
           </View>
         </Modal>
-        <SectionList sections={sectionList} renderItem={this.renderRow} />
+        <SectionList sections={this.state.listFiltered} renderItem={this.renderRow} />
+        <Searchbar
+          placeholder='Type Here...'
+          onChangeText={text => this.search(text)}
+        />
         <Appbar style={styles.bottom}>
           <Appbar.Action
             style={{ flex: 1 }}
@@ -218,12 +261,12 @@ export default class DisplayListHW extends DisplayList {
             color={'gold'}
             onPress={() => this.setModalVisible(true)}
           />
-          <Appbar.Action
+          {/* <Appbar.Action
             style={{ flex: 1 }}
             icon='recycle'
             color={'lightgreen'}
             onPress={() => this.setModalVisibleResi(true)}
-          />
+          /> */}
           <Appbar.Action
             style={{ flex: 1 }}
             icon='delete'
@@ -302,5 +345,10 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
     color: 'white'
+  },
+  modalTextResi: {
+    marginBottom: 15,
+    textAlign: 'left',
+    color: 'lightgreen',
   }
 })

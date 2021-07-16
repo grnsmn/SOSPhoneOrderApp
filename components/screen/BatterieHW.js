@@ -8,25 +8,85 @@ import {
   TouchableHighlight
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Appbar, Snackbar } from 'react-native-paper'
+import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
 import BattList from './Batterie'
-import { Input } from 'react-native-elements'
 
 const list = [
-  { id: 'cvG', nome: 'HUAWEI P8', nMax: 2, codice:'HB3447A9EBW' },
-  { id: 'po5', nome: 'HUAWEI P8 LITE', nMax: 2, codice:'HB3742A0EZC+' },
-  { id: 'cfV', nome: 'HUAWEI P9', compat:'P9 LITE \n P8 LITE 2017 \n P10 LITE \n P20 LITE \n HONOR 8 \n P SMART \n HONOR 9 LITE \n Y6 2018 \n GT3 \n HONOR 7A ', nMax: 5, codice: 'HB366481EC​W' },
-  { id: 'cfZ', nome: 'HUAWEI P9 PLUS', nMax: 2, codice:'HB376883ECW' },
-  { id: 'dtZ', nome: 'HUAWEI PSMART 2019', compat: 'HONOR 10 LITE \n P SMART PLUS 2019',  nMax: 2, codice:'HB396286ECW' },
-  { id: 'cf0', nome: 'HUAWEI P10', compat: 'HONOR 9', nMax: 2, codice:'HB386280ECW' },
-  { id: 'z9y', nome: 'HUAWEI P20', compat:'HONOR 10', nMax: 2, codice:'HB396285ECW' },
-  { id: 'S9y', nome: 'HUAWEI P30', compat: 'MATE 20 PRO', nMax: 2, codice:'HB436380ECW' },
-  { id: 'T71', nome: 'HUAWEI MATE 9', compat:'MATE 9 PRO \n Y7 2017 \n Y7 2019', nMax: 2, codice:'HB406689ECW' },
-  { id: 'T72', nome: 'HUAWEI MATE 10', compat: 'MATE 10 PRO \n P20 PRO \n P SMART Z \n P30 \n HONOR VIEW 20', nMax: 2, codice:'HB436486ECW ' },
-  { id: 'F79', nome: 'HUAWEI MATE 10 LITE', compat: 'P30 LITE \n HONOR 7X \n P SMART PLUS', nMax: 2, codice:'HB356687ECW' },
-  { id: 'x1L', nome: 'HUAWEI MATE 20 LITE', compat: 'P10 PLUS \n HONOR VIEW 10 \n NOVA 5T', nMax: 2, codice:'HB386589ECW' },
+  { id: 'cvG', nome: 'HUAWEI P8', nMax: 2, codice: 'HB3447A9EBW' },
+  { id: 'po5', nome: 'HUAWEI P8 LITE', nMax: 2, codice: 'HB3742A0EZC+' },
+  {
+    id: 'cfV',
+    nome: 'HUAWEI P9',
+    compat:
+      'P9 LITE \n P8 LITE 2017 \n P10 LITE \n P20 LITE \n HONOR 8 \n P SMART \n HONOR 9 LITE \n Y6 2018 \n GT3 \n HONOR 7A ',
+    nMax: 5,
+    codice: 'HB366481EC​W'
+  },
+  { id: 'cfZ', nome: 'HUAWEI P9 PLUS', nMax: 2, codice: 'HB376883ECW' },
+  {
+    id: 'dtZ',
+    nome: 'HUAWEI PSMART 2019',
+    compat: 'HONOR 10 LITE \n P SMART PLUS 2019',
+    nMax: 2,
+    codice: 'HB396286ECW'
+  },
+  {
+    id: 'cf0',
+    nome: 'HUAWEI P10',
+    compat: 'HONOR 9',
+    nMax: 2,
+    codice: 'HB386280ECW'
+  },
+  {
+    id: 'z9y',
+    nome: 'HUAWEI P20',
+    compat: 'HONOR 10',
+    nMax: 2,
+    codice: 'HB396285ECW'
+  },
+  {
+    id: 'S9y',
+    nome: 'HUAWEI P30',
+    compat: 'MATE 20 PRO',
+    nMax: 2,
+    codice: 'HB436380ECW'
+  },
+  {
+    id: 'T71',
+    nome: 'HUAWEI MATE 9',
+    compat: 'MATE 9 PRO \n Y7 2017 \n Y7 2019',
+    nMax: 2,
+    codice: 'HB406689ECW'
+  },
+  {
+    id: 'T72',
+    nome: 'HUAWEI MATE 10',
+    compat: 'MATE 10 PRO \n P20 PRO \n P SMART Z \n P30 \n HONOR VIEW 20',
+    nMax: 2,
+    codice: 'HB436486ECW '
+  },
+  {
+    id: 'F79',
+    nome: 'HUAWEI MATE 10 LITE',
+    compat: 'P30 LITE \n HONOR 7X \n P SMART PLUS',
+    nMax: 2,
+    codice: 'HB356687ECW'
+  },
+  {
+    id: 'x1L',
+    nome: 'HUAWEI MATE 20 LITE',
+    compat: 'P10 PLUS \n HONOR VIEW 10 \n NOVA 5T',
+    nMax: 2,
+    codice: 'HB386589ECW'
+  },
   { id: 'x76', nome: 'HUAWEI MATE S', nMax: 2, codice: 'HB436178EBW' },
-  { id: 'x78', nome: 'HUAWEI NOVA YOUNG', compat:'HUAWEI Y6 PRO 2017 \n Y5 2018 \n Y6 2019 \n Y6S', nMax: 2, codice:'HB405979ECW' },
+  {
+    id: 'x78',
+    nome: 'HUAWEI NOVA YOUNG',
+    compat: 'HUAWEI Y6 PRO 2017 \n Y5 2018 \n Y6 2019 \n Y6S',
+    nMax: 2,
+    codice: 'HB405979ECW'
+  }
 ]
 const sectionList = [
   {
@@ -35,12 +95,24 @@ const sectionList = [
   }
 ]
 export default class BattListHW extends BattList {
-  state = { modalVisible: false, modalVisibleResi: false, clearList:false}
-  // searchBattery(code){
-  //   list.forEach(element=>{
-  //     console.log(element.codice.includes(code))
-  //   })
-  // }
+  state = {
+    modalVisible: false,
+    modalVisibleResi: false,
+    clearList: false,
+    listFiltered: sectionList,
+    searchModel: ''
+  }
+
+  search (model) {
+    this.setState({
+      listFiltered: [
+        {
+          title: 'To order',
+          data: list.filter(elem => (elem.nome.includes(model.toUpperCase())))
+        }
+      ]
+    })
+  }
   clearListBatt () {
     //Azzera lista ordine
     global.store_Batt.clear()
@@ -81,6 +153,14 @@ export default class BattListHW extends BattList {
                 {[...global.store_Batt.values()].sort().map(function (element) {
                   return String(element.n + 'x ' + element.name + '\n')
                 })}
+              </Text>
+              <Text style={styles.modalTextResi}>
+                RESI {'\n'}
+                {[...global.resi_Batt_IP.values()]
+                  .sort()
+                  .map(function (element) {
+                    return String(element.n + 'x ' + element.name + '\n')
+                  })}
               </Text>
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
@@ -132,23 +212,16 @@ export default class BattListHW extends BattList {
           LISTA AZZERATA{' '}
         </Snackbar>
         <SectionList
-          sections={sectionList}
+          sections={this.state.listFiltered}
           renderItem={this.renderRow}
           // renderSectionHeader={({ section: { title } }) => (
           //   <Text style={styles.header}>{title}</Text>
           // )}
         ></SectionList>
-        {/* <View>
-          <Input
-          defaultValue= {this.state.search}
-          style={{backgroundColor:'white'}}
-          onChangeText={value => {this.setState({a:value})}}
-          onSubmitEditing={()=>{this.setState({search: this.state.a}); }}
-
-          >
-
-          </Input>
-        </View> */}
+        <Searchbar
+          placeholder='Type Here...'
+          onChangeText={text => this.search(text)}
+        />
         <Appbar style={styles.bottom}>
           <Appbar.Action
             style={{ flex: 1 }}
@@ -156,12 +229,12 @@ export default class BattListHW extends BattList {
             color={'gold'}
             onPress={() => this.setModalVisible(true)}
           />
-          <Appbar.Action
+          {/* <Appbar.Action
             style={{ flex: 1 }}
             icon='recycle'
             color={'lightgreen'}
             onPress={() => this.setModalVisibleResi(true)}
-          />
+          /> */}
           <Appbar.Action
             style={{ flex: 1 }}
             icon='delete'
@@ -243,8 +316,14 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   modalText: {
+    fontSize: 15,
     marginBottom: 15,
     textAlign: 'center',
-    color: 'white'
+    color: 'gold'
+  },
+  modalTextResi: {
+    marginBottom: 15,
+    textAlign: 'left',
+    color: 'lightgreen'
   }
 })

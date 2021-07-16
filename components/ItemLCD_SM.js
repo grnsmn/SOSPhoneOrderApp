@@ -23,7 +23,7 @@ export default class ItemLCD_SM extends PureComponent {
     nomeItem: '',
     section: 'LCD',
     colore: '',
-    contatoreW: 0,
+    contatore: 0,
     resiW: 0,
     quality: 'indeterminate'
   }
@@ -35,7 +35,6 @@ export default class ItemLCD_SM extends PureComponent {
   }
   componentDidMount () {
     //console.log('Mount'+ this.state.nomeItem)
-    const id_W = this.state.id + 'W'
     AsyncStorage.getItem(this.state.id).then(result => {
       const parseElement = JSON.parse(result)
       if (parseElement != null) {
@@ -45,26 +44,26 @@ export default class ItemLCD_SM extends PureComponent {
             return value
           })
           this.setState({
-            contatoreW: tmp.contatoreW,
+            contatore: tmp.contatore,
             resiW: tmp.resiW,
             colore: tmp.colore,
             quality: tmp.quality
           })
           //Aggiornamento lista ordine
-          if (this.state.contatoreW != 0) {
-            global.store_Lcd.set(id_W, {
+          if (this.state.contatore != 0) {
+            global.store_Lcd.set(this.state.id, {
               name: this.state.nomeItem,
               col: this.state.colore,
-              n: this.state.contatoreW,
+              n: this.state.contatore,
               quality: this.state.quality == 'checked' ? 'ORIG' : 'COMP'
             })
-          } else if (this.state.contatoreW == 0) {
-            global.store_Lcd.delete(id_W)
+          } else if (this.state.contatore == 0) {
+            global.store_Lcd.delete(this.state.id)
           }
           //RESI BIANCHI
-          if (this.state.resiW == 0) global.resi_Lcd.delete(id_W)
+          if (this.state.resiW == 0) global.resi_Lcd.delete(this.state.id)
           if (this.state.resiW != 0) {
-            global.resi_Lcd.set(id_W, {
+            global.resi_Lcd.set(this.state.id, {
               name: this.state.nomeItem,
               n: this.state.resiW
             })
@@ -75,25 +74,25 @@ export default class ItemLCD_SM extends PureComponent {
     })
   }
   componentDidUpdate () {
-    AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
-    const id_W = this.state.id + 'W'
     //console.log("attualmente inseriti:" +  this.state.resiW)
     //elimina gli elementi da map se il valore inserito è 0
-    if (this.state.contatoreW == 0) global.store_Lcd.delete(id_W)
+    if (this.state.contatore == 0) global.store_Lcd.delete(this.state.id)
     //aggiorna la quantità di elementi in contemporanea all'inserimento del valore desiderato
-    if (this.state.contatoreW != 0) {
-      global.store_Lcd.set(id_W, {
+    if (this.state.contatore != 0) {
+      global.store_Lcd.set(this.state.id, {
         name: this.state.nomeItem,
         col: this.state.colore,
-        n: this.state.contatoreW,
-        quality: this.state.quality
+        n: this.state.contatore,
+        quality: this.state.quality,
+        section: 'LCD'
       })
+      AsyncStorage.mergeItem(this.state.id, JSON.stringify(global.store_Lcd.get(this.state.id)))
     }
     //Aggiornamento lista resi
     //RESI BIANCHI
-    if (this.state.resiW == 0) global.resi_Lcd.delete(id_W)
+    if (this.state.resiW == 0) global.resi_Lcd.delete(this.state.id)
     if (this.state.resiW != 0) {
-      global.resi_Lcd.set(id_W, {
+      global.resi_Lcd.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.resiW
       })
@@ -205,14 +204,14 @@ export default class ItemLCD_SM extends PureComponent {
                 fontSize: 11
                 // backgroundColor: 'white'
               }}
-              placeholder={String(this.state.contatoreW)}
+              placeholder={String(this.state.contatore)}
               placeholderTextColor={'gold'}
               keyboardType='numeric'
               maxLength={1}
               onChangeText={value => {
                 if (value <= this.props.nMax && value != '') {
                   this.setState({
-                    contatoreW: parseInt(value),
+                    contatore: parseInt(value),
                     colore: this.state.colore
                   })
                 }

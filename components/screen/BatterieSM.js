@@ -8,7 +8,7 @@ import {
   TouchableHighlight
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Appbar, Snackbar } from 'react-native-paper'
+import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
 import BattList from './Batterie'
 
 
@@ -52,8 +52,19 @@ const sectionList = [
   }
 ]
 export default class BattListSM extends BattList {
-  state = { modalVisible: false, modalVisibleResi: false, clearList:false}
+  state = { modalVisible: false, modalVisibleResi: false, clearList:false, listFiltered: sectionList,
+    searchModel: ''}
 
+    search (model) {
+      this.setState({
+        listFiltered: [
+          {
+            title: 'To order',
+            data: list.filter(elem => (elem.nome.includes(model.toUpperCase())))
+          }
+        ]
+      })
+    }
   clearListBatt () {
     //Azzera lista ordine
     global.store_Batt.clear()
@@ -91,6 +102,14 @@ export default class BattListSM extends BattList {
                 {[...global.store_Batt.values()].sort().map(function (element) {
                   return String(element.n + 'x ' + element.name + '\n')
                 })}
+              </Text>
+              <Text style={styles.modalTextResi}>
+                RESI {'\n'}
+                {[...global.resi_Batt_IP.values()]
+                  .sort()
+                  .map(function (element) {
+                    return String(element.n + 'x ' + element.name + '\n')
+                  })}
               </Text>
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
@@ -142,12 +161,16 @@ export default class BattListSM extends BattList {
           LISTA AZZERATA{' '}
         </Snackbar>
         <SectionList
-          sections={sectionList}
+          sections={this.state.listFiltered}
           renderItem={this.renderRow}
           // renderSectionHeader={({ section: { title } }) => (
           //   <Text style={styles.header}>{title}</Text>
           // )}
         ></SectionList>
+        <Searchbar
+          placeholder='Type Here...'
+          onChangeText={text => this.search(text)}
+        />
         <Appbar style={styles.bottom}>
           <Appbar.Action
             style={{ flex: 1 }}
@@ -155,12 +178,12 @@ export default class BattListSM extends BattList {
             color={'gold'}
             onPress={() => this.setModalVisible(true)}
           />
-          <Appbar.Action
+          {/* <Appbar.Action
             style={{ flex: 1 }}
             icon='recycle'
             color={'lightgreen'}
             onPress={() => this.setModalVisibleResi(true)}
-          />
+          /> */}
           <Appbar.Action
             style={{ flex: 1 }}
             icon='delete'
@@ -242,8 +265,14 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   modalText: {
+    fontSize:15,
     marginBottom: 15,
     textAlign: 'center',
-    color: 'white'
+    color: 'gold'
+  },
+  modalTextResi: {
+    marginBottom: 15,
+    textAlign: 'left',
+    color: 'lightgreen',
   }
 })

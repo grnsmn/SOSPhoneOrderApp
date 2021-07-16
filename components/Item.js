@@ -41,7 +41,8 @@ export default class Item extends PureComponent {
             // console.log([...global.store_Batt.get(this.state.id)])
             global.store_Batt.set(this.state.id, {
               name: this.state.nomeItem,
-              n: this.state.contatore
+              n: this.state.contatore,
+              section: this.state.section,
             })
           }
 

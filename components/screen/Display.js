@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ItemLCD from '../ItemLCD'
-import { Appbar, Snackbar } from 'react-native-paper'
+import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
 
 global.listDisplay = ''
 global.listResiDisplay = ''
@@ -36,13 +36,9 @@ const sectionList = [
     title: 'To Order',
     data: list
   }
-  // {
-  //   title: 'Resi',
-  //   data: list
-  // }
 ]
 export default class DisplayList extends PureComponent {
-  state = { modalVisible: false, modalVisibleResi: false, clearList: false }
+  state = { modalVisible: false, modalVisibleResi: false, clearList: false,listFiltered:sectionList, searchModel:'' }
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
@@ -54,7 +50,16 @@ export default class DisplayList extends PureComponent {
   renderRow = ({ item }) => (
     <ItemLCD NameItem={item.nome} nMax={item.nMax} id={item.id} />
   )
-
+  search (model) {
+    this.setState({
+      listFiltered: [
+        {
+          title: 'To order',
+          data: list.filter(elem => elem.nome.includes(model.toUpperCase()))
+        }
+      ]
+    })
+  }
   onShareDisplay = async () => {
     try {
       const data = new Date()
@@ -205,6 +210,7 @@ export default class DisplayList extends PureComponent {
                   if (element.name.includes('IPHONE')) {
                     if (
                       element.name.includes('IPHONE X') ||
+                      element.name.includes('IPHONE XS Max') ||
                       element.name.includes('IPHONE XR') ||
                       element.name.includes('IPHONE 11')
                     ) {
@@ -226,6 +232,7 @@ export default class DisplayList extends PureComponent {
                     if (
                       element.name.includes('P20 LITE') ||
                       element.name.includes('P30 LITE') ||
+                      element.name.includes('P40 LITE') ||
                       element.name.includes('MATE 20 LITE') ||
                       element.name.includes('PSMART 2019') ||
                       element.name.includes('PSMART Z')
@@ -252,6 +259,35 @@ export default class DisplayList extends PureComponent {
                           '\n'
                       )
                     }
+                  }
+                })}
+              </Text>
+              <Text style={styles.modalTextResi}>
+                RESI {'\n\n'}
+                {[...global.resi_Lcd.values()].sort().map(function (element) {
+                  if (
+                    element.name.includes('IPHONE X') ||
+                    element.name.includes('IPHONE 11') ||
+                    element.name.includes('P20 LITE') ||
+                    element.name.includes('P30 LITE') ||
+                    element.name.includes('P40 LITE') ||
+                    element.name.includes('MATE 20 LITE') ||
+                    element.name.includes('PSMART 2019') ||
+                    element.name.includes('PSMART Z')
+                  ) {
+                    return String(
+                      element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
+                    )
+                  } else {
+                    return String(
+                      element.n +
+                        'x ' +
+                        ' LCD ' +
+                        element.name +
+                        ' ' +
+                        element.col +
+                        '\n'
+                    )
                   }
                 })}
               </Text>
@@ -316,7 +352,11 @@ export default class DisplayList extends PureComponent {
             </View>
           </View>
         </Modal>
-        <SectionList sections={sectionList} renderItem={this.renderRow} />
+        <SectionList sections={this.state.listFiltered} renderItem={this.renderRow} />
+        <Searchbar
+          placeholder='Type Here...'
+          onChangeText={text => this.search(text)}
+        />
         <Appbar style={styles.bottom}>
           <Appbar.Action
             style={{ flex: 1 }}
@@ -324,12 +364,12 @@ export default class DisplayList extends PureComponent {
             color={'gold'}
             onPress={() => this.setModalVisible(true)}
           />
-          <Appbar.Action
+          {/* <Appbar.Action
             style={{ flex: 1 }}
             icon='recycle'
             color={'lightgreen'}
             onPress={() => this.setModalVisibleResi(true)}
-          />
+          /> */}
           <Appbar.Action
             style={{ flex: 1 }}
             icon='delete'
@@ -391,7 +431,9 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5
+    elevation: 5,
+    borderWidth:1,
+    borderColor:'#2196F3'
   },
   openButton: {
     backgroundColor: '#F194FF',
@@ -405,8 +447,14 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   modalText: {
+    fontSize:15,
     marginBottom: 15,
-    textAlign: 'center',
-    color: 'white'
+    textAlign: 'left',
+    color: '#F1F3F4'
+  },
+  modalTextResi: {
+    marginBottom: 15,
+    textAlign: 'left',
+    color: 'lightgreen',
   }
 })
