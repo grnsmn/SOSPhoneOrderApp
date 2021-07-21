@@ -170,6 +170,7 @@ export default class BattListSM extends BattList {
         <Searchbar
           placeholder='Type Here...'
           onChangeText={text => this.search(text)}
+          style={styles.input}
         />
         <Appbar style={styles.bottom}>
           <Appbar.Action
@@ -224,8 +225,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   bottom: {
-    borderColor: '#f4511D',
-    borderTopWidth: 3,
+    borderTopWidth: 2,
+    borderRadius: 15,
     backgroundColor: '#252850',
     position: 'relative',
     left: 0,
@@ -274,5 +275,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'left',
     color: 'lightgreen',
+  },
+  input: {
+    backgroundColor: '#2196F3',
+    borderColor: '#252850',
+    borderWidth: 0.5,
+    marginTop: 3,
+    height: 40,
+    borderRadius: 10
   }
 })

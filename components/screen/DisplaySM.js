@@ -54,16 +54,13 @@ const sectionList = [
   }
 ]
 export default class DisplayListSM extends DisplayList {
-  state = { modalVisible: false, modalVisibleResi: false, clearList: false,  listFiltered: sectionList,
+  state = { modalVisible: false, clearList: false,  listFiltered: sectionList,
     searchModel: '' }
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
   }
 
-  setModalVisibleResi = visible => {
-    this.setState({ modalVisibleResi: visible })
-  }
   renderRow = ({ item }) => (
     <ItemLCD_SM NameItem={item.nome} nMax={item.nMax} id={item.id} />
   )
@@ -94,6 +91,7 @@ export default class DisplayListSM extends DisplayList {
         <Searchbar
           placeholder='Type Here...'
           onChangeText={text => this.search(text)}
+          style={styles.input}
         />
         <Snackbar
           visible={this.state.clearList}
@@ -182,55 +180,6 @@ export default class DisplayListSM extends DisplayList {
             </View>
           </View>
         </Modal>
-        <Modal
-          animationType='slide'
-          transparent={true}
-          visible={this.state.modalVisibleResi}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>
-                RESI {'\n\n'}
-                {[...global.resi_Lcd.values()].sort().map(function (element) {
-                  if (
-                    element.name.includes('IPHONE X') ||
-                    element.name.includes('IPHONE 11') ||
-                    element.name.includes('P20 LITE') ||
-                    element.name.includes('P30 LITE') ||
-                    element.name.includes('MATE 20 LITE') ||
-                    element.name.includes('PSMART 2019') ||
-                    element.name.includes('PSMART Z')
-                  ) {
-                    return String(
-                      element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
-                    )
-                  } else {
-                    return String(
-                      element.n +
-                        'x ' +
-                        ' LCD ' +
-                        element.name +
-                        ' ' +
-                        element.col +
-                        '\n'
-                    )
-                  }
-                })}
-              </Text>
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
-                onPress={() => {
-                  this.setModalVisibleResi(!this.state.modalVisibleResi)
-                }}
-              >
-                <Text style={styles.textStyle}>Hide List</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
         <Appbar style={styles.bottom}>
           <Appbar.Action
             style={{ flex: 1 }}
@@ -278,8 +227,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   bottom: {
-    borderColor: '#f4511D',
-    borderTopWidth: 3,
+    borderTopWidth: 2,
+    borderRadius: 15,
     backgroundColor: '#252850',
     position: 'relative',
     left: 0,
@@ -322,5 +271,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
     color: 'white'
+  },
+  input: {
+    backgroundColor: '#2196F3',
+    borderColor: '#252850',
+    borderWidth: 0.5,
+    marginTop: 3,
+    height: 40,
+    borderRadius: 10
   }
 })

@@ -38,14 +38,10 @@ const sectionList = [
   }
 ]
 export default class DisplayList extends PureComponent {
-  state = { modalVisible: false, modalVisibleResi: false, clearList: false,listFiltered:sectionList, searchModel:'' }
+  state = { modalVisible: false,  clearList: false,listFiltered:sectionList, searchModel:'' }
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
-  }
-
-  setModalVisibleResi = visible => {
-    this.setState({ modalVisibleResi: visible })
   }
   renderRow = ({ item }) => (
     <ItemLCD NameItem={item.nome} nMax={item.nMax} id={item.id} />
@@ -356,6 +352,8 @@ export default class DisplayList extends PureComponent {
         <Searchbar
           placeholder='Type Here...'
           onChangeText={text => this.search(text)}
+          style={styles.input}
+
         />
         <Appbar style={styles.bottom}>
           <Appbar.Action
@@ -364,12 +362,6 @@ export default class DisplayList extends PureComponent {
             color={'gold'}
             onPress={() => this.setModalVisible(true)}
           />
-          {/* <Appbar.Action
-            style={{ flex: 1 }}
-            icon='recycle'
-            color={'lightgreen'}
-            onPress={() => this.setModalVisibleResi(true)}
-          /> */}
           <Appbar.Action
             style={{ flex: 1 }}
             icon='delete'
@@ -404,8 +396,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   bottom: {
-    borderColor: '#f4511D',
-    borderTopWidth: 3,
+    borderTopWidth: 2,
+    borderRadius: 15,
     backgroundColor: '#252850',
     position: 'relative',
     left: 0,
@@ -456,5 +448,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'left',
     color: 'lightgreen',
+  },
+  input: {
+    backgroundColor: '#2196F3',
+    borderColor: '#252850',
+    borderWidth: 0.5,
+    marginTop: 3,
+    height: 40,
+    borderRadius: 10
   }
 })

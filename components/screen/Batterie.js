@@ -41,7 +41,6 @@ const sectionList = [
 export default class BattList extends PureComponent {
   state = {
     modalVisible: false,
-    modalVisibleResi: false,
     clearList: false,
     listFiltered: sectionList,
     searchModel: ''
@@ -54,7 +53,7 @@ export default class BattList extends PureComponent {
     this.setState({ modalVisibleResi: visible })
   }
 
-  renderRow = ({ item, index }) => (
+  renderRow = ({ item}) => (
     <Item
       NameItem={item.nome}
       nMax={item.nMax}
@@ -179,35 +178,6 @@ export default class BattList extends PureComponent {
             </View>
           </View>
         </Modal>
-        <Modal
-          animationType='slide'
-          transparent={true}
-          visible={this.state.modalVisibleResi}
-          onRequestClose={() => {
-            this.setModalVisible(!this.state.modalVisible)
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>
-                RESI {'\n\n'}
-                {[...global.resi_Batt_IP.values()]
-                  .sort()
-                  .map(function (element) {
-                    return String(element.n + 'x ' + element.name + '\n')
-                  })}
-              </Text>
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
-                onPress={() => {
-                  this.setModalVisibleResi(!this.state.modalVisibleResi)
-                }}
-              >
-                <Text style={styles.textStyle}>Chiudi</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
         <Snackbar
           visible={this.state.clearList}
           onDismiss={() => this.setState({ clearList: false })}
@@ -220,13 +190,11 @@ export default class BattList extends PureComponent {
         <SectionList
           sections={this.state.listFiltered}
           renderItem={this.renderRow}
-          // renderSectionHeader={({ section: { title } }) => (
-          //   <Text style={styles.header}>{title}</Text>
-          // )}
         ></SectionList>
         <Searchbar
           placeholder='Type Here...'
           onChangeText={text => this.search(text)}
+          style={styles.input}
         />
         <Appbar style={styles.bottom}>
           <Appbar.Action
@@ -235,17 +203,6 @@ export default class BattList extends PureComponent {
             color={'gold'}
             onPress={() => this.setModalVisible(true)}
           />
-          {/* <Appbar.Action
-            style={{ flex: 1 }}
-            icon='recycle'
-            color={'lightgreen'}
-            onPress={() => this.setModalVisibleResi(true)}
-          /> */}
-          {/* <Appbar.Action
-            style={{ flex: 1 }}
-            icon='printer-wireless'
-            onPress={() =>  this.stampList()}
-          /> */}
           <Appbar.Action
             style={{ flex: 1 }}
             icon='delete'
@@ -284,8 +241,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   bottom: {
-    borderColor: '#f4511D',
-    borderTopWidth: 3,
+    borderTopWidth: 2,
+    borderRadius: 15,
     backgroundColor: '#252850',
     position: 'relative',
     left: 0,
@@ -334,5 +291,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'left',
     color: 'lightgreen'
+  },
+  input: {
+    backgroundColor: '#2196F3',
+    borderColor: '#252850',
+    borderWidth: 0.5,
+    marginTop: 3,
+    height: 40,
+    borderRadius: 10
   }
 })

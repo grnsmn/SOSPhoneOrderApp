@@ -363,23 +363,10 @@ export default class Home extends PureComponent {
             }}
             buttonStyle={{ backgroundColor: 'red' }}
           />
-          {/* <Button
-            icon={<Icon name='delete-forever' size={28} color='white' />}
-            onPress={() => {
-              this._reset()
-            }}
-            containerStyle={{
-              flex: 0.3,
-              //borderBottomWidth: 2,
-              borderTopWidth: 3,
-              borderRightWidth: 2
-            }}
-            buttonStyle={{ backgroundColor: 'darkred' }}
-          /> */}
           <ShareExample nomeLista={'Lista Extra'} />
         </View>
         <Input
-          placeholder='   Inserisci Ricambi Extra'
+          placeholder='Inserisci Ricambi Extra'
           leftIcon={{ type: 'ionicons', name: 'add', color: 'red', size: 25 }}
           //containerStyle={{borderWidth:1, borderColor:'white'}}
           style={styles.input}
@@ -419,7 +406,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    //margin: 15,
+    textAlign:'center',
     height: 40,
     //borderColor: '#7a42f4',
     borderColor: 'red',

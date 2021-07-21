@@ -102,7 +102,7 @@ export default class Item extends PureComponent {
             style={{ flex: 0.5, borderLeftWidth: 0, borderColor: 'gold' }}
           >
             <Input
-              style={{ borderWidth: 1, color: 'white' }}
+              style={{ borderWidth: 1, color: 'white', textAlign:'center' }}
               renderErrorMessage={false}
               labelStyle={{ color: 'gold', textAlign: 'center', fontSize: 11 }}
               label={'To Order'}
@@ -125,7 +125,7 @@ export default class Item extends PureComponent {
           >
             <Input
               label={'Reso'}
-              style={{ borderWidth: 1, color: 'white' }}
+              style={{ borderWidth: 1, color: 'white', textAlign:'center' }}
               renderErrorMessage={false}
               labelStyle={{
                 color: 'lightgreen',

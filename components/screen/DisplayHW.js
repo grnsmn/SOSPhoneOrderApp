@@ -13,21 +13,22 @@ import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
 import DisplayList from './Display'
 
 const list = [
-  { id: 'g6p', nome: 'HUAWEI P8', nMax: 1 },
-  { id: 'hm4', nome: 'HUAWEI P8 LITE', nMax: 1 },
-  { id: 'hZ4', nome: 'HUAWEI P8 LITE 2017', nMax: 1 },
-  { id: 'wqq', nome: 'HUAWEI P9', nMax: 1 },
-  { id: 'iz8', nome: 'HUAWEI P9 LITE', nMax: 1 },
-  { id: '2o4', nome: 'HUAWEI P10', nMax: 1 },
-  { id: 'zo3', nome: 'HUAWEI P10 LITE', nMax: 1 },
-  { id: 'w37', nome: 'HUAWEI P20 LITE', nMax: 2 },
-  { id: 'w3H', nome: 'HUAWEI P30 LITE', nMax: 1 },
-  { id: 'V7v', nome: 'HUAWEI P40 LITE', nMax: 1 },
-  { id: 'xhm', nome: 'HUAWEI MATE 10 LITE', nMax: 2 },
-  { id: 'hhs', nome: 'HUAWEI MATE 20 LITE', nMax: 2 },
-  { id: 'tn4', nome: 'HUAWEI PSMART', nMax: 2 },
-  { id: 'xs9', nome: 'HUAWEI PSMART 2019', nMax: 2 },
-  { id: 'tW6', nome: 'HUAWEI PSMART Z', nMax: 2 }
+  { id: 'g6p', nome: 'HUAWEI P8', nMax: 3 },
+  { id: 'hm4', nome: 'HUAWEI P8 LITE', nMax: 3 },
+  { id: 'hZ4', nome: 'HUAWEI P8 LITE 2017', nMax: 3 },
+  { id: 'wqq', nome: 'HUAWEI P9', nMax: 3 },
+  { id: 'iz8', nome: 'HUAWEI P9 LITE', nMax: 3 },
+  { id: '2o4', nome: 'HUAWEI P10', nMax: 3 },
+  { id: 'wYà', nome: 'HUAWEI P20', nMax: 3 },
+  { id: 'zo3', nome: 'HUAWEI P10 LITE', nMax: 3 },
+  { id: 'w37', nome: 'HUAWEI P20 LITE', nMax: 3 },
+  { id: 'w3H', nome: 'HUAWEI P30 LITE', nMax: 3 },
+  { id: 'V7v', nome: 'HUAWEI P40 LITE', nMax: 3 },
+  { id: 'xhm', nome: 'HUAWEI MATE 10 LITE', nMax: 3 },
+  { id: 'hhs', nome: 'HUAWEI MATE 20 LITE', nMax: 3 },
+  { id: 'tn4', nome: 'HUAWEI PSMART', nMax: 3 },
+  { id: 'xs9', nome: 'HUAWEI PSMART 2019', nMax: 3 },
+  { id: 'tW6', nome: 'HUAWEI PSMART Z', nMax: 3 }
 ]
 const sectionList = [
   {
@@ -36,7 +37,7 @@ const sectionList = [
   }
 ]
 export default class DisplayListHW extends DisplayList {
-  state = { modalVisible: false, modalVisibleResi: false, clearList:false, listFiltered: sectionList,
+  state = { modalVisible: false,  clearList:false, listFiltered: sectionList,
     searchModel: '' }
 
   search (model) {
@@ -49,13 +50,11 @@ export default class DisplayListHW extends DisplayList {
       ]
     })
   }
+
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
   }
 
-  setModalVisibleResi = visible => {
-    this.setState({ modalVisibleResi: visible })
-  }
   renderRow = ({ item }) => (
     <ItemLCD NameItem={item.nome} nMax={item.nMax} id={item.id} />
   )
@@ -200,59 +199,12 @@ export default class DisplayListHW extends DisplayList {
             </View>
           </View>
         </Modal>
-        <Modal
-          animationType='slide'
-          transparent={true}
-          visible={this.state.modalVisibleResi}
-          onRequestClose={() => {
-            this.setModalVisible(!this.state.modalVisible)
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>
-                RESI {'\n\n'}
-                {[...global.resi_Lcd.values()].sort().map(function (element) {
-                  if (
-                    element.name.includes('IPHONE X') ||
-                    element.name.includes('IPHONE 11') ||
-                    element.name.includes('P20 LITE') ||
-                    element.name.includes('P30 LITE') ||
-                    element.name.includes('MATE 20 LITE') ||
-                    element.name.includes('PSMART 2019') ||
-                    element.name.includes('PSMART Z')
-                  ) {
-                    return String(
-                      element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
-                    )
-                  } else {
-                    return String(
-                      element.n +
-                        'x ' +
-                        ' LCD ' +
-                        element.name +
-                        ' ' +
-                        element.col +
-                        '\n'
-                    )
-                  }
-                })}
-              </Text>
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
-                onPress={() => {
-                  this.setModalVisibleResi(!this.state.modalVisibleResi)
-                }}
-              >
-                <Text style={styles.textStyle}>Hide List</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
         <SectionList sections={this.state.listFiltered} renderItem={this.renderRow} />
         <Searchbar
           placeholder='Type Here...'
           onChangeText={text => this.search(text)}
+          style={styles.input}
+
         />
         <Appbar style={styles.bottom}>
           <Appbar.Action
@@ -301,8 +253,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   bottom: {
-    borderColor: '#f4511D',
-    borderTopWidth: 3,
+    borderTopWidth: 2,
+    borderRadius: 15,
     backgroundColor: '#252850',
     position: 'relative',
     left: 0,
@@ -350,5 +302,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'left',
     color: 'lightgreen',
+  },
+  input: {
+    backgroundColor: '#2196F3',
+    borderColor: '#252850',
+    borderWidth: 0.5,
+    marginTop: 3,
+    height: 40,
+    borderRadius: 10
   }
 })

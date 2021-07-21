@@ -95,10 +95,10 @@ export default class ItemAccessori extends PureComponent {
           }}
         >
           <View
-            style={{ flex: 0.4, borderLeftWidth: 0.5, borderColor: 'gold' }}
+            style={{ flex: 0.4 }}
           >
             <Input
-              style={{ borderWidth: 1, color: 'white' }}
+              style={{ borderWidth: 1, color: 'white', textAlign:'center' }}
               renderErrorMessage={false}
               labelStyle={{ color: 'gold', textAlign: 'center', fontSize: 11 }}
               label={'Ultimi'}
@@ -126,8 +126,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    borderColor: 'white',
-    borderWidth: 0.25,
+    borderColor: '#2196F3',
+    borderWidth: 0.5,
+    borderRadius: 10,
     margin: 1,
     alignItems: 'center',
     backgroundColor: '#181818'

@@ -1,10 +1,5 @@
 import React, { PureComponent } from 'react'
-import {
-  Text,
-  View,
-  StyleSheet,
-  Vibration,
-} from 'react-native'
+import { Text, View, StyleSheet, Vibration } from 'react-native'
 import { Input } from 'react-native-elements'
 import { Checkbox } from 'react-native-paper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -86,7 +81,10 @@ export default class ItemLCD_SM extends PureComponent {
         quality: this.state.quality,
         section: 'LCD'
       })
-      AsyncStorage.mergeItem(this.state.id, JSON.stringify(global.store_Lcd.get(this.state.id)))
+      AsyncStorage.mergeItem(
+        this.state.id,
+        JSON.stringify(global.store_Lcd.get(this.state.id))
+      )
     }
     //Aggiornamento lista resi
     //RESI BIANCHI
@@ -127,12 +125,11 @@ export default class ItemLCD_SM extends PureComponent {
             >
               {this.props.NameItem}
             </Text>
-            
           </TouchableOpacity>
         </View>
         <View style={styles.container2}>
           <TouchableOpacity>
-              {/* <Checkbox.Item
+            {/* <Checkbox.Item
               label={this.state.quality == 'checked' ? 'ORIG' : 'COMP'}
               color='gold'
               labelStyle={{
@@ -165,18 +162,34 @@ export default class ItemLCD_SM extends PureComponent {
               />
               <MenuOptions>
                 <MenuOption onSelect={() => this.setState({ colore: 'NERO' })}>
-                  <Text style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}>NERO</Text>
+                  <Text
+                    style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}
+                  >
+                    NERO
+                  </Text>
                 </MenuOption>
                 <MenuOption
                   onSelect={() => this.setState({ colore: 'BIANCO' })}
                 >
-                  <Text style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}>BIANCO</Text>
+                  <Text
+                    style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}
+                  >
+                    BIANCO
+                  </Text>
                 </MenuOption>
                 <MenuOption onSelect={() => this.setState({ colore: 'BLU' })}>
-                  <Text style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}>BLU</Text>
+                  <Text
+                    style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}
+                  >
+                    BLU
+                  </Text>
                 </MenuOption>
                 <MenuOption onSelect={() => this.setState({ colore: 'GOLD' })}>
-                  <Text style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}>GOLD</Text>
+                  <Text
+                    style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}
+                  >
+                    GOLD
+                  </Text>
                 </MenuOption>
                 {/* <MenuOption
                 onSelect={() => alert(`Not called`)}
@@ -197,6 +210,7 @@ export default class ItemLCD_SM extends PureComponent {
         >
           <View style={{ flex: 0.8, borderWidth: 1, borderLeftColor: 'white' }}>
             <Input
+              style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
               label={'To Order'}
               labelStyle={{
                 color: 'gold',
@@ -225,6 +239,7 @@ export default class ItemLCD_SM extends PureComponent {
             style={{ flex: 0.7, borderWidth: 0.5, borderLeftColor: 'white' }}
           >
             <Input
+              style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
               label={'Reso'}
               labelStyle={{
                 color: 'black',

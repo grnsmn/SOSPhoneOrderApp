@@ -31,10 +31,10 @@ export default class ItemLCD extends PureComponent {
   componentDidMount () {
     //console.log('Mount'+ this.state.nomeItem)
     const id_W = this.state.id + 'W'
-    const id_BK = this.state.id + 'Bk' 
+    const id_BK = this.state.id + 'Bk'
     AsyncStorage.getItem(this.state.id).then(result => {
-        const parseElement = JSON.parse(result)
-        if (parseElement != null) {
+      const parseElement = JSON.parse(result)
+      if (parseElement != null) {
         if (parseElement.id != null) {
           const tmp = JSON.parse(result, (key, value) => {
             //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
@@ -238,6 +238,7 @@ export default class ItemLCD extends PureComponent {
               }}
             >
               <Input
+                style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
                 label={'WHITE'}
                 labelStyle={{
                   color: 'black',
@@ -264,6 +265,7 @@ export default class ItemLCD extends PureComponent {
                 errorMessage={'max ' + this.props.nMax}
               />
               <Input
+                style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
                 label={'Reso'}
                 labelStyle={{
                   color: 'black',
@@ -295,6 +297,7 @@ export default class ItemLCD extends PureComponent {
             style={{ flex: 0.5, borderWidth: 0.5, borderLeftColor: '#2196F3' }}
           >
             <Input
+              style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
               label={'BLACK'}
               labelStyle={{
                 color: '#F1F3F4',
@@ -320,6 +323,7 @@ export default class ItemLCD extends PureComponent {
               errorMessage={'max ' + this.props.nMax}
             />
             <Input
+              style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
               label={'Reso'}
               labelStyle={{
                 color: 'black',
