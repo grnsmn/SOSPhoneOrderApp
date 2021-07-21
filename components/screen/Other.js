@@ -8,10 +8,8 @@ import {
   TouchableHighlight,
   Share
 } from 'react-native'
-import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Appbar } from 'react-native-paper'
-import ItemLCD from '../ItemLCD'
+import { Appbar, Searchbar } from 'react-native-paper'
 import ItemOther from '../ItemOther'
 import ItemOtherColor from '../ItemOtherColor'
 const list = [
@@ -50,10 +48,10 @@ const sectionList = [
     title: 'Circuito Prossimità',
     data: list
   },
-  // {
-  //   title: 'T. Home',
-  //   data: T_HomeList
-  // },
+  {
+    title: 'T. Home',
+    data: T_HomeList
+  }
   // {
   //   title: 'Backcover',
   //   data: BackoverList
@@ -62,20 +60,52 @@ const sectionList = [
 
 global.list_other = ''
 export default class OtherList extends PureComponent {
-  state = { modalVisible: false, modalVisibleResi: false }
+  state = {
+    modalVisible: false,
+    modalVisibleResi: false,
+    listFiltered: sectionList,
+    searchModel: ''
+  }
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
   }
-
-  setModalVisibleResi = visible => {
-    this.setState({ modalVisibleResi: visible })
+  search (model) {
+    this.setState({
+      listFiltered: [
+        {
+          title: 'Dock Ricarica',
+          data: list.filter(elem => elem.nome.includes(model.toUpperCase()))
+        },
+        {
+          title: 'Circuito Prossimità',
+          data: list.filter(elem => elem.nome.includes(model.toUpperCase()))
+        },
+        {
+          title: 'T. Home',
+          data: T_HomeList.filter(elem => elem.nome.includes(model.toUpperCase()))
+        }
+      ]
+    })
   }
-  renderRow = ({ section, item }) => (
-    section.title == 'Circuito Prossimità' || section.title == 'Dock Ricarica'? <ItemOther NameItem={item.nome} NameSection= {section.title} nMax={item.nMax} id={item.id} /> :
-    <ItemOtherColor NameItem={item.nome} NameSection= {section.title} nMax={item.nMax} id={item.id} />
+  renderRow = ({ section, item }) =>
+    section.title == 'Circuito Prossimità' ||
+    section.title == 'Dock Ricarica' ? (
+      <ItemOther
+        NameItem={item.nome}
+        NameSection={section.title}
+        nMax={item.nMax}
+        id={item.id}
+      />
+    ) : (
+      <ItemOtherColor
+        NameItem={item.nome}
+        NameSection={section.title}
+        nMax={item.nMax}
+        id={item.id}
+      />
     )
-  renderRowColor = ({ section, item }) => (
+  renderRowColor = ({ item }) => (
     <ItemOtherColor NameItem={item.nome} nMax={item.nMax} id={item.id} />
   )
   componentDidMount () {
@@ -83,22 +113,22 @@ export default class OtherList extends PureComponent {
   }
   onShareOther = async () => {
     try {
-      const data = new Date()
-      const tomorrow = new Date(data)
-      tomorrow.setDate(tomorrow.getDate() + 1)
-      if(tomorrow.getDay()==0) {
-        tomorrow.setDate(tomorrow.getDate() + 1)
-      }
+      // const data = new Date()
+      // const tomorrow = new Date(data)
+      // tomorrow.setDate(tomorrow.getDate() + 1)
+      // if(tomorrow.getDay()==0) {
+      //   tomorrow.setDate(tomorrow.getDate() + 1)
+      // }
       const result = await Share.share({
         message:
-        'Ordine del ' + 
-        tomorrow.getDate() +
-        '/' + 
-        parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
-        '/' +
-        tomorrow.getFullYear() +
-        '\n\n' +
-        global.list_other
+          // 'Ordine del ' +
+          // tomorrow.getDate() +
+          // '/' +
+          // parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
+          // '/' +
+          // tomorrow.getFullYear() +
+          // '\n\n' +
+          global.list_other
       })
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -117,14 +147,15 @@ export default class OtherList extends PureComponent {
   stampList () {
     global.list_other = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
     global.store_Other.forEach(element => {
-      global.list_other += element.n + 'x ' + element.section + ' '+ element.name + '\n'
+      global.list_other +=
+        element.n + 'x ' + element.section + ' ' + element.name + '\n'
     })
     this.onShareOther()
   }
   render () {
     return (
       <View style={styles.container}>
-       <Modal
+        <Modal
           animationType='slide'
           transparent={true}
           visible={this.state.modalVisible}
@@ -135,25 +166,37 @@ export default class OtherList extends PureComponent {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
-              IN ORDINE {"\n\n"}
-                {
-                  [...global.store_Other.values()]
-                    .sort()
-                    .map(function (element) {
-                      if(element.section=='Dock Ricarica' || element.section=='Circuito Prossimità') 
-                          return String(element.n + 'x ' + element.section + ' '+ element.name + '\n')
-                      else if(element.section=='T. Home' || element.section=='Backcover')
-                          return String(
-                          element.n +
+                IN ORDINE {'\n\n'}
+                {[...global.store_Other.values()]
+                  .sort()
+                  .map(function (element) {
+                    if (
+                      element.section == 'Dock Ricarica' ||
+                      element.section == 'Circuito Prossimità'
+                    )
+                      return String(
+                        element.n +
                           'x ' +
-                          ' ' + element.section +
+                          element.section +
+                          ' ' +
+                          element.name +
+                          '\n'
+                      )
+                    else if (
+                      element.section == 'T. Home' ||
+                      element.section == 'Backcover'
+                    )
+                      return String(
+                        element.n +
+                          'x ' +
+                          ' ' +
+                          element.section +
                           element.name +
                           ' ' +
                           element.col +
                           '\n'
                       )
-                    })
-                    }
+                  })}
               </Text>
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
@@ -167,24 +210,20 @@ export default class OtherList extends PureComponent {
           </View>
         </Modal>
         <View style={styles.container2}>
-        <View style = {{flex: 1}}>
-        <SectionList
-          sections={sectionList}
-          renderItem={this.renderRow}
-          renderSectionHeader={({ section: { title } }) => (
-            <Text style={styles.header}>{title}</Text>
-          )}
-        ></SectionList>
-        </View>
-        {/* <View style = {{flex: 1}}>
-        <SectionList
-          sections={sectionListColor}
-          renderItem={this.renderRowColor}
-          renderSectionHeader={({ section: { title } }) => (
-            <Text style={styles.header}>{title}</Text>
-          )}
-        ></SectionList>
-        </View> */}
+          <View style={{ flex: 1 }}>
+            <SectionList
+              sections={this.state.listFiltered}
+              renderItem={this.renderRow}
+              renderSectionHeader={({ section: { title } }) => (
+                <Text style={styles.header}>{title}</Text>
+              )}
+            ></SectionList>
+            <Searchbar
+              placeholder='Cerca...'
+              onChangeText={text => this.search(text)}
+              style={styles.input}
+            />
+          </View>
         </View>
         <Appbar style={styles.bottom}>
           <Appbar.Action
@@ -196,7 +235,7 @@ export default class OtherList extends PureComponent {
           <Appbar.Action
             style={{ flex: 1 }}
             icon='printer-wireless'
-            onPress={() =>  this.stampList()}
+            onPress={() => this.stampList()}
           />
           <Appbar.Action
             style={{ flex: 1 }}
@@ -234,8 +273,8 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   bottom: {
-    borderColor: '#f4511D',
-    borderTopWidth: 3,
+    borderTopWidth: 2,
+    borderRadius: 15,
     backgroundColor: '#252850',
     position: 'relative',
     left: 0,
@@ -278,5 +317,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
     color: 'white'
+  },
+  input: {
+    backgroundColor: '#2196F3',
+    borderColor: '#252850',
+    borderWidth: 0.5,
+    marginTop: 3,
+    height: 40,
+    borderRadius: 10
   }
 })

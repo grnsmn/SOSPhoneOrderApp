@@ -12,7 +12,6 @@ import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Appbar, Searchbar, Snackbar } from 'react-native-paper'
 
-
 global.listBatt = '' //Variabile globale per la scrittura dell'ordine finale
 global.listResiBatt = '' //Variabile globale per la scrittura della lista dei resi finale
 
@@ -49,11 +48,7 @@ export default class BattList extends PureComponent {
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
   }
-  setModalVisibleResi = visible => {
-    this.setState({ modalVisibleResi: visible })
-  }
-
-  renderRow = ({ item}) => (
+  renderRow = ({ item }) => (
     <Item
       NameItem={item.nome}
       nMax={item.nMax}
@@ -74,12 +69,12 @@ export default class BattList extends PureComponent {
   }
   onShareBatt = async () => {
     try {
-      const data = new Date()
-      const tomorrow = new Date(data)
-      tomorrow.setDate(tomorrow.getDate() + 1)
-      if (tomorrow.getDay() == 0) {
-        tomorrow.setDate(tomorrow.getDate() + 1)
-      }
+      // const data = new Date()
+      // const tomorrow = new Date(data)
+      // tomorrow.setDate(tomorrow.getDate() + 1)
+      // if (tomorrow.getDay() == 0) {
+      //   tomorrow.setDate(tomorrow.getDate() + 1)
+      // }
       const result = await Share.share({
         message:
           // 'Ordine del ' +
@@ -192,7 +187,7 @@ export default class BattList extends PureComponent {
           renderItem={this.renderRow}
         ></SectionList>
         <Searchbar
-          placeholder='Type Here...'
+          placeholder='Cerca...'
           onChangeText={text => this.search(text)}
           style={styles.input}
         />

@@ -89,7 +89,7 @@ export default class DisplayListSM extends DisplayList {
        
         <SectionList sections={this.state.listFiltered} renderItem={this.renderRow} />
         <Searchbar
-          placeholder='Type Here...'
+          placeholder='Cerca...'
           onChangeText={text => this.search(text)}
           style={styles.input}
         />

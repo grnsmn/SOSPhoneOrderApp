@@ -27,9 +27,9 @@ const list = [
   { id: 'WYR', nome: 'IPHONE 7 PLUS', nMax: 2 },
   { id: 'M3P', nome: 'IPHONE 8 PLUS', nMax: 2 },
   { id: '2TI', nome: 'IPHONE X [ GX ]', nMax: 4 },
-  { id: '5QM', nome: 'IPHONE XS MAX', nMax: 1 },
   { id: 'JQ7', nome: 'IPHONE XR', nMax: 2 },
-  { id: '2A4', nome: 'IPHONE 11', nMax: 2 }
+  { id: '2A4', nome: 'IPHONE 11', nMax: 2 },
+  { id: '5QM', nome: 'IPHONE XS MAX', nMax: 2 },
 ]
 const sectionList = [
   {
@@ -38,7 +38,7 @@ const sectionList = [
   }
 ]
 export default class DisplayList extends PureComponent {
-  state = { modalVisible: false,  clearList: false,listFiltered:sectionList, searchModel:'' }
+  state = { modalVisible: false, clearList: false,listFiltered:sectionList, searchModel:'' }
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
@@ -298,59 +298,10 @@ export default class DisplayList extends PureComponent {
             </View>
           </SafeAreaView>
         </Modal>
-        <Modal
-          animationType='slide'
-          transparent={true}
-          visible={this.state.modalVisibleResi}
-          onRequestClose={() => {
-            this.setModalVisible(!this.state.modalVisible)
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>
-                RESI {'\n\n'}
-                {[...global.resi_Lcd.values()].sort().map(function (element) {
-                  if (
-                    element.name.includes('IPHONE X') ||
-                    element.name.includes('IPHONE 11') ||
-                    element.name.includes('P20 LITE') ||
-                    element.name.includes('P30 LITE') ||
-                    element.name.includes('P40 LITE') ||
-                    element.name.includes('MATE 20 LITE') ||
-                    element.name.includes('PSMART 2019') ||
-                    element.name.includes('PSMART Z')
-                  ) {
-                    return String(
-                      element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
-                    )
-                  } else {
-                    return String(
-                      element.n +
-                        'x ' +
-                        ' LCD ' +
-                        element.name +
-                        ' ' +
-                        element.col +
-                        '\n'
-                    )
-                  }
-                })}
-              </Text>
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
-                onPress={() => {
-                  this.setModalVisibleResi(!this.state.modalVisibleResi)
-                }}
-              >
-                <Text style={styles.textStyle}>Chiudi</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
+
         <SectionList sections={this.state.listFiltered} renderItem={this.renderRow} />
         <Searchbar
-          placeholder='Type Here...'
+          placeholder='Cerca...'
           onChangeText={text => this.search(text)}
           style={styles.input}
 

@@ -106,12 +106,12 @@ export default class Accessori extends PureComponent {
   }
   onShareAccessori = async () => {
     try {
-      const data = new Date()
-      const tomorrow = new Date(data)
-      tomorrow.setDate(tomorrow.getDate() + 1)
-      if (tomorrow.getDay() == 0) {
-        tomorrow.setDate(tomorrow.getDate() + 1)
-      }
+      // const data = new Date()
+      // const tomorrow = new Date(data)
+      // tomorrow.setDate(tomorrow.getDate() + 1)
+      // if (tomorrow.getDay() == 0) {
+      //   tomorrow.setDate(tomorrow.getDate() + 1)
+      // }
       const result = await Share.share({
         message:
           // 'Ordine del ' +

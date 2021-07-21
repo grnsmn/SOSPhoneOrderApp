@@ -201,7 +201,7 @@ export default class DisplayListHW extends DisplayList {
         </Modal>
         <SectionList sections={this.state.listFiltered} renderItem={this.renderRow} />
         <Searchbar
-          placeholder='Type Here...'
+          placeholder='Cerca...'
           onChangeText={text => this.search(text)}
           style={styles.input}
 
@@ -213,12 +213,6 @@ export default class DisplayListHW extends DisplayList {
             color={'gold'}
             onPress={() => this.setModalVisible(true)}
           />
-          {/* <Appbar.Action
-            style={{ flex: 1 }}
-            icon='recycle'
-            color={'lightgreen'}
-            onPress={() => this.setModalVisibleResi(true)}
-          /> */}
           <Appbar.Action
             style={{ flex: 1 }}
             icon='delete'

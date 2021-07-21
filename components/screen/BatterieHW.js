@@ -12,8 +12,8 @@ import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
 import BattList from './Batterie'
 
 const list = [
-  { id: 'cvG', nome: 'HUAWEI P8', nMax: 2, codice: 'HB3447A9EBW' },
-  { id: 'po5', nome: 'HUAWEI P8 LITE', nMax: 2, codice: 'HB3742A0EZC+' },
+  { id: 'cvG', nome: 'HUAWEI P8', compat:'', nMax: 2, codice: 'HB3447A9EBW' },
+  { id: 'po5', nome: 'HUAWEI P8 LITE',compat:'', nMax: 2, codice: 'HB3742A0EZC+' },
   {
     id: 'cfV',
     nome: 'HUAWEI P9',
@@ -22,7 +22,7 @@ const list = [
     nMax: 5,
     codice: 'HB366481EC​W'
   },
-  { id: 'cfZ', nome: 'HUAWEI P9 PLUS', nMax: 2, codice: 'HB376883ECW' },
+  { id: 'cfZ', nome: 'HUAWEI P9 PLUS',compat:'', nMax: 2, codice: 'HB376883ECW' },
   {
     id: 'dtZ',
     nome: 'HUAWEI PSMART 2019',
@@ -79,7 +79,7 @@ const list = [
     nMax: 2,
     codice: 'HB386589ECW'
   },
-  { id: 'x76', nome: 'HUAWEI MATE S', nMax: 2, codice: 'HB436178EBW' },
+  { id: 'x76', nome: 'HUAWEI MATE S', compat:'',nMax: 2, codice: 'HB436178EBW' },
   {
     id: 'x78',
     nome: 'HUAWEI NOVA YOUNG',
@@ -97,7 +97,6 @@ const sectionList = [
 export default class BattListHW extends BattList {
   state = {
     modalVisible: false,
-    modalVisibleResi: false,
     clearList: false,
     listFiltered: sectionList,
     searchModel: ''
@@ -109,8 +108,16 @@ export default class BattListHW extends BattList {
         {
           title: 'To order',
           data: list.filter(elem => (elem.nome.includes(model.toUpperCase())))
+        },
+        {
+          title: 'To order',
+          data: list.filter(elem => (elem.codice.includes(model.toUpperCase())))
+        },
+        {
+          title: 'To order',
+          data: list.filter(elem => (elem.compat.includes(model.toUpperCase())))
         }
-      ]
+        ]
     })
   }
   clearListBatt () {
@@ -173,35 +180,7 @@ export default class BattListHW extends BattList {
             </View>
           </View>
         </Modal>
-        <Modal
-          animationType='slide'
-          transparent={true}
-          visible={this.state.modalVisibleResi}
-          onRequestClose={() => {
-            this.setModalVisible(!this.state.modalVisible)
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>
-                RESI {'\n\n'}
-                {[...global.resi_Batt_IP.values()]
-                  .sort()
-                  .map(function (element) {
-                    return String(element.n + 'x ' + element.name + '\n')
-                  })}
-              </Text>
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
-                onPress={() => {
-                  this.setModalVisibleResi(!this.state.modalVisibleResi)
-                }}
-              >
-                <Text style={styles.textStyle}>Chiui</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
+
         <Snackbar
           visible={this.state.clearList}
           onDismiss={() => this.setState({ clearList: false })}
@@ -219,7 +198,7 @@ export default class BattListHW extends BattList {
           // )}
         ></SectionList>
         <Searchbar
-          placeholder='Type Here...'
+          placeholder='Cerca...'
           onChangeText={text => this.search(text)}
           style={styles.input}
 
@@ -231,12 +210,6 @@ export default class BattListHW extends BattList {
             color={'gold'}
             onPress={() => this.setModalVisible(true)}
           />
-          {/* <Appbar.Action
-            style={{ flex: 1 }}
-            icon='recycle'
-            color={'lightgreen'}
-            onPress={() => this.setModalVisibleResi(true)}
-          /> */}
           <Appbar.Action
             style={{ flex: 1 }}
             icon='delete'
@@ -259,18 +232,12 @@ export default class BattListHW extends BattList {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //flexDirection: 'row',
     backgroundColor: 'black',
     padding: 5
-    //paddingTop: StatusBar.length
   },
   buttonContainer: {
     flex: 1,
     borderWidth: 2
-
-    //    borderBottomWidth: 3,
-    //  borderTopWidth: 1.5,
-    //borderLeftWidth: 2
   },
   header: {
     fontSize: 32,
