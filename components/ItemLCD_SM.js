@@ -1,13 +1,6 @@
 import React, { PureComponent } from 'react'
-import {
-  Text,
-  View,
-  StyleSheet,
-  Vibration,
-  TouchableHighlight
-} from 'react-native'
+import { Text, View, StyleSheet, Vibration } from 'react-native'
 import { Input } from 'react-native-elements'
-import { Checkbox } from 'react-native-paper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import {
@@ -16,10 +9,6 @@ import {
   MenuOption,
   MenuTrigger
 } from 'react-native-popup-menu'
-import { TouchableHighlightBase } from 'react-native'
-
-global.store_Lcd = new Map() //Array globale che conterrà nomi e quantità di LCD IPHONE da mettere in lista
-global.resi_Lcd = new Map() //Per immagazzinamento lista resi
 
 export default class ItemLCD_SM extends PureComponent {
   //OGNI ELEMENTO IN QUESTA CLASSE TIENE CONTO DI UN CONTEGGIO A COLORE DEL DISPLAY (BIANCO E NERO)
@@ -27,8 +16,8 @@ export default class ItemLCD_SM extends PureComponent {
     id: '',
     nomeItem: '',
     section: 'LCD',
-    colore: '',
-    contatoreW: 0,
+    colore: '\t',
+    contatore: 0,
     resiW: 0,
     quality: 'indeterminate'
   }
@@ -40,65 +29,63 @@ export default class ItemLCD_SM extends PureComponent {
   }
   componentDidMount () {
     //console.log('Mount'+ this.state.nomeItem)
-    const id_W = this.state.id + 'W'
     AsyncStorage.getItem(this.state.id).then(result => {
       const parseElement = JSON.parse(result)
-      if (parseElement != null) {
-        if (parseElement.id != null) {
+      if (parseElement != null && parseElement.id != null) {
           const tmp = JSON.parse(result, (key, value) => {
             //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
             return value
           })
-          this.setState({
-            contatoreW: tmp.contatoreW,
-            resiW: tmp.resiW,
-            colore: tmp.colore,
-            quality: tmp.quality
-          })
           //Aggiornamento lista ordine
-          if (this.state.contatoreW != 0) {
-            global.store_Lcd.set(id_W, {
+          if (this.state.contatore != 0) {
+            global.store_Lcd.set(this.state.id, {
               name: this.state.nomeItem,
               col: this.state.colore,
-              n: this.state.contatoreW,
+              n: this.state.contatore,
               quality: this.state.quality == 'checked' ? 'ORIG' : 'COMP'
             })
-          } else if (this.state.contatoreW == 0) {
-            global.store_Lcd.delete(id_W)
+          } else if (this.state.contatore == 0) {
+            global.store_Lcd.delete(this.state.id)
           }
           //RESI BIANCHI
-          if (this.state.resiW == 0) global.resi_Lcd.delete(id_W)
+          if (this.state.resiW == 0) global.resi_Lcd.delete(this.state.id)
           if (this.state.resiW != 0) {
-            global.resi_Lcd.set(id_W, {
+            global.resi_Lcd.set(this.state.id, {
               name: this.state.nomeItem,
               n: this.state.resiW
             })
           }
-        }
+          this.setState({
+            contatore: tmp.contatore,
+            resiW: tmp.resiW,
+            colore: tmp.colore,
+            quality: tmp.quality
+          })   
       } else {
       }
     })
   }
   componentDidUpdate () {
-    AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
-    const id_W = this.state.id + 'W'
-    //console.log("attualmente inseriti:" +  this.state.resiW)
     //elimina gli elementi da map se il valore inserito è 0
-    if (this.state.contatoreW == 0) global.store_Lcd.delete(id_W)
+    if (this.state.contatore == 0) global.store_Lcd.delete(this.state.id)
     //aggiorna la quantità di elementi in contemporanea all'inserimento del valore desiderato
-    if (this.state.contatoreW != 0) {
-      global.store_Lcd.set(id_W, {
+   else {
+      global.store_Lcd.set(this.state.id, {
         name: this.state.nomeItem,
         col: this.state.colore,
-        n: this.state.contatoreW,
-        quality: this.state.quality
+        n: this.state.contatore,
+        quality: this.state.quality,
+        section: 'LCD'
       })
+      AsyncStorage.mergeItem(
+        this.state.id,
+        JSON.stringify(global.store_Lcd.get(this.state.id))
+      )
     }
     //Aggiornamento lista resi
-    //RESI BIANCHI
-    if (this.state.resiW == 0) global.resi_Lcd.delete(id_W)
-    if (this.state.resiW != 0) {
-      global.resi_Lcd.set(id_W, {
+    if (this.state.resiW == 0) global.resi_Lcd.delete(this.state.id)
+    else {
+      global.resi_Lcd.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.resiW
       })
@@ -133,12 +120,11 @@ export default class ItemLCD_SM extends PureComponent {
             >
               {this.props.NameItem}
             </Text>
-            
           </TouchableOpacity>
         </View>
         <View style={styles.container2}>
           <TouchableOpacity>
-              <Checkbox.Item
+            {/* <Checkbox.Item
               label={this.state.quality == 'checked' ? 'ORIG' : 'COMP'}
               color='gold'
               labelStyle={{
@@ -156,7 +142,7 @@ export default class ItemLCD_SM extends PureComponent {
               //     this.setState({ quality: 'checked' })
               //   }
               // }}
-            />
+            /> */}
             <Menu>
               <Text
                 style={{ color: 'white', fontSize: 11, textAlign: 'center' }}
@@ -171,18 +157,34 @@ export default class ItemLCD_SM extends PureComponent {
               />
               <MenuOptions>
                 <MenuOption onSelect={() => this.setState({ colore: 'NERO' })}>
-                  <Text style={{ color: 'black' }}>NERO</Text>
+                  <Text
+                    style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}
+                  >
+                    NERO
+                  </Text>
                 </MenuOption>
                 <MenuOption
                   onSelect={() => this.setState({ colore: 'BIANCO' })}
                 >
-                  <Text style={{ color: 'black' }}>BIANCO</Text>
+                  <Text
+                    style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}
+                  >
+                    BIANCO
+                  </Text>
                 </MenuOption>
                 <MenuOption onSelect={() => this.setState({ colore: 'BLU' })}>
-                  <Text style={{ color: 'black' }}>BLU</Text>
+                  <Text
+                    style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}
+                  >
+                    BLU
+                  </Text>
                 </MenuOption>
                 <MenuOption onSelect={() => this.setState({ colore: 'GOLD' })}>
-                  <Text style={{ color: 'black' }}>GOLD</Text>
+                  <Text
+                    style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}
+                  >
+                    GOLD
+                  </Text>
                 </MenuOption>
                 {/* <MenuOption
                 onSelect={() => alert(`Not called`)}
@@ -203,6 +205,7 @@ export default class ItemLCD_SM extends PureComponent {
         >
           <View style={{ flex: 0.8, borderWidth: 1, borderLeftColor: 'white' }}>
             <Input
+              style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
               label={'To Order'}
               labelStyle={{
                 color: 'gold',
@@ -210,19 +213,19 @@ export default class ItemLCD_SM extends PureComponent {
                 fontSize: 11
                 // backgroundColor: 'white'
               }}
-              placeholder={String(this.state.contatoreW)}
+              placeholder={String(this.state.contatore)}
               placeholderTextColor={'gold'}
               keyboardType='numeric'
               maxLength={1}
               onChangeText={value => {
                 if (value <= this.props.nMax && value != '') {
                   this.setState({
-                    contatoreW: parseInt(value),
+                    contatore: parseInt(value),
                     colore: this.state.colore
                   })
                 }
               }}
-              onSubmitEditing={() => this.inStore2()}
+            //  onSubmitEditing={() => this.inStore2()}
               errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
               errorMessage={'max ' + this.props.nMax}
             />
@@ -231,6 +234,7 @@ export default class ItemLCD_SM extends PureComponent {
             style={{ flex: 0.7, borderWidth: 0.5, borderLeftColor: 'white' }}
           >
             <Input
+              style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
               label={'Reso'}
               labelStyle={{
                 color: 'black',
@@ -252,7 +256,7 @@ export default class ItemLCD_SM extends PureComponent {
                   })
                 }
               }}
-              onSubmitEditing={() => this.inStore2()}
+              //onSubmitEditing={() => this.inStore2()}
             />
           </View>
         </View>
@@ -264,8 +268,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    borderColor: '#F1F3F4',
-    borderWidth: 1,
+    borderColor: '#2196F3',
+    borderWidth: 0.5,
+    borderRadius: 10,
     margin: 1,
     alignItems: 'center',
     backgroundColor: '#000'

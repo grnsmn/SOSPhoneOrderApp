@@ -13,10 +13,11 @@ import { Button, Input } from 'react-native-elements'
 import { FAB, Snackbar } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import ShareExample from '../Sharing'
-import ListOrder from '../ListOrder'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 global.extra = ''
+global.store_Batt = new Map() //Oggetto map globale che conterrà nomi e quantità di BATTERIE IPHONE da mettere in lista
+global.resi_Batt_IP = new Map() //Per immagazzinamento lista resi
 
 export default class Home extends PureComponent {
   state = {
@@ -31,7 +32,6 @@ export default class Home extends PureComponent {
   constructor (props) {
     super(props)
   }
-
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
   }
@@ -45,7 +45,6 @@ export default class Home extends PureComponent {
     this.state.input.current.clear()
     Vibration.vibrate()
   }
-
   _reset () {
     global.store_Batt = new Map()
     global.resi_Batt_IP = new Map()
@@ -57,73 +56,107 @@ export default class Home extends PureComponent {
     global.listResiBatt = ''
     global.listResiDisplay = ''
     AsyncStorage.clear()
-    this.setState({reset: !this.state.reset})
+    this.setState({ reset: !this.state.reset })
     Vibration.vibrate()
   }
   componentDidMount () {
     AsyncStorage.getItem('ListExtra').then(
       //Mantiene in memoria la lista scritta anche dopo il riavvio dell'app
-      (result, err) => {
+      result => {
         if (result != null) {
           global.extra = result
         }
       }
     )
-    // var i = 0
-    // AsyncStorage.getAllKeys().then(
-    //   (result, err) => {
-    //     const x = [...result]
-    //     console.log(x)
-    //     for(i = 0; i<x.length; i++){
-    //       AsyncStorage.getItem(x[i]).then( res =>{
-    //         if(JSON.parse(res).section == 'BATT' && JSON.parse(res).contatore !=0){ 
+    //firebase.database().ref('BATTERIE/APPLE/IPHONE/').set({IPHONE: 'ciao'})
+
+    // AsyncStorage.getAllKeys().then(result => {
+    //   const x = [...result]
+    //   x.forEach(element =>
+    //     AsyncStorage.getItem(element).then(res => {
+    //       if(element != 'ListExtra'){ //CONROLLO CHE EVITA WARNING SULLA KEY LISTEXTRA PERCHè NON COMPRENDENTE DI SOTTO PARAMETRI COME SECTION ETC
+    //         //console.log(JSON.parse(res))
+    //         if(JSON.parse(res).section == 'BATT' && JSON.parse(res).contatore !=0){
     //           global.store_Batt.set(JSON.parse(res).id, {
     //             name: JSON.parse(res).nomeItem,
     //             n: JSON.parse(res).contatore,
     //             section: JSON.parse(res).section
     //           })
     //         }
-    //         else if(JSON.parse(res).section == 'LCD' && (JSON.parse(res).contatoreW !=0)){ 
-    //           global.store_Lcd.set(JSON.parse(res).id_W, {
-    //             name: JSON.parse(res).nomeItem,
-    //             col: 'BIANCO',
-    //             n: JSON.parse(res).contatoreW,
-    //             frame: JSON.parse(res).noFrame == 'checked' ? '+ FRAME' : 'NO FRAME',
-    //             section: JSON.parse(res).section
-    //           })
-    //         }
-    //         else if(JSON.parse(res).section == 'LCD' && (JSON.parse(res).contatoreBK !=0)){ 
-    //           global.store_Lcd.set(JSON.parse(res).id_BK, {
-    //             name: JSON.parse(res).nomeItem,
-    //             col: 'nero',
+    //         if (
+    //           JSON.parse(res).section == 'LCD' &&
+    //           JSON.parse(res).contatoreBK != 0 &&
+    //           JSON.parse(res).nomeItem.includes('HUAWEI') == 1 || 
+    //           JSON.parse(res).nomeItem.includes('IPHONE') == 1
+    //         ) {
+    //           global.store_Lcd.set(JSON.parse(res).id, {
+    //             id: JSON.parse(res).id,
+    //             name: JSON.parse(res).nomeItem!=null?JSON.parse(res).nomeItem:'',
+    //             col: 'NERO',
     //             n: JSON.parse(res).contatoreBK,
-    //             frame: JSON.parse(res).noFrame == 'checked' ? '+ FRAME' : 'NO FRAME',
+    //             frame:
+    //               JSON.parse(res).frame == 'checked' ? '+ FRAME' : 'NO FRAME',
     //             section: JSON.parse(res).section
     //           })
     //         }
-    //        }
-    //          )
-    //     }
-    //     }
-    // )
+            // if (
+            //   JSON.parse(res).section == 'LCD' &&
+            //   JSON.parse(res).n != 0 &&
+            //   JSON.parse(res).name.includes('HUAWEI') ==1 || 
+            //   JSON.parse(res).name.includes('IPHONE') ==1
+            //   ) {
+            //   global.store_Lcd.set(JSON.parse(res).id, {
+            //     id: JSON.parse(res).id,
+            //     name: JSON.parse(res).name,
+            //     col: 'BIANCO',
+            //     n: JSON.parse(res).n,
+            //     frame:
+            //     JSON.parse(res).frame == 'checked' ? '+ FRAME' : 'NO FRAME',
+            //     section: JSON.parse(res).section
+            //   })
+            // }
+            // if (
+            //   JSON.parse(res).section == 'LCD' &&
+            //   JSON.parse(res).n != 0 && 
+            //   JSON.parse(res).name.includes('SAMSUNG') == 1
+            // ) {
+            //   global.store_Lcd.set(JSON.parse(res).id, {
+            //     id: JSON.parse(res).id,
+            //     name: JSON.parse(res).name,
+            //     col: JSON.parse(res).col,
+            //     n: JSON.parse(res).n,
+            //     quality:
+            //     JSON.parse(res).quality == 'checked' ? 'ORIG' : 'COMP',
+            //     section: JSON.parse(res).section
+            //   })
+            // }
+    //       }
+    //     })
+    //   )
+    // })
   }
-
   render () {
     return (
       <View style={styles.container}>
         <StatusBar animated={false}></StatusBar>
         <Snackbar
           visible={this.state.reset}
-          onDismiss= {() => this.setState({reset: false})}
+          onDismiss={() => this.setState({ reset: false })}
           duration={700}
-          style={{backgroundColor: '#252850', textAlign:''}}
-          > RESET ESEGUITO </Snackbar>
+          style={{ backgroundColor: '#252850', textAlign: '' }}
+        >
+          {' '}
+          RESET ESEGUITO{' '}
+        </Snackbar>
         <Snackbar
           visible={this.state.resetExtra}
-          onDismiss= {() => this.setState({resetExtra: false})}
+          onDismiss={() => this.setState({ resetExtra: false })}
           duration={700}
-          style={{backgroundColor: '#252850', textAlign:''}}
-          > RESET LISTA EXTRA </Snackbar>
+          style={{ backgroundColor: '#252850', textAlign: '' }}
+        >
+          {' '}
+          RESET LISTA EXTRA{' '}
+        </Snackbar>
         <View style={styles.modelSection}>
           <FAB
             style={styles.fab}
@@ -138,12 +171,12 @@ export default class Home extends PureComponent {
             icon='toolbox'
             onPress={() => this.props.navigation.navigate('Accessori')}
           />
-          <Modal    //modal Lista Extra
+          <Modal //modal Lista Extra
             animationType='slide'
             transparent={true}
             visible={this.state.modalVisible}
             onRequestClose={() => {
-              Alert.alert('Modal has been closed.')
+              this.setModalVisible(!this.state.modalVisible)
             }}
           >
             <View style={styles.centeredView}>
@@ -163,17 +196,16 @@ export default class Home extends PureComponent {
               </View>
             </View>
           </Modal>
-          <Modal    //modal chiusura Lista Extra
+          <Modal //modal chiusura Lista Extra
             animationType='slide'
             transparent={true}
             visible={this.state.modalVisibleOrder}
             onRequestClose={() => {
-              Alert.alert('Modal has been closed.')
+              this.setModalVisible(!this.state.modalVisibleOrder)
             }}
           >
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                <ListOrder/>
                 <TouchableHighlight
                   style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
                   onPress={() => {
@@ -264,8 +296,8 @@ export default class Home extends PureComponent {
                 style={{
                   width: 140,
                   height: 30,
-                  marginTop:16,
-                  marginBottom:16
+                  marginTop: 16,
+                  marginBottom: 16
                 }}
               />
             </View>
@@ -284,7 +316,21 @@ export default class Home extends PureComponent {
             ></Button>
           </View>
         </View>
-        <View style={{ flexDirection: 'row' }}>  
+        <View style={{ flexDirection: 'row' }}>
+        {/* <Button
+            title={' ORDER'}
+            onPress={() => {
+              this.setModalVisibleOrder(true)
+            }}
+            containerStyle={{
+              flex: 1,
+              //borderBottomWidth: 2,
+              borderTopWidth: 3
+              //borderLeftWidth: 2
+            }}
+            buttonStyle={{ backgroundColor: '#181818' }}
+            icon={<Icon name='list' size={28} color='#F1F3F4' />}
+          /> */}
           <Button
             title={' Extra'}
             onPress={() => {
@@ -293,33 +339,19 @@ export default class Home extends PureComponent {
             containerStyle={{
               flex: 1,
               //borderBottomWidth: 2,
-              borderTopWidth: 3,
+              borderTopWidth: 3
               //borderLeftWidth: 2
             }}
             buttonStyle={{ backgroundColor: '#181818' }}
             icon={<Icon name='view-list' size={28} color='#F1F3F4' />}
           />
-          {/* <Button
-            title={' ORDER'}
-            onPress={() => {
-              this.setModalVisibleOrder(true)
-            }}
-            containerStyle={{
-              flex: 1,
-              //borderBottomWidth: 2,
-              borderTopWidth: 3,
-              //borderLeftWidth: 2
-            }}
-            buttonStyle={{ backgroundColor: '#181818' }}
-            icon={<Icon name='view-list' size={28} color='#F1F3F4' />}
-          /> */}
+    
           <Button
             title={'Svuota Extra'}
             onPress={() => {
               global.extra = ''
               AsyncStorage.removeItem('ListaExtra').then(() =>
-                  this.setState({resetExtra: !this.state.resetExtra})
-                
+                this.setState({ resetExtra: !this.state.resetExtra })
               )
             }}
             containerStyle={{
@@ -330,23 +362,10 @@ export default class Home extends PureComponent {
             }}
             buttonStyle={{ backgroundColor: 'red' }}
           />
-          {/* <Button
-            icon={<Icon name='delete-forever' size={28} color='white' />}
-            onPress={() => {
-              this._reset()
-            }}
-            containerStyle={{
-              flex: 0.3,
-              //borderBottomWidth: 2,
-              borderTopWidth: 3,
-              borderRightWidth: 2
-            }}
-            buttonStyle={{ backgroundColor: 'darkred' }}
-          /> */}
           <ShareExample nomeLista={'Lista Extra'} />
         </View>
         <Input
-          placeholder='   Inserisci Ricambi Extra'
+          placeholder='Inserisci Ricambi Extra'
           leftIcon={{ type: 'ionicons', name: 'add', color: 'red', size: 25 }}
           //containerStyle={{borderWidth:1, borderColor:'white'}}
           style={styles.input}
@@ -372,8 +391,7 @@ const styles = StyleSheet.create({
     //borderBottomWidth: 2,
     //alignItems: 'center',
     justifyContent: 'space-evenly',
-    backgroundColor: '#181818',
-    
+    backgroundColor: '#181818'
   },
   modelSection: {
     borderColor: 'red',
@@ -387,7 +405,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    //margin: 15,
+    textAlign:'center',
     height: 40,
     //borderColor: '#7a42f4',
     borderColor: 'red',

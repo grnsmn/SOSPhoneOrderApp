@@ -12,36 +12,38 @@ export default class ListOrder extends Component{
               <View>
                 <Text style={styles.modalText}>
                   IN ORDINE {'\n\n'}
-                  {[...global.extra] } 
+                  <Text style={{color:'#007AFF'}}>{'\n\t'}BATTERIE{'\n'}</Text> 
                   {[...global.store_Batt.values()]    //Sezione batterie
                     .sort()
                     .map(function (element) {
-                      return String(element.n + 'x '+ element.section + ' ' + element.name+ '\n')
+                      return String(element.n + 'x '+ ' ' + element.name+ '\n')
                     })
                   }
+                  <Text style={{color:'#007AFF'}}> {'\n\t'}DISPLAY{'\n'}</Text> 
                       {
                 [...global.store_Lcd.values()].sort().map(function (element) {
                   if (element.name.includes('IPHONE')) {
                     if (
                       element.name.includes('IPHONE X') ||
+                      element.name.includes('IPHONE XS MAX') ||
                       element.name.includes('IPHONE XR') ||
                       element.name.includes('IPHONE 11')
                     ) {
                       return String(
-                        element.n + 'x ' + ' LCD ' + element.name + ' '+ element.section + '\n'
+                        element.n + 'x ' + element.name + '\n'
                       )
                     } else {
                       return String(
                         element.n +
                           'x ' +
-                          ' LCD ' +
+                          
                           element.name +
                           ' ' +
                           element.col +
                           '\n'
                       )
                     }
-                  } else {
+                  } if (element.name.includes('HUAWEI')){
                     if (
                       element.name.includes('P20 LITE') ||
                       element.name.includes('P30 LITE') ||
@@ -52,7 +54,7 @@ export default class ListOrder extends Component{
                       return String(
                         element.n +
                           'x ' +
-                          ' LCD ' +
+                         
                           element.name +
                           ' ' +
                           element.frame +
@@ -62,7 +64,7 @@ export default class ListOrder extends Component{
                       return String(
                         element.n +
                           'x ' +
-                          ' LCD ' +
+                         
                           element.name +
                           ' ' +
                           element.col +
@@ -71,8 +73,21 @@ export default class ListOrder extends Component{
                           '\n'
                       )
                     }
+                  } if(element.name.includes('SAMSUNG')){
+                    return String(
+                        element.n +
+                          'x ' +
+                          element.name +
+                          ' ' +
+                          element.col +
+                          '\n'
+                      )
                   }
                 })}
+                <Text style={{color:'#007AFF'}}> {'\n\t'}EXTRA{'\n'}</Text> 
+                  {[...global.extra].map(function(element){
+                    return element
+                  }) }
                 </Text>
               </View>
         )
@@ -103,8 +118,8 @@ const styles = StyleSheet.create({
       },
       modalText: {
         marginBottom: 15,
-        textAlign: 'center',
-        color: 'white',
+        textAlign: 'left',
+        color: '#F1F3F4',
         fontWeight: 'bold'
       },
       openButton: {

@@ -9,8 +9,8 @@ export default class ItemAccessori extends PureComponent {
   state = {
     id: '',
     nomeItem: '',
-    nomeSection: '',
-    contatore: 0,
+
+    contatore: -1,
     modalVisible: false,
   }
   setModalVisible = visible => {
@@ -23,31 +23,30 @@ export default class ItemAccessori extends PureComponent {
   }
   componentDidMount () {
     AsyncStorage.getItem(this.state.id).then(result => {
-      //console.log(JSON.parse(result).contatore)
       const parseElement = JSON.parse(result)
-      if (parseElement != null) {
-        if (JSON.parse(result).id != null) {
+      //console.log(parseElement)
+      if (parseElement != null && parseElement.id != null) {
+        
           const tmp = JSON.parse(result, (key, value) => {
             //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
             return value
           })
           this.setState({ contatore: tmp.contatore,})
-          if (this.state.contatore == 0) global.store_accessori.delete(this.state.id)
-          if (this.state.contatore != 0) {
+          //if (this.state.contatore == 0) global.store_accessori.delete(this.state.id)
+          if (this.state.contatore != -1 && isNaN(this.state.contatore) == false) {
             global.store_accessori.set(this.state.id, {
               name: this.state.nomeItem,
               n: this.state.contatore
             })
           }
-        }
       } else {
       }
     })
   }
   componentDidUpdate () {
     AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
-    if (this.state.contatore == 88 ) global.store_accessori.delete(this.state.id)
-    if (this.state.contatore != 0) {
+   // if (this.state.contatore == 0 ) global.store_accessori.delete(this.state.id)
+    if (this.state.contatore != -1) {
       global.store_accessori.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.contatore
@@ -84,7 +83,7 @@ export default class ItemAccessori extends PureComponent {
           </View>
         </Modal>
         <Text style={{ color: 'white', flex: 1, fontSize: 15, marginLeft: 10 }}>
-          {this.props.NameItem}
+          {this.state.nomeItem}
         </Text>
         <View
           style={{
@@ -95,14 +94,14 @@ export default class ItemAccessori extends PureComponent {
           }}
         >
           <View
-            style={{ flex: 0.4, borderLeftWidth: 0.5, borderColor: 'gold' }}
+            style={{ flex: 0.4 }}
           >
             <Input
-              style={{ borderWidth: 1, color: 'white' }}
+              style={{ borderWidth: 1, color: 'white', textAlign:'center' }}
               renderErrorMessage={false}
               labelStyle={{ color: 'gold', textAlign: 'center', fontSize: 11 }}
               label={'Ultimi'}
-              placeholder={this.state.contatore.toString()}
+              placeholder={this.state.contatore.toString()=="-1"?"-":this.state.contatore.toString()}
               placeholderTextColor={'gold'}
               keyboardType='number-pad'
               maxLength={1}
@@ -126,8 +125,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    borderColor: 'white',
-    borderWidth: 0.25,
+    borderColor: '#2196F3',
+    borderWidth: 0.5,
+    borderRadius: 10,
     margin: 1,
     alignItems: 'center',
     backgroundColor: '#181818'

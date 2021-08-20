@@ -6,13 +6,11 @@ import {
   Text,
   Modal,
   TouchableHighlight,
-  Share,
+  Share
 } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Appbar, Snackbar } from 'react-native-paper'
-
+import { Appbar, Searchbar, Snackbar } from 'react-native-paper'
 
 global.listBatt = '' //Variabile globale per la scrittura dell'ordine finale
 global.listResiBatt = '' //Variabile globale per la scrittura della lista dei resi finale
@@ -38,46 +36,61 @@ const sectionList = [
     title: 'To Order',
     data: list
   }
-  // {
-  //   title: 'Resi',
-  //   data: list
-  // }
 ]
 export default class BattList extends PureComponent {
-  state = { modalVisible: false, modalVisibleResi: false, clearList:false }
-
+  state = {
+    modalVisible: false,
+    clearList: false,
+    listFiltered: sectionList,
+    searchModel: '',
+    refresh:false
+  }
+  
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
   }
-
-  setModalVisibleResi = visible => {
-    this.setState({ modalVisibleResi: visible })
-  }
+  
   renderRow = ({ item }) => (
-    <Item NameItem={item.nome} nMax={item.nMax} id={item.id} compat={item.compat}/>
+    <Item
+      NameItem={item.nome}
+      nMax={item.nMax}
+      id={item.id}
+      compat={item.compat}
+      codice={item.codice}
+      clear= {this.state.refresh}
+    />
   )
-   
+  search (model) {
+    this.setState({
+      listFiltered: [
+        {
+          title: 'To order',
+          data: list.filter(elem => elem.nome.includes(model.toUpperCase()))
+        }
+      ]
+    })
+  }
   onShareBatt = async () => {
     try {
-      const data = new Date()
-      const tomorrow = new Date(data)
-      tomorrow.setDate(tomorrow.getDate() + 1)
-      if(tomorrow.getDay()==0) {
-        tomorrow.setDate(tomorrow.getDate() + 1)
-      }
+      // const data = new Date()
+      // const tomorrow = new Date(data)
+      // tomorrow.setDate(tomorrow.getDate() + 1)
+      // if (tomorrow.getDay() == 0) {
+      //   tomorrow.setDate(tomorrow.getDate() + 1)
+      // }
       const result = await Share.share({
         message:
-        // 'Ordine del ' + 
-        // tomorrow.getDate() +
-        // '/' + 
-        // parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
-        // '/' +
-        // tomorrow.getFullYear() +
-        // '\n\n' +
-        global.listBatt +
-        '\nResi:\n' +
-        global.listResiBatt 
-        
+          // 'Ordine del ' +
+          // tomorrow.getDate() +
+          // '/' +
+          // parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla data italiana
+          // '/' +
+          // tomorrow.getFullYear() +
+          // '\n\n' +
+          global.listBatt +
+          (global.resi_Batt_IP.size == 0
+            ? ''
+            : '\nResi:\n' + global.listResiBatt)
       })
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -92,18 +105,22 @@ export default class BattList extends PureComponent {
       alert(error.message)
     }
   }
+
   stampList () {
     global.listBatt = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
     global.store_Batt.forEach(element => {
       global.listBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
     })
     global.listResiBatt = ''
-    global.resi_Batt_IP.forEach(element => {
-      global.listResiBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
-    })
+    global.resi_Batt_IP.size == 0
+      ? (global.listResiBatt = '')
+      : global.resi_Batt_IP.forEach(element => {
+          global.listResiBatt +=
+            element.n + 'x ' + ' BATT ' + element.name + '\n'
+        })
     this.onShareBatt()
-  } 
-  clearListBatt () {
+  }
+  clearListBatt () {   
     //Azzera lista ordine
     global.store_Batt.clear()
     global.listBatt = ''
@@ -120,37 +137,34 @@ export default class BattList extends PureComponent {
       }
       AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
-    this.setState({clearList: !this.state.clearList})
-    
+    this.setState({ clearList: !this.state.clearList, refresh: !this.state.refresh})
   }
   render () {
     return (
       <View style={styles.container}>
-            <Snackbar
-          visible={this.state.clearList}
-          onDismiss= {() => this.setState({clearList: false})}
-          duration={700}
-          style={{backgroundColor: '#252849', textAlign:'center'}}
-          > LISTA AZZERATA </Snackbar>
         <Modal
           animationType='slide'
           transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
+            this.setModalVisible(!this.state.modalVisible)
           }}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
-              IN ORDINE {"\n\n"}
-                {
-                  [...global.store_Batt.values()]
-                    .sort()
-                    .map(function (element) {
-                      return String(element.n + 'x '+ element.name + '\n')
-                    })
-                    }
+                IN ORDINE {'\n\n'}
+                {[...global.store_Batt.values()].sort().map(function (element) {
+                  return String(element.n + 'x ' + element.name + '\n')
+                })}
+              </Text>
+              <Text style={styles.modalTextResi}>
+                RESI {'\n'}
+                {[...global.resi_Batt_IP.values()]
+                  .sort()
+                  .map(function (element) {
+                    return String(element.n + 'x ' + element.name + '\n')
+                  })}
               </Text>
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
@@ -163,46 +177,25 @@ export default class BattList extends PureComponent {
             </View>
           </View>
         </Modal>
-        <Modal
-          animationType='slide'
-          transparent={true}
-          visible={this.state.modalVisibleResi}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
-          }}
+        <Snackbar
+          visible={this.state.clearList}
+          onDismiss={() => this.setState({ clearList: false })}
+          duration={700}
+          style={{ backgroundColor: '#252849', textAlign: 'center' }}
         >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>
-              RESI {"\n\n"}
-
-                {
-                  [...global.resi_Batt_IP.values()]
-                    .sort()
-                    .map(function (element) {
-                      return String(element.n + 'x '+ element.name + '\n')
-                    })
-                }
-              </Text>
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
-                onPress={() => {
-                  this.setModalVisibleResi(!this.state.modalVisibleResi)
-                }}
-              >
-                <Text style={styles.textStyle}>Chiudi</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
+          {' '}
+          LISTA AZZERATA{' '}
+        </Snackbar>
         <SectionList
-          sections={sectionList}
+          sections={this.state.listFiltered}
           renderItem={this.renderRow}
-          // renderSectionHeader={({ section: { title } }) => (
-          //   <Text style={styles.header}>{title}</Text>
-          // )}
+          refreshing={this.state.refresh}          
         ></SectionList>
-        
+        <Searchbar
+          placeholder='Cerca...'
+          onChangeText={text => this.search(text)}
+          style={styles.input}
+        />
         <Appbar style={styles.bottom}>
           <Appbar.Action
             style={{ flex: 1 }}
@@ -210,17 +203,6 @@ export default class BattList extends PureComponent {
             color={'gold'}
             onPress={() => this.setModalVisible(true)}
           />
-          <Appbar.Action
-            style={{ flex: 1 }}
-            icon='recycle'
-            color={'lightgreen'}
-            onPress={() => this.setModalVisibleResi(true)}
-          />
-          {/* <Appbar.Action
-            style={{ flex: 1 }}
-            icon='printer-wireless'
-            onPress={() =>  this.stampList()}
-          /> */}
           <Appbar.Action
             style={{ flex: 1 }}
             icon='delete'
@@ -253,18 +235,14 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex: 1,
     borderWidth: 2
-
-    //    borderBottomWidth: 3,
-    //  borderTopWidth: 1.5,
-    //borderLeftWidth: 2
   },
   header: {
     fontSize: 32,
     backgroundColor: '#fff'
   },
   bottom: {
-    borderColor:'#f4511D',
-    borderTopWidth:3,
+    borderTopWidth: 2,
+    borderRadius: 15,
     backgroundColor: '#252850',
     position: 'relative',
     left: 0,
@@ -304,8 +282,22 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   modalText: {
+    fontSize: 15,
     marginBottom: 15,
     textAlign: 'center',
-    color:'white'
+    color: 'gold'
+  },
+  modalTextResi: {
+    marginBottom: 15,
+    textAlign: 'left',
+    color: 'lightgreen'
+  },
+  input: {
+    backgroundColor: '#2196F3',
+    borderColor: '#252850',
+    borderWidth: 0.5,
+    marginTop: 3,
+    height: 40,
+    borderRadius: 10
   }
 })

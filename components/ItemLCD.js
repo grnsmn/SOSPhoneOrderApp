@@ -13,7 +13,7 @@ export default class ItemLCD extends PureComponent {
   state = {
     id: '',
     nomeItem: '',
-    section:'LCD',
+    section: 'LCD',
     colore: '',
     contatoreW: 0,
     contatoreBK: 0,
@@ -26,6 +26,7 @@ export default class ItemLCD extends PureComponent {
     super(props)
     this.state.nomeItem = this.props.NameItem
     this.state.id = this.props.id
+    //console.log(global.store_Lcd.get(this.state.id +'W')!=null?global.store_Lcd.get(this.state.id +'W'):'')
   }
   componentDidMount () {
     //console.log('Mount'+ this.state.nomeItem)
@@ -33,61 +34,61 @@ export default class ItemLCD extends PureComponent {
     const id_BK = this.state.id + 'Bk'
     AsyncStorage.getItem(this.state.id).then(result => {
       const parseElement = JSON.parse(result)
-      if (parseElement != null) {
-        if (parseElement.id != null) {
-          const tmp = JSON.parse(result, (key, value) => {
-            //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
-            return value
+      if (parseElement != null && parseElement.id != null) {
+        const tmp = JSON.parse(result, (key, value) => {
+          //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
+          return value
+        })
+        //Aggiornamento lista ordine
+        if (this.state.contatoreW != 0) {
+          global.store_Lcd.set(id_W, {
+            id: id_W,
+            name: this.state.nomeItem,
+            col: 'BIANCO',
+            n: this.state.contatoreW,
+            frame: this.state.noFrame == 'checked' ? '+ FRAME' : 'NO FRAME'
           })
-          this.setState({
-            contatoreW: tmp.contatoreW,
-            contatoreBK: tmp.contatoreBK,
-            resiW: tmp.resiW,
-            resiBK: tmp.resiBK,
-            noFrame: tmp.noFrame
-          })
-          //Aggiornamento lista ordine
-          if (this.state.contatoreW != 0) {
-            global.store_Lcd.set(id_W, {
-              name: this.state.nomeItem,
-              col: 'BIANCO',
-              n: this.state.contatoreW,
-              frame: this.state.noFrame == 'checked' ? '+ FRAME' : 'NO FRAME'
-            })
-          } else if (this.state.contatoreW == 0) {
-            global.store_Lcd.delete(id_W)
-          }
-          if (tmp.contatoreBK != 0) {
-            global.store_Lcd.set(id_BK, {
-              name: this.state.nomeItem,
-              col: 'NERO',
-              n: this.state.contatoreBK,
-              frame: this.state.noFrame == 'checked' ? '+ FRAME' : ' NO FRAME'
-            })
-          } else if (tmp.contatoreBK == 0) {
-            global.store_Lcd.delete(id_BK)
-          }
-
-          //Aggiornamento lista resi
-          //RESI BIANCHI
-          if (this.state.resiW == 0) global.resi_Lcd.delete(id_W)
-          if (this.state.resiW != 0) {
-            global.resi_Lcd.set(id_W, {
-              name: this.state.nomeItem,
-              col: 'BIANCO',
-              n: this.state.resiW
-            })
-          }
-          //RESI NERI
-          if (this.state.resiBK == 0) global.resi_Lcd.delete(id_BK)
-          if (this.state.resiBK != 0) {
-            global.resi_Lcd.set(id_BK, {
-              name: this.state.nomeItem,
-              col: 'NERO',
-              n: this.state.resiBK
-            })
-          }
+        } else if (this.state.contatoreW == 0) {
+          global.store_Lcd.delete(id_W)
         }
+        if (tmp.contatoreBK != 0) {
+          global.store_Lcd.set(id_BK, {
+            id: id_BK,
+            name: this.state.nomeItem,
+            col: 'NERO',
+            n: this.state.contatoreBK,
+            frame: this.state.noFrame == 'checked' ? '+ FRAME' : ' NO FRAME'
+          })
+        } else if (tmp.contatoreBK == 0) {
+          global.store_Lcd.delete(id_BK)
+        }
+
+        //Aggiornamento lista resi
+        //RESI BIANCHI
+        if (this.state.resiW == 0) global.resi_Lcd.delete(id_W)
+        if (this.state.resiW != 0) {
+          global.resi_Lcd.set(id_W, {
+            name: this.state.nomeItem,
+            col: 'BIANCO',
+            n: this.state.resiW
+          })
+        }
+        //RESI NERI
+        if (this.state.resiBK == 0) global.resi_Lcd.delete(id_BK)
+        if (this.state.resiBK != 0) {
+          global.resi_Lcd.set(id_BK, {
+            name: this.state.nomeItem,
+            col: 'NERO',
+            n: this.state.resiBK
+          })
+        }
+        this.setState({
+          contatoreW: tmp.contatoreW,
+          contatoreBK: tmp.contatoreBK,
+          resiW: tmp.resiW,
+          resiBK: tmp.resiBK,
+          noFrame: tmp.frame
+        })
       } else {
       }
     })
@@ -99,28 +100,32 @@ export default class ItemLCD extends PureComponent {
     //console.log("attualmente inseriti:" +  this.state.resiW)
     //elimina gli elementi da map se il valore inserito è 0
     if (this.state.contatoreW == 0) global.store_Lcd.delete(id_W)
-    if (this.state.contatoreBK == 0) global.store_Lcd.delete(id_BK)
     //aggiorna la quantità di elementi in contemporanea all'inserimento del valore desiderato
-    if (this.state.contatoreW != 0) {
+    else {
       global.store_Lcd.set(id_W, {
+        id: id_W,
         name: this.state.nomeItem,
         col: 'BIANCO',
         n: this.state.contatoreW,
+        section: 'LCD',
         frame: this.state.noFrame == 'checked' ? '+ FRAME' : 'NO FRAME'
       })
     }
-    if (this.state.contatoreBK != 0) {
+    if (this.state.contatoreBK == 0) global.store_Lcd.delete(id_BK)
+    else {
       global.store_Lcd.set(id_BK, {
+        id: id_BK,
         name: this.state.nomeItem,
         col: 'NERO',
         n: this.state.contatoreBK,
+        section: 'LCD',
         frame: this.state.noFrame == 'checked' ? '+ FRAME' : 'NO FRAME'
       })
     }
     //Aggiornamento lista resi
     //RESI BIANCHI
     if (this.state.resiW == 0) global.resi_Lcd.delete(id_W)
-    if (this.state.resiW != 0) {
+    else {
       global.resi_Lcd.set(id_W, {
         name: this.state.nomeItem,
         col: 'BIANCO',
@@ -129,16 +134,13 @@ export default class ItemLCD extends PureComponent {
     }
     //RESI NERI
     if (this.state.resiBK == 0) global.resi_Lcd.delete(id_BK)
-    if (this.state.resiBK != 0) {
+    else {
       global.resi_Lcd.set(id_BK, {
         name: this.state.nomeItem,
         col: 'NERO',
         n: this.state.resiBK
       })
     }
-  }
-  inStore2 () {
-    this.componentDidMount()
   }
   oneColor () {
     if (
@@ -177,21 +179,21 @@ export default class ItemLCD extends PureComponent {
                 color: '#F1F3F4',
                 marginLeft: 10,
                 fontSize: 16,
-                fontWeight: 'bold',
+                fontWeight: 'bold'
               }}
             >
               {this.props.NameItem}
             </Text>
           </TouchableOpacity>
         </View>
-              
+
         <View style={styles.container2}>
-            <Checkbox.Item
-            label= {this.state.noFrame == 'checked' ? '+ FRAME' : 'NO FRAME'}
-            color= 'gold'
+          <Checkbox.Item
+            label={this.state.noFrame == 'checked' ? '+ FRAME' : 'NO FRAME'}
+            color='gold'
             labelStyle={{
               color: '#BABCBE',
-              fontSize: 10,
+              fontSize: 10
             }}
             status={this.state.noFrame}
             onPress={() => {
@@ -204,7 +206,6 @@ export default class ItemLCD extends PureComponent {
               }
             }}
           />
-     
         </View>
         <View
           style={{
@@ -214,65 +215,102 @@ export default class ItemLCD extends PureComponent {
             justifyContent: 'flex-end'
           }}
         >
-          <View style={{ flex: 0.7, borderWidth: 1, borderLeftColor: 'white' }}>
-            <Input
-              label={'WHITE'}
-              labelStyle={{
-                color: 'black',
-                textAlign: 'center',
-                fontSize: 12,
-                backgroundColor: 'white'
+          {(this.props.NameItem.includes('IPHONE X') ||
+            this.props.NameItem.includes('IPHONE XR') ||
+            this.props.NameItem.includes('IPHONE 11') ||
+            this.props.NameItem.includes('P30 LITE') ||
+            this.props.NameItem.includes('P40 LITE') ||
+            this.props.NameItem.includes('MATE 20 LITE') ||
+            this.props.NameItem.includes('PSMART 2019') ||
+            this.props.NameItem.includes('PSMART Z') ||
+            this.props.NameItem.includes('P20 LITE')) == false ? (
+            <View
+              style={{
+                flex: 0.5,
+                borderWidth: 0.5,
+                borderLeftColor: '#2196F3'
               }}
-              disabled={this.oneColor()}
-              //renderErrorMessage={false}
-              placeholder={String(this.state.contatoreW)}
-              placeholderTextColor={'gold'}
-              keyboardType='numeric'
-              maxLength={1}
-              onChangeText={value => {
-                if (value <= this.props.nMax && value != '') {
-                  this.setState({
-                    contatoreW: parseInt(value),
-                    colore: 'BIANCO'
-                  })
+            >
+              <Input
+                style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
+                label={'WHITE'}
+                labelStyle={{
+                  color: 'black',
+                  textAlign: 'center',
+                  fontSize: 12,
+                  backgroundColor: '#F1F3F4'
+                }}
+                disabled={this.oneColor()}
+                //renderErrorMessage={false}
+                placeholder={
+                  String(this.state.contatoreW) == '0'
+                    ? '-'
+                    : String(this.state.contatoreW)
                 }
-              }}
-              onSubmitEditing={() => this.inStore2()}
-              errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
-              errorMessage={'max ' + this.props.nMax}
-            />
-            <Input
-              label={'Reso'}
-              labelStyle={{
-                color: 'black',
-                textAlign: 'center',
-                fontSize: 10,
-                backgroundColor: 'lightgreen'
-              }}
-              disabled={this.oneColor()}
-              placeholder={String(this.state.resiW)}
-              placeholderTextColor={'lightgreen'}
-              keyboardType='numeric'
-              maxLength={1}
-              renderErrorMessage={false}
-              onChangeText={value => {
-                if (value != '') {
-                  this.setState({
-                    resiW: parseInt(value),
-                    colore: 'BIANCO'
-                  })
+                placeholderTextColor={'gold'}
+                keyboardType='numeric'
+                maxLength={1}
+                onChangeText={value => {
+                  if (value <= this.props.nMax && value != '') {
+                    this.setState({
+                      contatoreW: parseInt(value),
+                      colore: 'BIANCO'
+                    })
+                  }
+                }}
+                //onSubmitEditing={() =>  this.componentDidMount()}
+                errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
+                errorMessage={'max ' + this.props.nMax}
+              />
+              <Input
+                style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
+                label={'Reso'}
+                labelStyle={{
+                  color: 'black',
+                  textAlign: 'center',
+                  fontSize: 10,
+                  backgroundColor: 'lightgreen'
+                }}
+                disabled={this.oneColor()}
+                placeholder={
+                  String(this.state.resiW) == '0'
+                    ? '-'
+                    : String(this.state.resiW)
                 }
-              }}
-              onSubmitEditing={() => this.inStore2()}
-            />
-          </View>
+                placeholderTextColor={'lightgreen'}
+                keyboardType='numeric'
+                maxLength={1}
+                renderErrorMessage={false}
+                onChangeText={value => {
+                  if (value != '') {
+                    this.setState({
+                      resiW: parseInt(value),
+                      colore: 'BIANCO'
+                    })
+                  }
+                }}
+                //onSubmitEditing={() =>  this.componentDidMount()}
+              />
+            </View>
+          ) : (
+            <View></View>
+          )}
           <View
-            style={{ flex: 0.7, borderWidth: 0.5, borderLeftColor: 'white' }}
+            style={{ flex: 0.5, borderWidth: 0.5, borderLeftColor: '#2196F3' }}
           >
             <Input
-              label={'BLACK'}            
-              labelStyle={{ color: '#F1F3F4', textAlign: 'center', fontSize: 12 }}
-              placeholder={this.state.contatoreBK.toString()}
+              style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
+              label={'BLACK'}
+              labelStyle={{
+                color: '#F1F3F4',
+                textAlign: 'center',
+                fontSize: 12
+              }}
+              placeholder={
+                String(this.state.contatoreBK) == '0'
+                  ? '-'
+                  : String(this.state.contatoreBK)
+              }
               placeholderTextColor={'gold'}
               //style={{ borderWidth: 0, color: 'white' }}
               renderErrorMessage={false}
@@ -286,11 +324,13 @@ export default class ItemLCD extends PureComponent {
                   })
                 }
               }}
-              onSubmitEditing={() => this.inStore2()}
+              //onSubmitEditing={() =>  this.componentDidMount()}
+
               errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
               errorMessage={'max ' + this.props.nMax}
             />
             <Input
+              style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
               label={'Reso'}
               labelStyle={{
                 color: 'black',
@@ -298,7 +338,11 @@ export default class ItemLCD extends PureComponent {
                 fontSize: 10,
                 backgroundColor: 'lightgreen'
               }}
-              placeholder={this.state.resiBK.toString()}
+              placeholder={
+                String(this.state.resiBK) == '0'
+                  ? '-'
+                  : String(this.state.resiBK)
+              }
               placeholderTextColor={'lightgreen'}
               keyboardType='numeric'
               maxLength={1}
@@ -311,7 +355,7 @@ export default class ItemLCD extends PureComponent {
                   })
                 }
               }}
-              onSubmitEditing={() => this.inStore2()}
+              //onSubmitEditing={() =>  this.componentDidMount()}
             />
           </View>
         </View>
@@ -323,8 +367,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    borderColor: '#F1F3F4',
-    borderWidth: 1,
+    borderColor: '#2196F3',
+    borderWidth: 0.5,
+    borderRadius: 10,
     margin: 1,
     alignItems: 'center',
     backgroundColor: '#000'
@@ -338,6 +383,6 @@ const styles = StyleSheet.create({
   container2: {
     flex: 0.8,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   }
 })

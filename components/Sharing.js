@@ -45,7 +45,6 @@ class ShareExample extends Component {
         <Button
           onPress={this.onShare}
           icon={<Icon name='send' size={20} color='white' />}
-          iconRight
           title='Invia '
           buttonStyle={{ backgroundColor: 'grey' }}
         />

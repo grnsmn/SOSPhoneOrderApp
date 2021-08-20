@@ -9,25 +9,26 @@ import {
   TouchableHighlight
 } from 'react-native'
 import ItemLCD from '../ItemLCD'
-import { Appbar } from 'react-native-paper'
+import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
 import DisplayList from './Display'
 
 const list = [
-  { id: 'g6p', nome: 'HUAWEI P8', nMax: 1 },
-  { id: 'hm4', nome: 'HUAWEI P8 LITE', nMax: 1 },
-  { id: 'hZ4', nome: 'HUAWEI P8 LITE 2017', nMax: 1 },
-  { id: 'wqq', nome: 'HUAWEI P9', nMax: 1 },
-  { id: 'iz8', nome: 'HUAWEI P9 LITE', nMax: 1 },
-  { id: '2o4', nome: 'HUAWEI P10', nMax: 1 },
-  { id: 'zo3', nome: 'HUAWEI P10 LITE', nMax: 1 },
-  { id: 'w37', nome: 'HUAWEI P20 LITE', nMax: 2 },
-  { id: 'w3H', nome: 'HUAWEI P30 LITE', nMax: 1 },
-  { id: 'V7v', nome: 'HUAWEI P40 LITE', nMax: 1 },
-  { id: 'xhm', nome: 'HUAWEI MATE 10 LITE', nMax: 2 },
-  { id: 'hhs', nome: 'HUAWEI MATE 20 LITE', nMax: 2 },
-  { id: 'tn4', nome: 'HUAWEI PSMART', nMax: 2 },
-  { id: 'xs9', nome: 'HUAWEI PSMART 2019', nMax: 2 },
-  { id: 'tW6', nome: 'HUAWEI PSMART Z', nMax: 2 }
+  { id: 'g6p', nome: 'HUAWEI P8', nMax: 3 },
+  { id: 'hm4', nome: 'HUAWEI P8 LITE', nMax: 3 },
+  { id: 'hZ4', nome: 'HUAWEI P8 LITE 2017', nMax: 3 },
+  { id: 'wqq', nome: 'HUAWEI P9', nMax: 3 },
+  { id: 'iz8', nome: 'HUAWEI P9 LITE', nMax: 3 },
+  { id: '2o4', nome: 'HUAWEI P10', nMax: 3 },
+  { id: 'wYà', nome: 'HUAWEI P20', nMax: 3 },
+  { id: 'zo3', nome: 'HUAWEI P10 LITE', nMax: 3 },
+  { id: 'w37', nome: 'HUAWEI P20 LITE', nMax: 3 },
+  { id: 'w3H', nome: 'HUAWEI P30 LITE', nMax: 3 },
+  { id: 'V7v', nome: 'HUAWEI P40 LITE', nMax: 3 },
+  { id: 'xhm', nome: 'HUAWEI MATE 10 LITE', nMax: 3 },
+  { id: 'hhs', nome: 'HUAWEI MATE 20 LITE', nMax: 3 },
+  { id: 'tn4', nome: 'HUAWEI PSMART', nMax: 3 },
+  { id: 'xs9', nome: 'HUAWEI PSMART 2019', nMax: 3 },
+  { id: 'tW6', nome: 'HUAWEI PSMART Z', nMax: 3 }
 ]
 const sectionList = [
   {
@@ -36,15 +37,24 @@ const sectionList = [
   }
 ]
 export default class DisplayListHW extends DisplayList {
-  state = { modalVisible: false, modalVisibleResi: false }
+  state = { modalVisible: false,  clearList:false, listFiltered: sectionList,
+    searchModel: '' }
+
+  search (model) {
+    this.setState({
+      listFiltered: [
+        {
+          title: 'To order',
+          data: list.filter(elem => (elem.nome.includes(model.toUpperCase())))
+        }
+      ]
+    })
+  }
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
   }
 
-  setModalVisibleResi = visible => {
-    this.setState({ modalVisibleResi: visible })
-  }
   renderRow = ({ item }) => (
     <ItemLCD NameItem={item.nome} nMax={item.nMax} id={item.id} />
   )
@@ -69,17 +79,26 @@ export default class DisplayListHW extends DisplayList {
       //AsyncStorage.multiRemove([element.id+'W', element.id+'Bk']).then(console.log("multirimozione eseguita"))
       AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
-    alert('Lista Svuotata')
+    this.setState({clearList: !this.state.clearList})
   }
   render () {
     return (
       <View style={styles.container}>
+        <Snackbar
+          visible={this.state.clearList}
+          onDismiss={() => this.setState({ clearList: false })}
+          duration={700}
+          style={{ backgroundColor: '#252850', textAlign: 'center' }}
+        >
+          {' '}
+          LISTA AZZERATA{' '}
+        </Snackbar>
         <Modal
           animationType='slide'
           transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
+            this.setModalVisible(!this.state.modalVisible)
           }}
         >
           <View style={styles.centeredView}>
@@ -141,28 +160,7 @@ export default class DisplayListHW extends DisplayList {
                   }
                 })}
               </Text>
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible)
-                }}
-              >
-                <Text style={styles.textStyle}>Chiudi</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
-        <Modal
-          animationType='slide'
-          transparent={true}
-          visible={this.state.modalVisibleResi}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>
+              <Text style={styles.modalTextResi}>
                 RESI {'\n\n'}
                 {[...global.resi_Lcd.values()].sort().map(function (element) {
                   if (
@@ -193,27 +191,27 @@ export default class DisplayListHW extends DisplayList {
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
                 onPress={() => {
-                  this.setModalVisibleResi(!this.state.modalVisibleResi)
+                  this.setModalVisible(!this.state.modalVisible)
                 }}
               >
-                <Text style={styles.textStyle}>Hide List</Text>
+                <Text style={styles.textStyle}>Chiudi</Text>
               </TouchableHighlight>
             </View>
           </View>
         </Modal>
-        <SectionList sections={sectionList} renderItem={this.renderRow} />
+        <SectionList sections={this.state.listFiltered} renderItem={this.renderRow} />
+        <Searchbar
+          placeholder='Cerca...'
+          onChangeText={text => this.search(text)}
+          style={styles.input}
+
+        />
         <Appbar style={styles.bottom}>
           <Appbar.Action
             style={{ flex: 1 }}
             icon='format-list-bulleted'
             color={'gold'}
             onPress={() => this.setModalVisible(true)}
-          />
-          <Appbar.Action
-            style={{ flex: 1 }}
-            icon='recycle'
-            color={'lightgreen'}
-            onPress={() => this.setModalVisibleResi(true)}
           />
           <Appbar.Action
             style={{ flex: 1 }}
@@ -249,8 +247,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   bottom: {
-    borderColor: '#f4511D',
-    borderTopWidth: 3,
+    borderTopWidth: 2,
+    borderRadius: 15,
     backgroundColor: '#252850',
     position: 'relative',
     left: 0,
@@ -293,5 +291,18 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
     color: 'white'
+  },
+  modalTextResi: {
+    marginBottom: 15,
+    textAlign: 'left',
+    color: 'lightgreen',
+  },
+  input: {
+    backgroundColor: '#2196F3',
+    borderColor: '#252850',
+    borderWidth: 0.5,
+    marginTop: 3,
+    height: 40,
+    borderRadius: 10
   }
 })

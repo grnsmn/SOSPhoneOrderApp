@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet} from 'react-native'
-import { Input } from 'react-native-elements'
-
+import { Input} from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 global.store_Batt = new Map() //Oggetto map globale che conterrà nomi e quantità di BATTERIE IPHONE da mettere in lista
 global.resi_Batt_IP = new Map() //Per immagazzinamento lista resi
+
 export default class Item extends PureComponent {
   state = {
     id: '',
@@ -29,64 +29,64 @@ export default class Item extends PureComponent {
     AsyncStorage.getItem(this.state.id).then(result => {
       //console.log(JSON.parse(result).contatore)
       const parseElement = JSON.parse(result)
-      if (parseElement != null) {
-        if (JSON.parse(result).id != null) {
-          const tmp = JSON.parse(result, (key, value) => {
-            //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
-            return value
-          })
-          this.setState({ contatore: tmp.contatore, NumResi: tmp.NumResi })
-          if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
-          if (this.state.contatore != 0) {
-            // console.log([...global.store_Batt.get(this.state.id)])
-            global.store_Batt.set(this.state.id, {
-              name: this.state.nomeItem,
-              n: this.state.contatore
+      try {
+        if (parseElement != null && parseElement.id != null) {
+            const tmp = JSON.parse(result, (key, value) => {
+              //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
+              return value
             })
-          }
-
-          if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
-          if (this.state.NumResi != 0) {
-            global.resi_Batt_IP.set(this.state.id, {
-              name: this.state.nomeItem,
-              n: this.state.NumResi
-            })
-          }
+            if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
+            else {
+              // console.log([...global.store_Batt.get(this.state.id)])
+              global.store_Batt.set(this.state.id, {
+                name: this.state.nomeItem,
+                n: this.state.contatore,
+                section: this.state.section,
+              })
+            }
+            
+            if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
+            else {
+              global.resi_Batt_IP.set(this.state.id, {
+                name: this.state.nomeItem,
+                n: this.state.NumResi
+              })
+            }
+            this.setState({ contatore: tmp.contatore, NumResi: tmp.NumResi })
+          
+        } else {
+          throw "error"
         }
-      } else {
+      } catch (error) {
+        //console.log("errore")
       }
     })
   }
   componentDidUpdate () {
     AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
     if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
-    if (this.state.contatore != 0) {
+    else {
       global.store_Batt.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.contatore
       })
     }
     if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
-    if (this.state.NumResi != 0) {
+    else {
       global.resi_Batt_IP.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.NumResi
       })
     }
   }
-
-  inStore () {
-    //this.setModalVisible(!this.state.modalVisible)
-    this.componentDidMount()
-    //console.log('elemento inserito')
-  }
   render () {
     return (
       <View style={styles.container}>
-        <Text style={{color: '#F1F3F4', flex: 1, fontSize: 16, marginLeft: 10, fontWeight: 'bold' }}>
+        <Text style={{color: '#F1F3F4', flex: 1.1, fontSize: 16, marginLeft: 10, fontWeight: 'bold'}}>
           {this.props.NameItem}
+          {this.props.codice?<Text style={{color:'#2196F3', fontSize:11, textAlign:'center'}}>{'\n'+this.props.codice}</Text>:<Text></Text>}
         </Text>
-        <Text style={{color: 'grey', flex: 1, fontSize: 10, marginLeft: 10, fontWeight: 'bold', textAlign: 'center' }}>{this.state.compat}</Text>
+        <Text style={{color: 'grey', flex: 0.75, fontSize: 10, fontWeight: 'bold', textAlign: 'right' }}>{this.state.compat}</Text>
         <View
           style={{
             flex: 1,
@@ -96,14 +96,14 @@ export default class Item extends PureComponent {
           }}
         >
           <View
-            style={{ flex: 0.8, borderLeftWidth: 0.5, borderColor: 'gold' }}
+            style={{ flex: 0.5, borderLeftWidth: 0, borderColor: 'gold' }}
           >
             <Input
-              style={{ borderWidth: 1, color: 'white' }}
+              style={{ borderWidth: 1, color: 'white', textAlign:'center' }}
               renderErrorMessage={false}
               labelStyle={{ color: 'gold', textAlign: 'center', fontSize: 11 }}
               label={'To Order'}
-              placeholder={this.state.contatore.toString()}
+              placeholder={this.state.contatore.toString()=="0"?"-":this.state.contatore.toString()}
               placeholderTextColor={'gold'}
               keyboardType='number-pad'
               maxLength={1}
@@ -112,24 +112,25 @@ export default class Item extends PureComponent {
                   this.setState({ contatore: parseInt(value) })
                 }
               }}
-              onSubmitEditing={() => this.inStore()}
+              //onSubmitEditing={() => this.componentDidMount()}
               errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
               errorMessage={'max ' + this.props.nMax}
             />
           </View>
           <View
-            style={{ flex: 0.6, borderLeftWidth: 0.5, borderColor: 'lightgreen' }}
+            style={{ flex: 0.4, borderLeftWidth: 0.5, borderColor: 'lightgreen' }}
           >
             <Input
               label={'Reso'}
-              style={{ borderWidth: 1, color: 'white' }}
+              style={{ borderWidth: 1, color: 'white', textAlign:'center' }}
               renderErrorMessage={false}
               labelStyle={{
                 color: 'lightgreen',
                 textAlign: 'center',
                 fontSize: 10
               }}
-              placeholder={String(this.state.NumResi)}
+              placeholder={this.state.NumResi.toString()=="0"?"-":this.state.NumResi.toString()}
+
               placeholderTextColor={'lightgreen'}
               keyboardType='number-pad'
               maxLength={1}
@@ -138,7 +139,7 @@ export default class Item extends PureComponent {
                   this.setState({ NumResi: parseInt(value) })
                 }
               }}
-              onSubmitEditing={() => this.inStore()}
+              //onSubmitEditing={() => this.componentDidMount()}
             />
           </View>
         </View>
@@ -151,9 +152,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    borderColor: 'white',
-    borderWidth: 0.25,
-    margin: 1,
+    borderColor: '#2196F3',
+    borderWidth: 0.3,
+    borderRadius: 10,
+    margin: 2,
     alignItems: 'center',
     backgroundColor: '#000'
   },

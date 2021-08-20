@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ItemLCD from '../ItemLCD'
-import { Appbar, Snackbar } from 'react-native-paper'
+import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
 
 global.listDisplay = ''
 global.listResiDisplay = ''
@@ -27,34 +27,35 @@ const list = [
   { id: 'WYR', nome: 'IPHONE 7 PLUS', nMax: 2 },
   { id: 'M3P', nome: 'IPHONE 8 PLUS', nMax: 2 },
   { id: '2TI', nome: 'IPHONE X [ GX ]', nMax: 4 },
-  { id: '5QM', nome: 'IPHONE XS MAX', nMax: 1 },
   { id: 'JQ7', nome: 'IPHONE XR', nMax: 2 },
-  { id: '2A4', nome: 'IPHONE 11', nMax: 2 }
+  { id: '2A4', nome: 'IPHONE 11', nMax: 2 },
+  { id: '5QM', nome: 'IPHONE XS MAX', nMax: 2 },
 ]
 const sectionList = [
   {
     title: 'To Order',
     data: list
   }
-  // {
-  //   title: 'Resi',
-  //   data: list
-  // }
 ]
 export default class DisplayList extends PureComponent {
-  state = { modalVisible: false, modalVisibleResi: false, clearList: false }
+  state = { modalVisible: false, clearList: false,listFiltered:sectionList, searchModel:'' }
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
   }
-
-  setModalVisibleResi = visible => {
-    this.setState({ modalVisibleResi: visible })
-  }
   renderRow = ({ item }) => (
     <ItemLCD NameItem={item.nome} nMax={item.nMax} id={item.id} />
   )
-
+  search (model) {
+    this.setState({
+      listFiltered: [
+        {
+          title: 'To order',
+          data: list.filter(elem => elem.nome.includes(model.toUpperCase()))
+        }
+      ]
+    })
+  }
   onShareDisplay = async () => {
     try {
       const data = new Date()
@@ -73,9 +74,9 @@ export default class DisplayList extends PureComponent {
           // '/' +
           // tomorrow.getFullYear() +
           // '\n\n' +
-          global.listDisplay + '\nResi:\n' + global.listResiDisplay
+          global.listDisplay +
+          (global.resi_Lcd.size==0?'' :  '\nResi:\n' + global.listResiDisplay) 
       })
-      console.log(message)
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // shared with activity type of result.activityType
@@ -192,7 +193,7 @@ export default class DisplayList extends PureComponent {
           transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
+            this.setModalVisible(!this.state.modalVisible)
           }}
         >
           <SafeAreaView style={styles.centeredView}>
@@ -201,9 +202,11 @@ export default class DisplayList extends PureComponent {
                 IN ORDINE {'\n\n'}
                 {//Funzione che permette la stampa pulita della lista in ordine
                 [...global.store_Lcd.values()].sort().map(function (element) {
+                  
                   if (element.name.includes('IPHONE')) {
                     if (
                       element.name.includes('IPHONE X') ||
+                      element.name.includes('IPHONE XS Max') ||
                       element.name.includes('IPHONE XR') ||
                       element.name.includes('IPHONE 11')
                     ) {
@@ -225,6 +228,7 @@ export default class DisplayList extends PureComponent {
                     if (
                       element.name.includes('P20 LITE') ||
                       element.name.includes('P30 LITE') ||
+                      element.name.includes('P40 LITE') ||
                       element.name.includes('MATE 20 LITE') ||
                       element.name.includes('PSMART 2019') ||
                       element.name.includes('PSMART Z')
@@ -254,28 +258,7 @@ export default class DisplayList extends PureComponent {
                   }
                 })}
               </Text>
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible)
-                }}
-              >
-                <Text style={styles.textStyle}>Chiudi</Text>
-              </TouchableHighlight>
-            </View>
-          </SafeAreaView>
-        </Modal>
-        <Modal
-          animationType='slide'
-          transparent={true}
-          visible={this.state.modalVisibleResi}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.')
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>
+              <Text style={styles.modalTextResi}>
                 RESI {'\n\n'}
                 {[...global.resi_Lcd.values()].sort().map(function (element) {
                   if (
@@ -307,27 +290,28 @@ export default class DisplayList extends PureComponent {
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
                 onPress={() => {
-                  this.setModalVisibleResi(!this.state.modalVisibleResi)
+                  this.setModalVisible(!this.state.modalVisible)
                 }}
               >
                 <Text style={styles.textStyle}>Chiudi</Text>
               </TouchableHighlight>
             </View>
-          </View>
+          </SafeAreaView>
         </Modal>
-        <SectionList sections={sectionList} renderItem={this.renderRow} />
+
+        <SectionList sections={this.state.listFiltered} renderItem={this.renderRow} />
+        <Searchbar
+          placeholder='Cerca...'
+          onChangeText={text => this.search(text)}
+          style={styles.input}
+
+        />
         <Appbar style={styles.bottom}>
           <Appbar.Action
             style={{ flex: 1 }}
             icon='format-list-bulleted'
             color={'gold'}
             onPress={() => this.setModalVisible(true)}
-          />
-          <Appbar.Action
-            style={{ flex: 1 }}
-            icon='recycle'
-            color={'lightgreen'}
-            onPress={() => this.setModalVisibleResi(true)}
           />
           <Appbar.Action
             style={{ flex: 1 }}
@@ -363,8 +347,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   bottom: {
-    borderColor: '#f4511D',
-    borderTopWidth: 3,
+    borderTopWidth: 2,
+    borderRadius: 15,
     backgroundColor: '#252850',
     position: 'relative',
     left: 0,
@@ -390,7 +374,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5
+    elevation: 5,
   },
   openButton: {
     backgroundColor: '#F194FF',
@@ -404,8 +388,22 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   modalText: {
+    fontSize:15,
     marginBottom: 15,
-    textAlign: 'center',
-    color: 'white'
+    textAlign: 'left',
+    color: '#F1F3F4'
+  },
+  modalTextResi: {
+    marginBottom: 15,
+    textAlign: 'left',
+    color: 'lightgreen',
+  },
+  input: {
+    backgroundColor: '#2196F3',
+    borderColor: '#252850',
+    borderWidth: 0.5,
+    marginTop: 3,
+    height: 40,
+    borderRadius: 10
   }
 })

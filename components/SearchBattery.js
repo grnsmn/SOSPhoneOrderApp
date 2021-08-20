@@ -52,7 +52,8 @@ export default class SearchBattery extends PureComponent {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'space-between',
+    flex: 2,
+    height:150,
+    justifyContent:'center',
   },
 });
