@@ -21,15 +21,13 @@ export default class ItemLCD extends PureComponent {
     resiBK: 0,
     noFrame: 'indeterminate'
   }
-
   constructor (props) {
     super(props)
     this.state.nomeItem = this.props.NameItem
     this.state.id = this.props.id
-    //console.log(global.store_Lcd.get(this.state.id +'W')!=null?global.store_Lcd.get(this.state.id +'W'):'')
   }
   componentDidMount () {
-    //console.log('Mount'+ this.state.nomeItem)
+    var storeLCD = global.store_Lcd;
     const id_W = this.state.id + 'W'
     const id_BK = this.state.id + 'Bk'
     AsyncStorage.getItem(this.state.id).then(result => {
@@ -40,33 +38,33 @@ export default class ItemLCD extends PureComponent {
           return value
         })
         //Aggiornamento lista ordine
-        if (this.state.contatoreW != 0) {
-          global.store_Lcd.set(id_W, {
+        if (this.state.contatoreW == 0) {
+          storeLCD.delete(id_W)
+        } else {
+          storeLCD.set(id_W, {
             id: id_W,
             name: this.state.nomeItem,
             col: 'BIANCO',
             n: this.state.contatoreW,
             frame: this.state.noFrame == 'checked' ? '+ FRAME' : 'NO FRAME'
           })
-        } else if (this.state.contatoreW == 0) {
-          global.store_Lcd.delete(id_W)
         }
-        if (tmp.contatoreBK != 0) {
-          global.store_Lcd.set(id_BK, {
+        if (tmp.contatoreBK == 0) {
+          storeLCD.delete(id_BK)
+        } else {
+          storeLCD.set(id_BK, {
             id: id_BK,
             name: this.state.nomeItem,
             col: 'NERO',
             n: this.state.contatoreBK,
             frame: this.state.noFrame == 'checked' ? '+ FRAME' : ' NO FRAME'
           })
-        } else if (tmp.contatoreBK == 0) {
-          global.store_Lcd.delete(id_BK)
         }
 
         //Aggiornamento lista resi
         //RESI BIANCHI
         if (this.state.resiW == 0) global.resi_Lcd.delete(id_W)
-        if (this.state.resiW != 0) {
+        else {
           global.resi_Lcd.set(id_W, {
             name: this.state.nomeItem,
             col: 'BIANCO',
@@ -75,7 +73,7 @@ export default class ItemLCD extends PureComponent {
         }
         //RESI NERI
         if (this.state.resiBK == 0) global.resi_Lcd.delete(id_BK)
-        if (this.state.resiBK != 0) {
+        else {
           global.resi_Lcd.set(id_BK, {
             name: this.state.nomeItem,
             col: 'NERO',
@@ -90,6 +88,7 @@ export default class ItemLCD extends PureComponent {
           noFrame: tmp.frame
         })
       } else {
+        
       }
     })
   }
@@ -293,7 +292,7 @@ export default class ItemLCD extends PureComponent {
               />
             </View>
           ) : (
-            <View></View>
+            <View />
           )}
           <View
             style={{ flex: 0.5, borderWidth: 0.5, borderLeftColor: '#2196F3' }}

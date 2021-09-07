@@ -9,8 +9,7 @@ export default class ItemAccessori extends PureComponent {
   state = {
     id: '',
     nomeItem: '',
-
-    contatore: -1,
+    contatore: '-',
     modalVisible: false,
   }
   setModalVisible = visible => {
@@ -32,8 +31,8 @@ export default class ItemAccessori extends PureComponent {
             return value
           })
           this.setState({ contatore: tmp.contatore,})
-          //if (this.state.contatore == 0) global.store_accessori.delete(this.state.id)
-          if (this.state.contatore != -1 && isNaN(this.state.contatore) == false) {
+          if (this.state.contatore == '-') global.store_accessori.delete(this.state.id)
+          if (this.state.contatore != '-' && isNaN(this.state.contatore) == false) {
             global.store_accessori.set(this.state.id, {
               name: this.state.nomeItem,
               n: this.state.contatore
@@ -45,8 +44,8 @@ export default class ItemAccessori extends PureComponent {
   }
   componentDidUpdate () {
     AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
-   // if (this.state.contatore == 0 ) global.store_accessori.delete(this.state.id)
-    if (this.state.contatore != -1) {
+    if (this.state.contatore == '-' ) global.store_accessori.delete(this.state.id)
+    if (this.state.contatore != '-') {
       global.store_accessori.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.contatore
@@ -54,10 +53,10 @@ export default class ItemAccessori extends PureComponent {
     }
   }
 
-  inStore () {
-    //this.setModalVisible(!this.state.modalVisible)
-    this.componentDidMount()
-  }
+  // inStore () {
+  //   //this.setModalVisible(!this.state.modalVisible)
+  //   this.componentDidMount()
+  // }
   render () {
     return (
       <View style={styles.container}>
@@ -101,16 +100,18 @@ export default class ItemAccessori extends PureComponent {
               renderErrorMessage={false}
               labelStyle={{ color: 'gold', textAlign: 'center', fontSize: 11 }}
               label={'Ultimi'}
-              placeholder={this.state.contatore.toString()=="-1"?"-":this.state.contatore.toString()}
+              placeholder={this.state.contatore.toString()=="-"?"-":this.state.contatore.toString()}
               placeholderTextColor={'gold'}
               keyboardType='number-pad'
-              maxLength={1}
+              maxLength={2}
               onChangeText={value => {
-                if (value <= this.props.nMax && value != '') {
+                if (parseInt(value) <= parseInt(this.props.nMax)) {
                   this.setState({ contatore: parseInt(value) })
+                }else if (value=='-'){
+                  this.setState({contatore: '-'})
                 }
               }}
-              onSubmitEditing={() => this.inStore()}
+              //onSubmitEditing={() => this.inStore()}
               errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
               errorMessage={'max ' + this.props.nMax}
             />

@@ -11,6 +11,7 @@ import {
 import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Appbar, Searchbar, Snackbar } from 'react-native-paper'
+import {SearchBar} from 'react-native-elements'
 
 global.listBatt = '' //Variabile globale per la scrittura dell'ordine finale
 global.listResiBatt = '' //Variabile globale per la scrittura della lista dei resi finale
@@ -42,8 +43,8 @@ export default class BattList extends PureComponent {
     modalVisible: false,
     clearList: false,
     listFiltered: sectionList,
-    searchModel: '',
-    refresh:false
+    search: '',
+
   }
   
   setModalVisible = visible => {
@@ -57,11 +58,11 @@ export default class BattList extends PureComponent {
       id={item.id}
       compat={item.compat}
       codice={item.codice}
-      clear= {this.state.refresh}
     />
   )
   search (model) {
     this.setState({
+      search: model,
       listFiltered: [
         {
           title: 'To order',
@@ -76,10 +77,10 @@ export default class BattList extends PureComponent {
       // const tomorrow = new Date(data)
       // tomorrow.setDate(tomorrow.getDate() + 1)
       // if (tomorrow.getDay() == 0) {
-      //   tomorrow.setDate(tomorrow.getDate() + 1)
-      // }
-      const result = await Share.share({
-        message:
+        //   tomorrow.setDate(tomorrow.getDate() + 1)
+        // }
+        const result = await Share.share({
+          message:
           // 'Ordine del ' +
           // tomorrow.getDate() +
           // '/' +
@@ -91,11 +92,11 @@ export default class BattList extends PureComponent {
           (global.resi_Batt_IP.size == 0
             ? ''
             : '\nResi:\n' + global.listResiBatt)
-      })
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
+          })
+          if (result.action === Share.sharedAction) {
+            if (result.activityType) {
+              // shared with activity type of result.activityType
+            } else {
           // shared
         }
       } else if (result.action === Share.dismissedAction) {
@@ -105,7 +106,6 @@ export default class BattList extends PureComponent {
       alert(error.message)
     }
   }
-
   stampList () {
     global.listBatt = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
     global.store_Batt.forEach(element => {
@@ -113,11 +113,11 @@ export default class BattList extends PureComponent {
     })
     global.listResiBatt = ''
     global.resi_Batt_IP.size == 0
-      ? (global.listResiBatt = '')
-      : global.resi_Batt_IP.forEach(element => {
-          global.listResiBatt +=
-            element.n + 'x ' + ' BATT ' + element.name + '\n'
-        })
+    ? (global.listResiBatt = '')
+    : global.resi_Batt_IP.forEach(element => {
+      global.listResiBatt +=
+      element.n + 'x ' + ' BATT ' + element.name + '\n'
+    })
     this.onShareBatt()
   }
   clearListBatt () {   
@@ -127,6 +127,7 @@ export default class BattList extends PureComponent {
     //Azzera lista resi
     global.resi_Batt_IP.clear()
     global.listResiBatt = ''
+    this.setState({ clearList: !this.state.clearList})
     list.forEach(element => {
       //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
       const item = {
@@ -137,9 +138,9 @@ export default class BattList extends PureComponent {
       }
       AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
-    this.setState({ clearList: !this.state.clearList, refresh: !this.state.refresh})
   }
   render () {
+    const storeBatt=[...global.store_Batt.values()].sort() 
     return (
       <View style={styles.container}>
         <Modal
@@ -154,7 +155,7 @@ export default class BattList extends PureComponent {
             <View style={styles.modalView}>
               <Text style={styles.modalText}>
                 IN ORDINE {'\n\n'}
-                {[...global.store_Batt.values()].sort().map(function (element) {
+                {storeBatt.map(function (element) {
                   return String(element.n + 'x ' + element.name + '\n')
                 })}
               </Text>
@@ -191,10 +192,13 @@ export default class BattList extends PureComponent {
           renderItem={this.renderRow}
           refreshing={this.state.refresh}          
         ></SectionList>
-        <Searchbar
+        <SearchBar
           placeholder='Cerca...'
+          //value={''}
           onChangeText={text => this.search(text)}
-          style={styles.input}
+          value={this.state.search}
+          containerStyle={styles.container_input}
+          inputContainerStyle={styles.input}
         />
         <Appbar style={styles.bottom}>
           <Appbar.Action
@@ -241,7 +245,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   bottom: {
-    borderTopWidth: 2,
+   // borderTopWidth: 2,
     borderRadius: 15,
     backgroundColor: '#252850',
     position: 'relative',
@@ -292,12 +296,21 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: 'lightgreen'
   },
-  input: {
+  container_input: {
     backgroundColor: '#2196F3',
-    borderColor: '#252850',
-    borderWidth: 0.5,
-    marginTop: 3,
-    height: 40,
+   // borderColor: '#252850',
+   // borderWidth: 0.5,
+    //margin: 3,
+    padding:3,
+   // height: 40,
+   borderRadius: 10
+ },
+  input: {
+    // backgroundColor: '#2196F3',
+    // borderColor: '#252850',
+    // borderWidth: 0.5,
+    // marginTop: 3,
+    // height: 40,
     borderRadius: 10
   }
 })

@@ -8,8 +8,10 @@ import {
   TouchableHighlight
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
+import { Appbar, Snackbar } from 'react-native-paper'
 import BattList from './Batterie'
+import {SearchBar} from 'react-native-elements'
+
 
 const list = [
   { id: 'cvG', nome: 'HUAWEI P8', compat:'', nMax: 2, codice: 'HB3447A9EBW' },
@@ -99,11 +101,12 @@ export default class BattListHW extends BattList {
     modalVisible: false,
     clearList: false,
     listFiltered: sectionList,
-    searchModel: ''
+    search: ''
   }
 
   search (model) {
     this.setState({
+      search: model,
       listFiltered: [
         {
           title: 'To order',
@@ -196,10 +199,12 @@ export default class BattListHW extends BattList {
           //   <Text style={styles.header}>{title}</Text>
           // )}
         ></SectionList>
-        <Searchbar
+        <SearchBar
           placeholder='Cerca...'
           onChangeText={text => this.search(text)}
-          style={styles.input}
+          value={this.state.search}
+          containerStyle={styles.container_input}
+          inputContainerStyle={styles.input}
         />
         <Appbar style={styles.bottom}>
           <Appbar.Action
@@ -243,7 +248,7 @@ const styles = StyleSheet.create({
   },
   bottom: {
     //borderColor: '#f4511D',
-    borderTopWidth: 2,
+    //borderTopWidth: 2,
     borderRadius: 15,
     backgroundColor: '#252850',
     position: 'relative',
@@ -294,12 +299,16 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: 'lightgreen'
   },
-  input: {
-    backgroundColor: '#2196F3',
-    borderColor: '#252850',
-    borderWidth: 0.5,
-    marginTop: 3,
-    height: 40,
+  container_input: {
+     backgroundColor: '#2196F3',
+    // borderColor: '#252850',
+    // borderWidth: 0.5,
+     //margin: 3,
+     padding:3,
+    // height: 40,
+    borderRadius: 10
+  },
+  input:{
     borderRadius: 10
   }
 })

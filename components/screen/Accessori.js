@@ -11,54 +11,57 @@ import {
 } from 'react-native'
 import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Appbar, Searchbar } from 'react-native-paper'
+import { Appbar, Searchbar, Snackbar } from 'react-native-paper'
 import ItemAccessori from '../ItemAccessori'
 
 const list_banco_vendita = [
-  { id: 'cè6', nome: 'CAVO LIGHTNING', nMax: 4 },
-  { id: 'cè1', nome: 'CAVO LIGHTNING 2M', nMax: 4 },
-  { id: 'cè8', nome: 'CAVO MICRO-USB', nMax: 4 },
-  { id: 'cè2', nome: 'CAVO MICRO-USB 2M', nMax: 4 },
-  { id: 'cèM', nome: 'CAVO TYPE-C/LIGHTING', nMax: 4 },
-  { id: 'cè9', nome: 'CAVO TYPE-C', nMax: 4 },
-  { id: 'cè0', nome: 'CAVO TYPE-C 2M', nMax: 4 },
-  { id: 'Aè1', nome: 'ALIM. 2.1A', nMax: 4 },
-  { id: 'Aè2', nome: 'ALIM. USB 3A', nMax: 4 },
-  { id: 'Aè3', nome: 'ALIM. TYPE-C 3A', nMax: 4 },
-  { id: 'pè3', nome: 'POWER-BANK', nMax: 4 },
-  { id: 'Aè4', nome: 'ALIM. COMPUTER', nMax: 2 },
-  { id: 'qèp', nome: 'SCHEDA SD 16GB', nMax: 2 },
-  { id: 'qè1', nome: 'SCHEDA SD 32GB', nMax: 2 },
-  { id: 'qè2', nome: 'SCHEDA SD 64GB', nMax: 2 },
-  { id: 'qè3', nome: 'PENDRIVE 16GB', nMax: 2 },
-  { id: 'qè4', nome: 'PENDRIVE 32GB', nMax: 2 },
-  { id: 'qè5', nome: 'PENDRIVE 64GB', nMax: 2 },
-  { id: 'qò5', nome: 'AURICOLARI LIGHTNING (IPHONE)', nMax: 2 },
-  { id: 'qò1', nome: 'AURICOLARI JACK 3.5', nMax: 2 },
-  { id: 'qò2', nome: 'AURICOLARI BLUETOOTH', nMax: 2 },
-  { id: 'qò3', nome: 'AIRPODS COMPATIBILI', nMax: 2 },
-  { id: 'b0à', nome: 'COVER TPU IPHONE [6/6S]', nMax: 5 },
-  { id: 'b1à', nome: 'COVER TPU IPHONE [7/8]', nMax: 5 },
-  { id: 'b2à', nome: 'COVER TPU IPHONE [X/XS]', nMax: 5 },
-  { id: 'bùà', nome: 'COVER TPU IPHONE X TRASPARENTI', nMax: 5 },
-  { id: 'b3à', nome: 'COVER TPU IPHONE XR', nMax: 5 },
-  { id: 'b4à', nome: 'COVER TPU IPHONE 11', nMax: 5 },
-  { id: 'b5à', nome: 'COVER TPU IPHONE 12', nMax: 5 },
-  { id: 'b6à', nome: 'COVER TPU IPHONE 6PLUS', nMax: 5 },
-  { id: 'b7à', nome: 'COVER TPU IPHONE 7PLUS', nMax: 5 }
+  { id: 'cè6', nome: 'CAVO LIGHTNING', nMax: 20 },
+  { id: 'cè1', nome: 'CAVO LIGHTNING 2M', nMax: 20 },
+  { id: 'cè8', nome: 'CAVO MICRO-USB', nMax: 20 },
+  { id: 'cè2', nome: 'CAVO MICRO-USB 2M', nMax: 20 },
+  { id: 'cèM', nome: 'CAVO TYPE-C/LIGHTING', nMax: 20 },
+  { id: 'cèH', nome: 'CAVO TYPE-C/TYPE-C', nMax: 20 },
+  { id: 'cè9', nome: 'CAVO TYPE-C', nMax: 20 },
+  { id: 'cè0', nome: 'CAVO TYPE-C 2M', nMax: 20 },
+  { id: 'Aè1', nome: 'ALIM. 2.1A', nMax: 20 },
+  { id: 'Aè2', nome: 'ALIM. USB 3A', nMax: 20 },
+  { id: 'Aè3', nome: 'ALIM. TYPE-C 3A', nMax: 20 },
+  { id: 'pè3', nome: 'POWER-BANK', nMax: 10 },
+  { id: 'Aè4', nome: 'ALIM. COMPUTER', nMax: 6 },
+  { id: 'qèp', nome: 'SCHEDA SD 16GB', nMax: 6 },
+  { id: 'qè1', nome: 'SCHEDA SD 32GB', nMax: 6 },
+  { id: 'qè2', nome: 'SCHEDA SD 64GB', nMax: 6 },
+  { id: 'qè3', nome: 'PENDRIVE 16GB', nMax: 6 },
+  { id: 'qè4', nome: 'PENDRIVE 32GB', nMax: 6 },
+  { id: 'qè5', nome: 'PENDRIVE 64GB', nMax: 6 },
+  { id: 'qò5', nome: 'AURICOLARI LIGHTNING (IPHONE)', nMax: 6 },
+  { id: 'qò1', nome: 'AURICOLARI JACK 3.5', nMax: 6 },
+  { id: 'qò2', nome: 'AURICOLARI BLUETOOTH', nMax: 6 },
+  { id: 'qò3', nome: 'AIRPODS COMPATIBILI', nMax: 6 },
+  { id: 'b0à', nome: 'COVER TPU IPHONE [6/6S]', nMax: 15 },
+  { id: 'b1à', nome: 'COVER TPU IPHONE [7/8]', nMax: 15 },
+  { id: 'b2à', nome: 'COVER TPU IPHONE [X/XS]', nMax: 15 },
+  { id: 'ba0', nome: 'COVER TPU IPHONE [7/8] TRASPARENTI', nMax: 15 },
+  { id: 'bùà', nome: 'COVER TPU IPHONE X TRASPARENTI', nMax: 15 },
+  { id: 'b3à', nome: 'COVER TPU IPHONE XR', nMax: 15 },
+  { id: 'b4à', nome: 'COVER TPU IPHONE 11', nMax: 15 },
+  { id: 'b5à', nome: 'COVER TPU IPHONE 12', nMax: 15 },
+  { id: 'b6à', nome: 'COVER TPU IPHONE 6PLUS', nMax: 15 },
+  { id: 'b7à', nome: 'COVER TPU IPHONE 7PLUS', nMax: 15 }
 ]
 
 const list_magazzino = [
   { id: 'za8', nome: 'PELLICOLE ZAGG SMALL', nMax: 10 },
-  { id: 'zaG', nome: 'PELLICOLE ZAGG LARGE', nMax: 2 },
+  { id: 'zaG', nome: 'PELLICOLE ZAGG LARGE', nMax: 10 },
   { id: 'zaS', nome: 'SPRAY ZAGG', nMax: 2 },
+  { id: 'VT0', nome: 'V.TEMP IPHONE 5', nMax: 10 },
   { id: 'VT1', nome: 'V.TEMP IPHONE 7', nMax: 10 },
   { id: 'VT2', nome: 'V.TEMP IPHONE 7P', nMax: 10 },
-  { id: 'VT3', nome: 'V.TEMP IPHONE X', nMax: 10 },
+  { id: 'VT3', nome: 'V.TEMP IPHONE X/11 PRO', nMax: 10 },
   { id: 'VT4', nome: 'V.TEMP IPHONE XR/11', nMax: 10 },
   { id: 'BL1', nome: 'ARIA COMPRESSA', nMax: 5 },
   { id: 'BL2', nome: 'ALCOOL ISOPROPILICO', nMax: 5 },
-  { id: 'BL3', nome: 'COLLA B-7000 110ml', nMax: 1 }
+  { id: 'BL3', nome: 'COLLA B-7000 110ml', nMax: 2 }
 ]
 
 const sectionList = [
@@ -81,7 +84,9 @@ export default class Accessori extends PureComponent {
     modalVisible: false,
     modalVisibleResi: false,
     listFiltered: sectionList,
-    searchModel: ''
+    searchModel: '',
+    clearList: false,
+
   }
 
   setModalVisible = visible => {
@@ -149,12 +154,14 @@ export default class Accessori extends PureComponent {
     //Azzera lista ordine
     global.store_accessori.clear()
     global.list_accessori = ''
+    this.setState({ clearList: !this.state.clearList})
+
     list_banco_vendita.forEach(element => {
       //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
       const item = {
         id: element.id,
         nomeItem: element.nome,
-        contatore: 0
+        contatore: '-'
       }
       AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
@@ -163,11 +170,11 @@ export default class Accessori extends PureComponent {
       const item = {
         id: element.id,
         nomeItem: element.nome,
-        contatore: 0
+        contatore: '-'
       }
       AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
-    alert('Lista Svuotata')
+    
   }
   setModalVisibleResi = visible => {
     this.setState({ modalVisibleResi: visible })
@@ -178,6 +185,15 @@ export default class Accessori extends PureComponent {
   render () {
     return (
       <View style={styles.container}>
+       <Snackbar
+          visible={this.state.clearList}
+          onDismiss={() => this.setState({ clearList: false })}
+          duration={700}
+          style={{ backgroundColor: '#252849', textAlign: 'center' }}
+        >
+          {' '}
+          LISTA AZZERATA{' '}
+        </Snackbar>
         <Modal
           animationType='slide'
           transparent={true}

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
-import { Text, View, StyleSheet} from 'react-native'
-import { Input} from 'react-native-elements'
+import { Text, View, StyleSheet } from 'react-native'
+import { Input } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 global.store_Batt = new Map() //Oggetto map globale che conterrà nomi e quantità di BATTERIE IPHONE da mettere in lista
@@ -10,11 +10,11 @@ export default class Item extends PureComponent {
   state = {
     id: '',
     nomeItem: '',
-    compat:'',
+    compat: '',
     section: 'BATT',
     contatore: 0,
     NumResi: 0,
-    modalVisible: false,
+    modalVisible: false
   }
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
@@ -31,31 +31,29 @@ export default class Item extends PureComponent {
       const parseElement = JSON.parse(result)
       try {
         if (parseElement != null && parseElement.id != null) {
-            const tmp = JSON.parse(result, (key, value) => {
-              //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
-              return value
+          const tmp = JSON.parse(result, (key, value) => {
+            //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
+            return value
+          })
+          if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
+          else {
+            global.store_Batt.set(this.state.id, {
+              name: this.state.nomeItem,
+              n: this.state.contatore,
+              section: this.state.section
             })
-            if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
-            else {
-              // console.log([...global.store_Batt.get(this.state.id)])
-              global.store_Batt.set(this.state.id, {
-                name: this.state.nomeItem,
-                n: this.state.contatore,
-                section: this.state.section,
-              })
-            }
-            
-            if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
-            else {
-              global.resi_Batt_IP.set(this.state.id, {
-                name: this.state.nomeItem,
-                n: this.state.NumResi
-              })
-            }
-            this.setState({ contatore: tmp.contatore, NumResi: tmp.NumResi })
-          
+          }
+
+          if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
+          else {
+            global.resi_Batt_IP.set(this.state.id, {
+              name: this.state.nomeItem,
+              n: this.state.NumResi
+            })
+          }
+          this.setState({ contatore: tmp.contatore, NumResi: tmp.NumResi })
         } else {
-          throw "error"
+          throw 'error'
         }
       } catch (error) {
         //console.log("errore")
@@ -82,11 +80,15 @@ export default class Item extends PureComponent {
   render () {
     return (
       <View style={styles.container}>
-        <Text style={{color: '#F1F3F4', flex: 1.1, fontSize: 16, marginLeft: 10, fontWeight: 'bold'}}>
+        <Text style={styles.titleItem}>
           {this.props.NameItem}
-          {this.props.codice?<Text style={{color:'#2196F3', fontSize:11, textAlign:'center'}}>{'\n'+this.props.codice}</Text>:<Text></Text>}
+          {this.props.codice ? (
+            <Text style={styles.codText}>{'\n' + this.props.codice}</Text>
+          ) : (
+            <Text />
+          )}
         </Text>
-        <Text style={{color: 'grey', flex: 0.75, fontSize: 10, fontWeight: 'bold', textAlign: 'right' }}>{this.state.compat}</Text>
+        <Text style={styles.compaText}>{this.state.compat}</Text>
         <View
           style={{
             flex: 1,
@@ -95,15 +97,17 @@ export default class Item extends PureComponent {
             justifyContent: 'flex-end'
           }}
         >
-          <View
-            style={{ flex: 0.5, borderLeftWidth: 0, borderColor: 'gold' }}
-          >
+          <View style={{ flex: 0.5, borderLeftWidth: 0, borderColor: 'gold' }}>
             <Input
-              style={{ borderWidth: 1, color: 'white', textAlign:'center' }}
+              style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
               renderErrorMessage={false}
               labelStyle={{ color: 'gold', textAlign: 'center', fontSize: 11 }}
               label={'To Order'}
-              placeholder={this.state.contatore.toString()=="0"?"-":this.state.contatore.toString()}
+              placeholder={
+                String(this.state.contatore) == '0'
+                  ? '-'
+                  : String(this.state.contatore)
+              }
               placeholderTextColor={'gold'}
               keyboardType='number-pad'
               maxLength={1}
@@ -118,19 +122,26 @@ export default class Item extends PureComponent {
             />
           </View>
           <View
-            style={{ flex: 0.4, borderLeftWidth: 0.5, borderColor: 'lightgreen' }}
+            style={{
+              flex: 0.4,
+              borderLeftWidth: 0.5,
+              borderColor: 'lightgreen'
+            }}
           >
             <Input
               label={'Reso'}
-              style={{ borderWidth: 1, color: 'white', textAlign:'center' }}
+              style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
               renderErrorMessage={false}
               labelStyle={{
                 color: 'lightgreen',
                 textAlign: 'center',
                 fontSize: 10
               }}
-              placeholder={this.state.NumResi.toString()=="0"?"-":this.state.NumResi.toString()}
-
+              placeholder={
+                this.state.NumResi.toString() == '0'
+                  ? '-'
+                  : this.state.NumResi.toString()
+              }
               placeholderTextColor={'lightgreen'}
               keyboardType='number-pad'
               maxLength={1}
@@ -208,5 +219,24 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
     color: 'white'
+  },
+  titleItem: {
+    color: '#F1F3F4',
+    flex: 1.1,
+    fontSize: 16,
+    marginLeft: 10,
+    fontWeight: 'bold'
+  },
+  codText: {
+    color: '#2196F3',
+    fontSize: 11,
+    textAlign: 'center'
+  },
+  compaText: {
+    color: 'grey',
+    flex: 0.75,
+    fontSize: 10,
+    fontWeight: 'bold',
+    textAlign: 'right'
   }
 })

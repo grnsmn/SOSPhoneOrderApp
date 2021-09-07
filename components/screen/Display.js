@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ItemLCD from '../ItemLCD'
 import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
+import {SearchBar} from 'react-native-elements'
 
 global.listDisplay = ''
 global.listResiDisplay = ''
@@ -38,7 +39,7 @@ const sectionList = [
   }
 ]
 export default class DisplayList extends PureComponent {
-  state = { modalVisible: false, clearList: false,listFiltered:sectionList, searchModel:'' }
+  state = { modalVisible: false, clearList: false, listFiltered:sectionList, search:'' }
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
@@ -48,6 +49,7 @@ export default class DisplayList extends PureComponent {
   )
   search (model) {
     this.setState({
+      search: model,
       listFiltered: [
         {
           title: 'To order',
@@ -203,12 +205,12 @@ export default class DisplayList extends PureComponent {
                 {//Funzione che permette la stampa pulita della lista in ordine
                 [...global.store_Lcd.values()].sort().map(function (element) {
                   
-                  if (element.name.includes('IPHONE')) {
+                  while (element.name.includes('IPHONE')) {
                     if (
-                      element.name.includes('IPHONE X') ||
-                      element.name.includes('IPHONE XS Max') ||
-                      element.name.includes('IPHONE XR') ||
-                      element.name.includes('IPHONE 11')
+                      element.name.includes('X') ||
+                      element.name.includes('XS Max') ||
+                      element.name.includes('XR') ||
+                      element.name.includes('11')
                     ) {
                       return String(
                         element.n + 'x ' + ' LCD ' + element.name + ' ' + '\n'
@@ -224,7 +226,7 @@ export default class DisplayList extends PureComponent {
                           '\n'
                       )
                     }
-                  } else {
+                  } while (element.name.includes('HUAWEI')){
                     if (
                       element.name.includes('P20 LITE') ||
                       element.name.includes('P30 LITE') ||
@@ -298,13 +300,13 @@ export default class DisplayList extends PureComponent {
             </View>
           </SafeAreaView>
         </Modal>
-
         <SectionList sections={this.state.listFiltered} renderItem={this.renderRow} />
-        <Searchbar
+        <SearchBar
           placeholder='Cerca...'
           onChangeText={text => this.search(text)}
-          style={styles.input}
-
+          value={this.state.search}
+          containerStyle={styles.container_input}
+          inputContainerStyle={styles.input}
         />
         <Appbar style={styles.bottom}>
           <Appbar.Action
@@ -398,12 +400,16 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: 'lightgreen',
   },
-  input: {
+  container_input: {
     backgroundColor: '#2196F3',
-    borderColor: '#252850',
-    borderWidth: 0.5,
-    marginTop: 3,
-    height: 40,
+   // borderColor: '#252850',
+   // borderWidth: 0.5,
+    //margin: 3,
+    padding:3,
+   // height: 40,
+   borderRadius: 10
+ },
+  input:{
     borderRadius: 10
   }
 })

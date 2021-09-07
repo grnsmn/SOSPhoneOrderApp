@@ -22,12 +22,12 @@ global.resi_Batt_IP = new Map() //Per immagazzinamento lista resi
 export default class Home extends PureComponent {
   state = {
     text: '',
-    input: React.createRef(),
-    toDay: new Date(),
+    //toDay: new Date(),
     modalVisible: false,
     modalVisibleOrder: false,
     reset: false,
-    resetExtra: false
+    resetExtra: false,
+    input: React.createRef()   //riferimento necessario ad azzerare il text dell'input all'inserimento dell'elemento extra
   }
   constructor (props) {
     super(props)
@@ -68,7 +68,6 @@ export default class Home extends PureComponent {
         }
       }
     )
-    //firebase.database().ref('BATTERIE/APPLE/IPHONE/').set({IPHONE: 'ciao'})
 
     // AsyncStorage.getAllKeys().then(result => {
     //   const x = [...result]

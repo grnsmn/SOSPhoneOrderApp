@@ -11,6 +11,8 @@ import {
 import ItemLCD from '../ItemLCD'
 import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
 import DisplayList from './Display'
+import {SearchBar} from 'react-native-elements'
+
 
 const list = [
   { id: 'g6p', nome: 'HUAWEI P8', nMax: 3 },
@@ -38,10 +40,11 @@ const sectionList = [
 ]
 export default class DisplayListHW extends DisplayList {
   state = { modalVisible: false,  clearList:false, listFiltered: sectionList,
-    searchModel: '' }
+    search: '' }
 
   search (model) {
     this.setState({
+      search: model,
       listFiltered: [
         {
           title: 'To order',
@@ -200,11 +203,12 @@ export default class DisplayListHW extends DisplayList {
           </View>
         </Modal>
         <SectionList sections={this.state.listFiltered} renderItem={this.renderRow} />
-        <Searchbar
+        <SearchBar
           placeholder='Cerca...'
           onChangeText={text => this.search(text)}
-          style={styles.input}
-
+          value={this.state.search}
+          containerStyle={styles.container_input}
+          inputContainerStyle={styles.input}
         />
         <Appbar style={styles.bottom}>
           <Appbar.Action
@@ -297,12 +301,16 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: 'lightgreen',
   },
-  input: {
+  container_input: {
     backgroundColor: '#2196F3',
-    borderColor: '#252850',
-    borderWidth: 0.5,
-    marginTop: 3,
-    height: 40,
-    borderRadius: 10
-  }
+   // borderColor: '#252850',
+   // borderWidth: 0.5,
+    //margin: 3,
+    padding:3,
+   // height: 40,
+   borderRadius: 10
+ },
+ input:{
+   borderRadius: 10
+ }
 })
