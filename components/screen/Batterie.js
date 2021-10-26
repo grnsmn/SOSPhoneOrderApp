@@ -11,7 +11,27 @@ import {
 import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Appbar, Searchbar, Snackbar } from 'react-native-paper'
-import {SearchBar} from 'react-native-elements'
+import { SearchBar } from 'react-native-elements'
+import * as firebase from 'firebase'
+
+var firebaseConfig = {
+  apiKey: 'AIzaSyCiHpV7RMsd2okgSwqqBra2e8Gc3dlrKCY',
+  authDomain: 'sosorderapp.firebaseapp.com',
+  databaseURL:
+    'https://sosorderapp-default-rtdb.europe-west1.firebasedatabase.app',
+  projectId: 'sosorderapp',
+  storageBucket: 'sosorderapp.appspot.com',
+  messagingSenderId: '767773027474',
+  appId: '1:767773027474:web:7065eaed04359967d2ca4b',
+  measurementId: 'G-30X46P77RX'
+}
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig)
+} else {
+  firebase.app() // if already initialized, use that one
+}
+var database = firebase.database().ref('/BATTERIE/APPLE/IPHONE/')
 
 global.listBatt = '' //Variabile globale per la scrittura dell'ordine finale
 global.listResiBatt = '' //Variabile globale per la scrittura della lista dei resi finale
@@ -43,14 +63,13 @@ export default class BattList extends PureComponent {
     modalVisible: false,
     clearList: false,
     listFiltered: sectionList,
-    search: '',
-
+    search: ''
   }
-  
+
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
   }
-  
+
   renderRow = ({ item }) => (
     <Item
       NameItem={item.nome}
@@ -77,10 +96,10 @@ export default class BattList extends PureComponent {
       // const tomorrow = new Date(data)
       // tomorrow.setDate(tomorrow.getDate() + 1)
       // if (tomorrow.getDay() == 0) {
-        //   tomorrow.setDate(tomorrow.getDate() + 1)
-        // }
-        const result = await Share.share({
-          message:
+      //   tomorrow.setDate(tomorrow.getDate() + 1)
+      // }
+      const result = await Share.share({
+        message:
           // 'Ordine del ' +
           // tomorrow.getDate() +
           // '/' +
@@ -92,11 +111,11 @@ export default class BattList extends PureComponent {
           (global.resi_Batt_IP.size == 0
             ? ''
             : '\nResi:\n' + global.listResiBatt)
-          })
-          if (result.action === Share.sharedAction) {
-            if (result.activityType) {
-              // shared with activity type of result.activityType
-            } else {
+      })
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
           // shared
         }
       } else if (result.action === Share.dismissedAction) {
@@ -113,22 +132,30 @@ export default class BattList extends PureComponent {
     })
     global.listResiBatt = ''
     global.resi_Batt_IP.size == 0
-    ? (global.listResiBatt = '')
-    : global.resi_Batt_IP.forEach(element => {
-      global.listResiBatt +=
-      element.n + 'x ' + ' BATT ' + element.name + '\n'
-    })
+      ? (global.listResiBatt = '')
+      : global.resi_Batt_IP.forEach(element => {
+          global.listResiBatt +=
+            element.n + 'x ' + ' BATT ' + element.name + '\n'
+        })
     this.onShareBatt()
   }
-  clearListBatt () {   
+  clearListBatt () {
     //Azzera lista ordine
     global.store_Batt.clear()
     global.listBatt = ''
     //Azzera lista resi
     global.resi_Batt_IP.clear()
     global.listResiBatt = ''
-    this.setState({ clearList: !this.state.clearList})
     list.forEach(element => {
+      database.update({
+        [String(element.nome)]: {
+          n: 0,
+          resi: 0,
+        }
+      })
+
+    firebase.database().ref('/BATTERIE/ORDER/'+element.nome).remove()
+
       //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
       const item = {
         id: element.id,
@@ -136,11 +163,12 @@ export default class BattList extends PureComponent {
         contatore: 0,
         NumResi: 0
       }
-      AsyncStorage.mergeItem(element.id, JSON.stringify(item))
+     // AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
+    this.setState({ clearList: !this.state.clearList })
   }
   render () {
-    const storeBatt=[...global.store_Batt.values()].sort() 
+    const storeBatt = [...global.store_Batt.values()].sort()
     return (
       <View style={styles.container}>
         <Modal
@@ -190,7 +218,7 @@ export default class BattList extends PureComponent {
         <SectionList
           sections={this.state.listFiltered}
           renderItem={this.renderRow}
-          refreshing={this.state.refresh}          
+          refreshing={this.state.refresh}
         ></SectionList>
         <SearchBar
           placeholder='Cerca...'
@@ -245,7 +273,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   bottom: {
-   // borderTopWidth: 2,
+    // borderTopWidth: 2,
     borderRadius: 15,
     backgroundColor: '#252850',
     position: 'relative',
@@ -298,13 +326,13 @@ const styles = StyleSheet.create({
   },
   container_input: {
     backgroundColor: '#2196F3',
-   // borderColor: '#252850',
-   // borderWidth: 0.5,
+    // borderColor: '#252850',
+    // borderWidth: 0.5,
     //margin: 3,
-    padding:3,
-   // height: 40,
-   borderRadius: 10
- },
+    padding: 3,
+    // height: 40,
+    borderRadius: 10
+  },
   input: {
     // backgroundColor: '#2196F3',
     // borderColor: '#252850',

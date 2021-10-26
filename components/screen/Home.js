@@ -14,6 +14,25 @@ import { FAB, Snackbar } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import ShareExample from '../Sharing'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as firebase from 'firebase'
+
+var firebaseConfig = {
+  apiKey: 'AIzaSyCiHpV7RMsd2okgSwqqBra2e8Gc3dlrKCY',
+  authDomain: 'sosorderapp.firebaseapp.com',
+  databaseURL:
+    'https://sosorderapp-default-rtdb.europe-west1.firebasedatabase.app',
+  projectId: 'sosorderapp',
+  storageBucket: 'sosorderapp.appspot.com',
+  messagingSenderId: '767773027474',
+  appId: '1:767773027474:web:7065eaed04359967d2ca4b',
+  measurementId: 'G-30X46P77RX'
+}
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig)
+} else {
+  firebase.app() // if already initialized, use that one
+}
 
 global.extra = ''
 global.store_Batt = new Map() //Oggetto map globale che conterrà nomi e quantità di BATTERIE IPHONE da mettere in lista
@@ -68,7 +87,6 @@ export default class Home extends PureComponent {
         }
       }
     )
-
     // AsyncStorage.getAllKeys().then(result => {
     //   const x = [...result]
     //   x.forEach(element =>

@@ -2,9 +2,25 @@ import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 import { Input } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as firebase from 'firebase'
 
-global.store_Batt = new Map() //Oggetto map globale che conterrà nomi e quantità di BATTERIE IPHONE da mettere in lista
-global.resi_Batt_IP = new Map() //Per immagazzinamento lista resi
+var firebaseConfig = {
+  apiKey: 'AIzaSyCiHpV7RMsd2okgSwqqBra2e8Gc3dlrKCY',
+  authDomain: 'sosorderapp.firebaseapp.com',
+  databaseURL:
+    'https://sosorderapp-default-rtdb.europe-west1.firebasedatabase.app',
+  projectId: 'sosorderapp',
+  storageBucket: 'sosorderapp.appspot.com',
+  messagingSenderId: '767773027474',
+  appId: '1:767773027474:web:7065eaed04359967d2ca4b',
+  measurementId: 'G-30X46P77RX'
+}
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig)
+} else {
+  firebase.app() // if already initialized, use that one
+}
 
 export default class Item extends PureComponent {
   state = {
@@ -25,57 +41,109 @@ export default class Item extends PureComponent {
     this.state.id = this.props.id
     this.state.compat = this.props.compat
   }
-  componentDidMount () {
-    AsyncStorage.getItem(this.state.id).then(result => {
-      //console.log(JSON.parse(result).contatore)
-      const parseElement = JSON.parse(result)
-      try {
-        if (parseElement != null && parseElement.id != null) {
-          const tmp = JSON.parse(result, (key, value) => {
-            //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
-            return value
-          })
-          if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
-          else {
-            global.store_Batt.set(this.state.id, {
-              name: this.state.nomeItem,
-              n: this.state.contatore,
-              section: this.state.section
-            })
-          }
-
-          if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
-          else {
-            global.resi_Batt_IP.set(this.state.id, {
-              name: this.state.nomeItem,
-              n: this.state.NumResi
-            })
-          }
-          this.setState({ contatore: tmp.contatore, NumResi: tmp.NumResi })
-        } else {
-          throw 'error'
+  updateItem (ramo) {
+    firebase
+      .database()
+      .ref('/BATTERIE/' + ramo)
+      .update({
+        [String(this.state.nomeItem)]: {
+          n: this.state.contatore,
+          resi: this.state.NumResi,
+          codice: this.props.codice != null ? this.props.codice : null
         }
-      } catch (error) {
-        //console.log("errore")
-      }
-    })
+      })
+  }
+
+  componentDidMount () {
+    if (this.state.nomeItem.includes('IPHONE')) {
+      var dbPoint = firebase
+        .database()
+        .ref('/BATTERIE/APPLE/IPHONE/' + this.state.nomeItem)
+
+      dbPoint.on('value', snap => {
+        const tmp = snap.val()
+        this.setState({ contatore: tmp.n, NumResi: tmp.resi })
+        if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
+        if (this.state.contatore != 0) {
+          // console.log([...global.store_Batt.get(this.state.id)])
+          global.store_Batt.set(this.state.id, {
+            name: this.state.nomeItem,
+            n: this.state.contatore,
+            section: this.state.section
+          })
+        }
+
+        if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
+        if (this.state.NumResi != 0) {
+          global.resi_Batt_IP.set(this.state.id, {
+            name: this.state.nomeItem,
+            n: this.state.NumResi
+          })
+        }
+      })
+    } else if (this.state.nomeItem.includes('HUAWEI')) {
+      var dbPoint2 = firebase
+        .database()
+        .ref('/BATTERIE/HUAWEI/' + this.state.nomeItem)
+
+      dbPoint2.on('value', snap => {
+        const tmp = snap.val()
+        this.setState({ contatore: tmp.n, NumResi: tmp.resi })
+        if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
+        if (this.state.contatore != 0) {
+          // console.log([...global.store_Batt.get(this.state.id)])
+          global.store_Batt.set(this.state.id, {
+            name: this.state.nomeItem,
+            n: this.state.contatore,
+            section: this.state.section
+          })
+        }
+
+        if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
+        if (this.state.NumResi != 0) {
+          global.resi_Batt_IP.set(this.state.id, {
+            name: this.state.nomeItem,
+            n: this.state.NumResi
+          })
+        }
+      })
+    }
   }
   componentDidUpdate () {
-    AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
-    if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
-    else {
+    if (this.state.nomeItem.includes('IPHONE')) {
+      this.updateItem('APPLE/IPHONE/')
+    } else {
+      this.updateItem('HUAWEI/')
+    }
+    if (this.state.contatore == 0) {
+      global.store_Batt.delete(this.state.id)
+      firebase
+        .database()
+        .ref('/BATTERIE/ORDER/' + this.state.nomeItem)
+        .remove()
+    }
+    if (this.state.contatore != 0) {
+      this.updateItem('ORDER/')
       global.store_Batt.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.contatore
       })
     }
     if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
-    else {
+    if (this.state.NumResi != 0) {
+      this.updateItem('ORDER/')
       global.resi_Batt_IP.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.NumResi
       })
     }
+    //const LISTA = Object.fromEntries(global.store_Batt)
+    // firebase
+    //   .database()
+    //   .ref('/BATTERIE/ORDER/')
+    //   .update({
+    //     LISTA
+    //   })
   }
   render () {
     return (
