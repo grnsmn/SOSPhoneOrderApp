@@ -10,12 +10,17 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Appbar, Snackbar } from 'react-native-paper'
 import BattList from './Batterie'
-import {SearchBar} from 'react-native-elements'
-
+import { SearchBar } from 'react-native-elements'
 
 const list = [
-  { id: 'cvG', nome: 'HUAWEI P8', compat:'', nMax: 2, codice: 'HB3447A9EBW' },
-  { id: 'po5', nome: 'HUAWEI P8 LITE',compat:'', nMax: 2, codice: 'HB3742A0EZC+' },
+  { id: 'cvG', nome: 'HUAWEI P8', compat: '', nMax: 2, codice: 'HB3447A9EBW' },
+  {
+    id: 'po5',
+    nome: 'HUAWEI P8 LITE',
+    compat: '',
+    nMax: 2,
+    codice: 'HB3742A0EZC+'
+  },
   {
     id: 'cfV',
     nome: 'HUAWEI P9',
@@ -24,7 +29,13 @@ const list = [
     nMax: 5,
     codice: 'HB366481EC​W'
   },
-  { id: 'cfZ', nome: 'HUAWEI P9 PLUS',compat:'', nMax: 2, codice: 'HB376883ECW' },
+  {
+    id: 'cfZ',
+    nome: 'HUAWEI P9 PLUS',
+    compat: '',
+    nMax: 2,
+    codice: 'HB376883ECW'
+  },
   {
     id: 'dtZ',
     nome: 'HUAWEI PSMART 2019',
@@ -81,7 +92,13 @@ const list = [
     nMax: 2,
     codice: 'HB386589ECW'
   },
-  { id: 'x76', nome: 'HUAWEI MATE S', compat:'',nMax: 2, codice: 'HB436178EBW' },
+  {
+    id: 'x76',
+    nome: 'HUAWEI MATE S',
+    compat: '',
+    nMax: 2,
+    codice: 'HB436178EBW'
+  },
   {
     id: 'x78',
     nome: 'HUAWEI NOVA YOUNG',
@@ -110,17 +127,17 @@ export default class BattListHW extends BattList {
       listFiltered: [
         {
           title: 'To order',
-          data: list.filter(elem => (elem.nome.includes(model.toUpperCase())))
+          data: list.filter(elem => elem.nome.includes(model.toUpperCase()))
         },
         {
           title: 'To order',
-          data: list.filter(elem => (elem.codice.includes(model.toUpperCase())))
+          data: list.filter(elem => elem.codice.includes(model.toUpperCase()))
         },
         {
           title: 'To order',
-          data: list.filter(elem => (elem.compat.includes(model.toUpperCase())))
+          data: list.filter(elem => elem.compat.includes(model.toUpperCase()))
         }
-        ]
+      ]
     })
   }
   clearListBatt () {
@@ -131,6 +148,17 @@ export default class BattListHW extends BattList {
     global.resi_Batt_IP.clear()
     global.listResiBatt = ''
     list.forEach(element => {
+      atabase.update({
+        [String(element.nome)]: {
+          n: 0,
+          resi: 0,
+          codice: element.codice
+        }
+      })
+      firebase
+        .database()
+        .ref('/BATTERIE/ORDER/' + element.nome)
+        .remove()
       //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
       const item = {
         id: element.id,
@@ -138,7 +166,7 @@ export default class BattListHW extends BattList {
         contatore: 0,
         NumResi: 0
       }
-      AsyncStorage.mergeItem(element.id, JSON.stringify(item))
+      //AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
     this.setState({ clearList: !this.state.clearList })
   }
@@ -300,15 +328,15 @@ const styles = StyleSheet.create({
     color: 'lightgreen'
   },
   container_input: {
-     backgroundColor: '#2196F3',
+    backgroundColor: '#2196F3',
     // borderColor: '#252850',
     // borderWidth: 0.5,
-     //margin: 3,
-     padding:3,
+    //margin: 3,
+    padding: 3,
     // height: 40,
     borderRadius: 10
   },
-  input:{
+  input: {
     borderRadius: 10
   }
 })

@@ -66,6 +66,16 @@ export default class BattList extends PureComponent {
     search: ''
   }
 
+  componentDidMount(){
+    // var dbPoint = firebase
+    //     .database()
+    //     .ref('/BATTERIE/APPLE/IPHONE/')
+
+    //   dbPoint.on('value', snap => {
+    //     const tmp = snap.val()
+    //     console.log(Object.entries(tmp))
+    //   })
+  }
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
   }
@@ -150,11 +160,14 @@ export default class BattList extends PureComponent {
       database.update({
         [String(element.nome)]: {
           n: 0,
-          resi: 0,
+          resi: 0
         }
       })
 
-    firebase.database().ref('/BATTERIE/ORDER/'+element.nome).remove()
+      firebase
+        .database()
+        .ref('/BATTERIE/ORDER/' + element.nome)
+        .remove()
 
       //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
       const item = {
@@ -163,7 +176,7 @@ export default class BattList extends PureComponent {
         contatore: 0,
         NumResi: 0
       }
-     // AsyncStorage.mergeItem(element.id, JSON.stringify(item))
+      // AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
     this.setState({ clearList: !this.state.clearList })
   }

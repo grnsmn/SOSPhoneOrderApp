@@ -47,13 +47,13 @@ export default class Item extends PureComponent {
       .ref('/BATTERIE/' + ramo)
       .update({
         [String(this.state.nomeItem)]: {
+          id: this.state.id,
           n: this.state.contatore,
           resi: this.state.NumResi,
           codice: this.props.codice != null ? this.props.codice : null
         }
       })
   }
-
   componentDidMount () {
     if (this.state.nomeItem.includes('IPHONE')) {
       var dbPoint = firebase

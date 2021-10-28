@@ -87,70 +87,16 @@ export default class Home extends PureComponent {
         }
       }
     )
-    // AsyncStorage.getAllKeys().then(result => {
-    //   const x = [...result]
-    //   x.forEach(element =>
-    //     AsyncStorage.getItem(element).then(res => {
-    //       if(element != 'ListExtra'){ //CONROLLO CHE EVITA WARNING SULLA KEY LISTEXTRA PERCHè NON COMPRENDENTE DI SOTTO PARAMETRI COME SECTION ETC
-    //         //console.log(JSON.parse(res))
-    //         if(JSON.parse(res).section == 'BATT' && JSON.parse(res).contatore !=0){
-    //           global.store_Batt.set(JSON.parse(res).id, {
-    //             name: JSON.parse(res).nomeItem,
-    //             n: JSON.parse(res).contatore,
-    //             section: JSON.parse(res).section
-    //           })
-    //         }
-    //         if (
-    //           JSON.parse(res).section == 'LCD' &&
-    //           JSON.parse(res).contatoreBK != 0 &&
-    //           JSON.parse(res).nomeItem.includes('HUAWEI') == 1 || 
-    //           JSON.parse(res).nomeItem.includes('IPHONE') == 1
-    //         ) {
-    //           global.store_Lcd.set(JSON.parse(res).id, {
-    //             id: JSON.parse(res).id,
-    //             name: JSON.parse(res).nomeItem!=null?JSON.parse(res).nomeItem:'',
-    //             col: 'NERO',
-    //             n: JSON.parse(res).contatoreBK,
-    //             frame:
-    //               JSON.parse(res).frame == 'checked' ? '+ FRAME' : 'NO FRAME',
-    //             section: JSON.parse(res).section
-    //           })
-    //         }
-            // if (
-            //   JSON.parse(res).section == 'LCD' &&
-            //   JSON.parse(res).n != 0 &&
-            //   JSON.parse(res).name.includes('HUAWEI') ==1 || 
-            //   JSON.parse(res).name.includes('IPHONE') ==1
-            //   ) {
-            //   global.store_Lcd.set(JSON.parse(res).id, {
-            //     id: JSON.parse(res).id,
-            //     name: JSON.parse(res).name,
-            //     col: 'BIANCO',
-            //     n: JSON.parse(res).n,
-            //     frame:
-            //     JSON.parse(res).frame == 'checked' ? '+ FRAME' : 'NO FRAME',
-            //     section: JSON.parse(res).section
-            //   })
-            // }
-            // if (
-            //   JSON.parse(res).section == 'LCD' &&
-            //   JSON.parse(res).n != 0 && 
-            //   JSON.parse(res).name.includes('SAMSUNG') == 1
-            // ) {
-            //   global.store_Lcd.set(JSON.parse(res).id, {
-            //     id: JSON.parse(res).id,
-            //     name: JSON.parse(res).name,
-            //     col: JSON.parse(res).col,
-            //     n: JSON.parse(res).n,
-            //     quality:
-            //     JSON.parse(res).quality == 'checked' ? 'ORIG' : 'COMP',
-            //     section: JSON.parse(res).section
-            //   })
-            // }
-    //       }
-    //     })
-    //   )
-    // })
+
+  //   var dbPoint = firebase
+  //   .database()
+  //   .ref('/BATTERIE/APPLE/IPHONE/')
+    
+  // dbPoint.once('value', snap => {
+  //   const tmp = snap.val()
+  //   const x= JSON.parse(JSON.stringify(tmp), value =>
+  //   console.log(value))
+  // })
   }
   render () {
     return (
