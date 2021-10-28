@@ -46,7 +46,7 @@ export default class Home extends PureComponent {
     modalVisibleOrder: false,
     reset: false,
     resetExtra: false,
-    input: React.createRef()   //riferimento necessario ad azzerare il text dell'input all'inserimento dell'elemento extra
+    input: React.createRef() //riferimento necessario ad azzerare il text dell'input all'inserimento dell'elemento extra
   }
   constructor (props) {
     super(props)
@@ -57,7 +57,6 @@ export default class Home extends PureComponent {
   setModalVisibleOrder = visible => {
     this.setState({ modalVisibleOrder: visible })
   }
-
   _save () {
     global.extra += this.state.text + ' \n'
     AsyncStorage.setItem('ListExtra', global.extra)
@@ -87,18 +86,33 @@ export default class Home extends PureComponent {
         }
       }
     )
-
-  //   var dbPoint = firebase
-  //   .database()
-  //   .ref('/BATTERIE/APPLE/IPHONE/')
-    
-  // dbPoint.once('value', snap => {
-  //   const tmp = snap.val()
-  //   const x= JSON.parse(JSON.stringify(tmp), value =>
-  //   console.log(value))
-  // })
+    var dbPoint = firebase.database().ref('/BATTERIE/ORDER')
+    dbPoint.once('value').then(function (snapshot) {
+      snapshot.forEach(function (childSnapshot) {
+        var key = childSnapshot.key
+        var childData = childSnapshot.val()
+        if (childData.n == 0) global.store_Batt.delete(childData.id)
+        if (childData.n != 0) {
+          global.store_Batt.set(childData.id, {
+            name: key,
+            n: childData.n,
+            section: 'BATT'
+          })
+        }
+        if (childData.resi == 0) global.resi_Batt_IP.delete(childData.id)
+        if (childData.resi != 0) {
+          global.resi_Batt_IP.set(childData.id, {
+            name: key,
+            n: childData.resi,
+            section: 'BATT'
+          })
+        }
+      })
+    })
   }
   render () {
+    const storeBatt = [...global.store_Batt.values()].sort()
+
     return (
       <View style={styles.container}>
         <StatusBar animated={false}></StatusBar>
@@ -159,7 +173,7 @@ export default class Home extends PureComponent {
               </View>
             </View>
           </Modal>
-          <Modal //modal chiusura Lista Extra
+          <Modal //modal Lista Order
             animationType='slide'
             transparent={true}
             visible={this.state.modalVisibleOrder}
@@ -169,6 +183,20 @@ export default class Home extends PureComponent {
           >
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
+                <Text style={styles.modalText}>
+                  BATTERIE {'\n\n'}
+                  {storeBatt.map(function (element) {
+                    return String(element.n + 'x '+ element.section + ' ' + element.name + '\n')
+                  })}
+                </Text>
+                <Text style={styles.modalTextResi}>
+                  RESI {'\n'}
+                  {[...global.resi_Batt_IP.values()]
+                    .sort()
+                    .map(function (element) {
+                      return String(element.n + 'x '+ element.section + ' ' + element.name + '\n')
+                    })}
+                </Text>
                 <TouchableHighlight
                   style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
                   onPress={() => {
@@ -280,7 +308,7 @@ export default class Home extends PureComponent {
           </View>
         </View>
         <View style={{ flexDirection: 'row' }}>
-        {/* <Button
+          <Button
             title={' ORDER'}
             onPress={() => {
               this.setModalVisibleOrder(true)
@@ -293,7 +321,7 @@ export default class Home extends PureComponent {
             }}
             buttonStyle={{ backgroundColor: '#181818' }}
             icon={<Icon name='list' size={28} color='#F1F3F4' />}
-          /> */}
+          />
           <Button
             title={' Extra'}
             onPress={() => {
@@ -308,7 +336,7 @@ export default class Home extends PureComponent {
             buttonStyle={{ backgroundColor: '#181818' }}
             icon={<Icon name='view-list' size={28} color='#F1F3F4' />}
           />
-    
+
           <Button
             title={'Svuota Extra'}
             onPress={() => {
@@ -368,7 +396,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    textAlign:'center',
+    textAlign: 'center',
     height: 40,
     //borderColor: '#7a42f4',
     borderColor: 'red',
@@ -420,6 +448,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5
+  },
+  modalText: {
+    fontSize: 15,
+    marginBottom: 15,
+    textAlign: 'center',
+    color: 'gold'
+  },
+  modalTextResi: {
+    marginBottom: 15,
+    textAlign: 'left',
+    color: 'lightgreen'
   },
   openButton: {
     backgroundColor: '#F194FF',

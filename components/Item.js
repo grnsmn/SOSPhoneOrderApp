@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 import { Input } from 'react-native-elements'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+//import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as firebase from 'firebase'
 
 var firebaseConfig = {
@@ -44,7 +44,7 @@ export default class Item extends PureComponent {
   updateItem (ramo) {
     firebase
       .database()
-      .ref('/BATTERIE/' + ramo)
+      .ref(ramo)
       .update({
         [String(this.state.nomeItem)]: {
           id: this.state.id,
@@ -55,66 +55,37 @@ export default class Item extends PureComponent {
       })
   }
   componentDidMount () {
-    if (this.state.nomeItem.includes('IPHONE')) {
-      var dbPoint = firebase
-        .database()
-        .ref('/BATTERIE/APPLE/IPHONE/' + this.state.nomeItem)
+    // if (this.state.nomeItem.includes('IPHONE')) {
+    var dbPoint = firebase
+      .database()
+      .ref(this.props.pathDB + this.state.nomeItem)
 
-      dbPoint.on('value', snap => {
-        const tmp = snap.val()
+    dbPoint.on('value', snap => {
+      const tmp = snap.val()
+      if (tmp != null) {
         this.setState({ contatore: tmp.n, NumResi: tmp.resi })
-        if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
-        if (this.state.contatore != 0) {
-          // console.log([...global.store_Batt.get(this.state.id)])
-          global.store_Batt.set(this.state.id, {
-            name: this.state.nomeItem,
-            n: this.state.contatore,
-            section: this.state.section
-          })
-        }
+      }
+      if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
+      if (this.state.contatore != 0) {
+        global.store_Batt.set(this.state.id, {
+          name: this.state.nomeItem,
+          n: this.state.contatore,
+          section: this.state.section
+        })
+      }
 
-        if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
-        if (this.state.NumResi != 0) {
-          global.resi_Batt_IP.set(this.state.id, {
-            name: this.state.nomeItem,
-            n: this.state.NumResi
-          })
-        }
-      })
-    } else if (this.state.nomeItem.includes('HUAWEI')) {
-      var dbPoint2 = firebase
-        .database()
-        .ref('/BATTERIE/HUAWEI/' + this.state.nomeItem)
-
-      dbPoint2.on('value', snap => {
-        const tmp = snap.val()
-        this.setState({ contatore: tmp.n, NumResi: tmp.resi })
-        if (this.state.contatore == 0) global.store_Batt.delete(this.state.id)
-        if (this.state.contatore != 0) {
-          // console.log([...global.store_Batt.get(this.state.id)])
-          global.store_Batt.set(this.state.id, {
-            name: this.state.nomeItem,
-            n: this.state.contatore,
-            section: this.state.section
-          })
-        }
-
-        if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
-        if (this.state.NumResi != 0) {
-          global.resi_Batt_IP.set(this.state.id, {
-            name: this.state.nomeItem,
-            n: this.state.NumResi
-          })
-        }
-      })
-    }
+      if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
+      if (this.state.NumResi != 0) {
+        global.resi_Batt_IP.set(this.state.id, {
+          name: this.state.nomeItem,
+          n: this.state.NumResi
+        })
+      }
+    })
   }
   componentDidUpdate () {
-    if (this.state.nomeItem.includes('IPHONE')) {
-      this.updateItem('APPLE/IPHONE/')
-    } else {
-      this.updateItem('HUAWEI/')
-    }
+    this.updateItem(this.props.pathDB)
+
     if (this.state.contatore == 0) {
       global.store_Batt.delete(this.state.id)
       firebase
@@ -123,7 +94,7 @@ export default class Item extends PureComponent {
         .remove()
     }
     if (this.state.contatore != 0) {
-      this.updateItem('ORDER/')
+      this.updateItem('BATTERIE/ORDER/')
       global.store_Batt.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.contatore
@@ -131,19 +102,12 @@ export default class Item extends PureComponent {
     }
     if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
     if (this.state.NumResi != 0) {
-      this.updateItem('ORDER/')
+      this.updateItem('BATTERIE/ORDER/')
       global.resi_Batt_IP.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.NumResi
       })
     }
-    //const LISTA = Object.fromEntries(global.store_Batt)
-    // firebase
-    //   .database()
-    //   .ref('/BATTERIE/ORDER/')
-    //   .update({
-    //     LISTA
-    //   })
   }
   render () {
     return (

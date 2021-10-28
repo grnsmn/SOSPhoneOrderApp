@@ -7,10 +7,31 @@ import {
   Modal,
   TouchableHighlight
 } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+//import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Appbar, Snackbar } from 'react-native-paper'
 import BattList from './Batterie'
+import Item from '../Item'
 import { SearchBar } from 'react-native-elements'
+import * as firebase from 'firebase'
+
+var firebaseConfig = {
+  apiKey: 'AIzaSyCiHpV7RMsd2okgSwqqBra2e8Gc3dlrKCY',
+  authDomain: 'sosorderapp.firebaseapp.com',
+  databaseURL:
+    'https://sosorderapp-default-rtdb.europe-west1.firebasedatabase.app',
+  projectId: 'sosorderapp',
+  storageBucket: 'sosorderapp.appspot.com',
+  messagingSenderId: '767773027474',
+  appId: '1:767773027474:web:7065eaed04359967d2ca4b',
+  measurementId: 'G-30X46P77RX'
+}
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig)
+} else {
+  firebase.app() // if already initialized, use that one
+}
+var database = firebase.database().ref('/BATTERIE/HUAWEI/')
 
 const list = [
   { id: 'cvG', nome: 'HUAWEI P8', compat: '', nMax: 2, codice: 'HB3447A9EBW' },
@@ -120,7 +141,16 @@ export default class BattListHW extends BattList {
     listFiltered: sectionList,
     search: ''
   }
-
+  renderRow = ({ item }) => (
+    <Item
+      NameItem={item.nome}
+      nMax={item.nMax}
+      id={item.id}
+      compat={item.compat}
+      codice={item.codice}
+      pathDB={"BATTERIE/HUAWEI/"}
+    />
+  )
   search (model) {
     this.setState({
       search: model,
@@ -148,7 +178,7 @@ export default class BattListHW extends BattList {
     global.resi_Batt_IP.clear()
     global.listResiBatt = ''
     list.forEach(element => {
-      atabase.update({
+      database.update({
         [String(element.nome)]: {
           n: 0,
           resi: 0,
@@ -170,9 +200,6 @@ export default class BattListHW extends BattList {
     })
     this.setState({ clearList: !this.state.clearList })
   }
-  // componentDidUpdate(){
-  //   console.log(this.state.search)
-  // }
   render () {
     return (
       <View style={styles.container}>

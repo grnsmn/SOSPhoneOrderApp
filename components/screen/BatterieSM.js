@@ -10,6 +10,27 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
 import BattList from './Batterie'
+import Item from '../Item'
+import * as firebase from 'firebase'
+
+var firebaseConfig = {
+  apiKey: 'AIzaSyCiHpV7RMsd2okgSwqqBra2e8Gc3dlrKCY',
+  authDomain: 'sosorderapp.firebaseapp.com',
+  databaseURL:
+    'https://sosorderapp-default-rtdb.europe-west1.firebasedatabase.app',
+  projectId: 'sosorderapp',
+  storageBucket: 'sosorderapp.appspot.com',
+  messagingSenderId: '767773027474',
+  appId: '1:767773027474:web:7065eaed04359967d2ca4b',
+  measurementId: 'G-30X46P77RX'
+}
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig)
+} else {
+  firebase.app() // if already initialized, use that one
+}
+var database = firebase.database().ref('/BATTERIE/SAMSUNG/')
 
 const list = [
   { id: 'G920F', nome: 'SAMSUNG S6', compat:'',nMax: 2 },
@@ -76,6 +97,16 @@ export default class BattListSM extends BattList {
       ]
     })
   }
+  renderRow = ({ item }) => (
+    <Item
+      NameItem={item.nome}
+      nMax={item.nMax}
+      id={item.id}
+      compat={item.compat}
+      codice={item.codice}
+      pathDB={"BATTERIE/SAMSUNG/"}
+    />
+    )
   clearListBatt () {
     //Azzera lista ordine
     global.store_Batt.clear()
@@ -84,6 +115,17 @@ export default class BattListSM extends BattList {
     global.resi_Batt_IP.clear()
     global.listResiBatt = ''
     list.forEach(element => {
+      database.update({
+        [String(element.nome)]: {
+          n: 0,
+          resi: 0,
+          codice: element.codice
+        }
+      })
+      firebase
+        .database()
+        .ref('/BATTERIE/ORDER/' + element.nome)
+        .remove()
       //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
       const item = {
         id: element.id,
@@ -91,7 +133,7 @@ export default class BattListSM extends BattList {
         contatore: 0,
         NumResi: 0
       }
-      AsyncStorage.mergeItem(element.id, JSON.stringify(item))
+      //AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
     this.setState({ clearList: !this.state.clearList })
   }

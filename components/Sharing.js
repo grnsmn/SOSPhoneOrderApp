@@ -7,12 +7,12 @@ class ShareExample extends Component {
   state = { extra: '' }
   onShare = async () => {
     try {
-      const data = new Date()
-      const tomorrow = new Date(data)
-      tomorrow.setDate(tomorrow.getDate() + 1)
-      if(tomorrow.getDay()==0) {
-        tomorrow.setDate(tomorrow.getDate() + 1)
-      }
+      // const data = new Date()
+      // const tomorrow = new Date(data)
+      // tomorrow.setDate(tomorrow.getDate() + 1)
+      // if(tomorrow.getDay()==0) {
+      //   tomorrow.setDate(tomorrow.getDate() + 1)
+      // }
 
       const result = await Share.share({
         message:
@@ -44,8 +44,8 @@ class ShareExample extends Component {
       <View style={{ borderTopWidth: 3 }}>
         <Button
           onPress={this.onShare}
-          icon={<Icon name='send' size={20} color='white' />}
-          title='Invia '
+          icon={<Icon name='send' size={40} color='white' />}
+          title=''
           buttonStyle={{ backgroundColor: 'grey' }}
         />
       </View>

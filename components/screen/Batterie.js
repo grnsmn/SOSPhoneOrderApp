@@ -9,7 +9,7 @@ import {
   Share
 } from 'react-native'
 import Item from '../Item'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+//import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Appbar, Searchbar, Snackbar } from 'react-native-paper'
 import { SearchBar } from 'react-native-elements'
 import * as firebase from 'firebase'
@@ -63,19 +63,9 @@ export default class BattList extends PureComponent {
     modalVisible: false,
     clearList: false,
     listFiltered: sectionList,
-    search: ''
+    search: '',
   }
 
-  componentDidMount(){
-    // var dbPoint = firebase
-    //     .database()
-    //     .ref('/BATTERIE/APPLE/IPHONE/')
-
-    //   dbPoint.on('value', snap => {
-    //     const tmp = snap.val()
-    //     console.log(Object.entries(tmp))
-    //   })
-  }
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
   }
@@ -87,6 +77,7 @@ export default class BattList extends PureComponent {
       id={item.id}
       compat={item.compat}
       codice={item.codice}
+      pathDB={"BATTERIE/APPLE/IPHONE/"}
     />
   )
   search (model) {
@@ -138,7 +129,7 @@ export default class BattList extends PureComponent {
   stampList () {
     global.listBatt = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
     global.store_Batt.forEach(element => {
-      global.listBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
+      global.listBatt += element.n + 'x ' + ' BATT ' + element.name + '\n' 
     })
     global.listResiBatt = ''
     global.resi_Batt_IP.size == 0
