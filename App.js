@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Image, View, Text, InteractionManager } from 'react-native'
+import { StyleSheet, Image, View, Text} from 'react-native'
 import HomeScreen from './components/screen/Home'
 import BattList from './components/screen/Batterie'
 import BattListHW from './components/screen/BatterieHW'
