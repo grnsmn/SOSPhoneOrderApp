@@ -119,7 +119,7 @@ export default class BattListSM extends BattList {
         [String(element.nome)]: {
           n: 0,
           resi: 0,
-          codice: element.codice
+          codice: element.id
         }
       })
       firebase

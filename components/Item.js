@@ -50,7 +50,8 @@ export default class Item extends PureComponent {
           id: this.state.id,
           n: this.state.contatore,
           resi: this.state.NumResi,
-          codice: this.props.codice != null ? this.props.codice : null
+          codice: this.props.codice != null ? this.props.codice : null,
+          nMax: this.props.nMax
         }
       })
   }
@@ -73,31 +74,33 @@ export default class Item extends PureComponent {
           section: this.state.section
         })
       }
-
+      
       if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
       if (this.state.NumResi != 0) {
         global.resi_Batt_IP.set(this.state.id, {
           name: this.state.nomeItem,
-          n: this.state.NumResi
+          n: this.state.NumResi,
+          section: this.state.section
         })
       }
     })
   }
   componentDidUpdate () {
     this.updateItem(this.props.pathDB)
-
+    
     if (this.state.contatore == 0) {
       global.store_Batt.delete(this.state.id)
       firebase
-        .database()
-        .ref('/BATTERIE/ORDER/' + this.state.nomeItem)
-        .remove()
+      .database()
+      .ref('/BATTERIE/ORDER/' + this.state.nomeItem)
+      .remove()
     }
     if (this.state.contatore != 0) {
       this.updateItem('BATTERIE/ORDER/')
       global.store_Batt.set(this.state.id, {
         name: this.state.nomeItem,
-        n: this.state.contatore
+        n: this.state.contatore,
+        section: this.state.section
       })
     }
     if (this.state.NumResi == 0) global.resi_Batt_IP.delete(this.state.id)
@@ -105,7 +108,8 @@ export default class Item extends PureComponent {
       this.updateItem('BATTERIE/ORDER/')
       global.resi_Batt_IP.set(this.state.id, {
         name: this.state.nomeItem,
-        n: this.state.NumResi
+        n: this.state.NumResi,
+        section: this.state.section
       })
     }
   }
