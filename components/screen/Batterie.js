@@ -6,13 +6,15 @@ import {
   Text,
   Modal,
   TouchableHighlight,
-  Share
+  Share,
+  TextInput
 } from 'react-native'
 import Item from '../Item'
 //import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Appbar, Searchbar, Snackbar } from 'react-native-paper'
+import { Appbar, Snackbar } from 'react-native-paper'
 import { SearchBar } from 'react-native-elements'
 import * as firebase from 'firebase'
+import { jsxIdentifier } from '@babel/types'
 
 var firebaseConfig = {
   apiKey: 'AIzaSyCiHpV7RMsd2okgSwqqBra2e8Gc3dlrKCY',
@@ -36,7 +38,7 @@ var database = firebase.database().ref('/BATTERIE/APPLE/IPHONE/')
 global.listBatt = '' //Variabile globale per la scrittura dell'ordine finale
 global.listResiBatt = '' //Variabile globale per la scrittura della lista dei resi finale
 
-const list = [
+let list = [
   { id: 'S0Z', nome: 'IPHONE 5', nMax: 2 },
   { id: 'v8E', nome: 'IPHONE 5S', nMax: 2 },
   { id: 'v8L', nome: 'IPHONE SE', nMax: 2 },
@@ -61,15 +63,57 @@ const sectionList = [
 export default class BattList extends PureComponent {
   state = {
     modalVisible: false,
+    modalVisibleAdd: false,
     clearList: false,
-    listFiltered: sectionList,
+    list: [],
+    secList: [],
+    listFiltered: [],
     search: '',
+    newItemName: '',
+    newItemNMax: ''
   }
-
+  getRandomString (length) {
+    var randomChars =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    var result = ''
+    for (var i = 0; i < length; i++) {
+      result += randomChars.charAt(
+        Math.floor(Math.random() * randomChars.length)
+      )
+    }
+    return result
+  }
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
   }
+  setModalVisibleAdd = visible => {
+    this.setState({ modalVisibleAdd: visible })
+  }
+  constructor() {
+    super()
+    var items = []
+    database.orderByKey().on('value', snap => {
+      const tmp = snap.val()
+      if (tmp != null) {
+        for (const [key, childData] of Object.entries(tmp)) {
+          //console.log(`${key}: ${childData.id}`)
+          items.push({ id: childData.id, nome: key, nMax: childData.nMax })
+        }
+      }
+    })
+      this.state.list = items
+      this.state.secList = [
+        {
+          title: 'To Order',
+          data: this.state.list
+        }
+      ]
+      this.state.listFiltered = this.state.secList
+    // console.log(this.state.list)
+  }
+  componentDidUpdate(){
 
+  }
   renderRow = ({ item }) => (
     <Item
       NameItem={item.nome}
@@ -77,7 +121,7 @@ export default class BattList extends PureComponent {
       id={item.id}
       compat={item.compat}
       codice={item.codice}
-      pathDB={"BATTERIE/APPLE/IPHONE/"}
+      pathDB={'BATTERIE/APPLE/IPHONE/'}
     />
   )
   search (model) {
@@ -86,9 +130,21 @@ export default class BattList extends PureComponent {
       listFiltered: [
         {
           title: 'To order',
-          data: list.filter(elem => elem.nome.includes(model.toUpperCase()))
+          data: this.state.list.filter(elem => elem.nome.includes(model.toUpperCase()))
         }
       ]
+    })
+  }
+  addItem (newItem, newNMax) {
+    console.log(newItem)
+    console.log(newNMax)
+    database.update({
+      [newItem]:{
+        id:this.getRandomString(3),
+        n: 0,
+        resi: 0,
+        nMax: newNMax
+      }
     })
   }
   onShareBatt = async () => {
@@ -129,7 +185,7 @@ export default class BattList extends PureComponent {
   stampList () {
     global.listBatt = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
     global.store_Batt.forEach(element => {
-      global.listBatt += element.n + 'x ' + ' BATT ' + element.name + '\n' 
+      global.listBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
     })
     global.listResiBatt = ''
     global.resi_Batt_IP.size == 0
@@ -150,8 +206,10 @@ export default class BattList extends PureComponent {
     list.forEach(element => {
       database.update({
         [String(element.nome)]: {
+          id: element.id,
           n: 0,
-          resi: 0
+          resi: 0,
+          nMax: element.nMax
         }
       })
 
@@ -210,6 +268,45 @@ export default class BattList extends PureComponent {
             </View>
           </View>
         </Modal>
+        <Modal
+          animationType='slide'
+          transparent={true}
+          visible={this.state.modalVisibleAdd}
+          onRequestClose={() => {
+            this.setModalVisibleAdd(!this.state.modalVisibleAdd)
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Elemento da aggiungere {''}</Text>
+              <TextInput
+                style={styles.inputItem}
+                placeholderTextColor={'white'}
+                placeholder='NOME ITEM'
+                onChangeText={text =>
+                  this.setState({ newItemName: text.toUpperCase() })
+                }
+              />
+              <TextInput
+                style={styles.inputItem}
+                placeholderTextColor={'white'}
+                placeholder='N.MAX'
+                onChangeText={text =>
+                  this.setState({ newItemNMax: text.toUpperCase() })
+                }
+              />
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+                onPress={() => {
+                  this.setModalVisibleAdd(!this.state.modalVisibleAdd)
+                  this.addItem(this.state.newItemName, this.state.newItemNMax)
+                }}
+              >
+                <Text style={styles.textStyle}>Chiudi</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
         <Snackbar
           visible={this.state.clearList}
           onDismiss={() => this.setState({ clearList: false })}
@@ -245,6 +342,14 @@ export default class BattList extends PureComponent {
             color={'red'}
             onPress={() => {
               this.clearListBatt()
+            }}
+          />
+          <Appbar.Action
+            style={{ flex: 1 }}
+            icon='plus'
+            color={'white'}
+            onPress={() => {
+              this.setModalVisibleAdd()
             }}
           />
           <Appbar.Action
@@ -338,11 +443,20 @@ const styles = StyleSheet.create({
     borderRadius: 10
   },
   input: {
-    // backgroundColor: '#2196F3',
     // borderColor: '#252850',
     // borderWidth: 0.5,
     // marginTop: 3,
     // height: 40,
     borderRadius: 10
+  },
+  inputItem: {
+    backgroundColor: '#313131',
+    borderRadius: 10,
+    borderColor: '#2196F3',
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+    color: 'white'
   }
 })

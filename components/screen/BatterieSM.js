@@ -109,11 +109,11 @@ export default class BattListSM extends BattList {
     )
   clearListBatt () {
     //Azzera lista ordine
-    global.store_Batt.clear()
-    global.listBatt = ''
-    //Azzera lista resi
-    global.resi_Batt_IP.clear()
-    global.listResiBatt = ''
+    // global.store_Batt.clear()
+    // global.listBatt = ''
+    // //Azzera lista resi
+    // global.resi_Batt_IP.clear()
+    // global.listResiBatt = ''
     list.forEach(element => {
       database.update({
         [String(element.nome)]: {

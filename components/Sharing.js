@@ -25,6 +25,17 @@ class ShareExample extends Component {
         '\n' +
         global.extra
       })
+      const result2 = await Share.share({
+        message:
+        // 'Ordine del ' +
+        // tomorrow.getDate() +
+        // '/' + 
+        // parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla tomorrow italiana
+        // '/' +
+        // tomorrow.getFullYear() +
+        '\n' +
+        global.listBatt
+      })
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // shared with activity type of result.activityType
@@ -32,6 +43,15 @@ class ShareExample extends Component {
           // shared
         }
       } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+      if (result2.action === Share.sharedAction) {
+        if (result2.activityType) {
+          // shared with activity type of result2.activityType
+        } else {
+          // shared
+        }
+      } else if (result2.action === Share.dismissedAction) {
         // dismissed
       }
     } catch (error) {

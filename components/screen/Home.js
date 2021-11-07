@@ -86,11 +86,14 @@ export default class Home extends PureComponent {
         }
       }
     )
+    global.listBatt=''
     var dbPoint = firebase.database().ref('/BATTERIE/ORDER')
     dbPoint.once('value').then(function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
         var key = childSnapshot.key
         var childData = childSnapshot.val()
+        global.listBatt+= childData.n + 'x '+ 'BATT' + ' ' + key + '\n'
+        //console.log(global.listBatt)
         if (childData.n == 0) global.store_Batt.delete(childData.id)
         if (childData.n != 0) {
           global.store_Batt.set(childData.id, {
@@ -109,6 +112,8 @@ export default class Home extends PureComponent {
         }
       })
     })
+
+
   }
   render () {
     const storeBatt = [...global.store_Batt.values()].sort()
@@ -185,6 +190,7 @@ export default class Home extends PureComponent {
               <View style={styles.modalView}>
                 <Text style={styles.modalText}>
                   BATTERIE {'\n\n'}
+                  
                   {storeBatt.map(function (element) {
                     return String(element.n + 'x '+ element.section + ' ' + element.name + '\n')
                   })}
