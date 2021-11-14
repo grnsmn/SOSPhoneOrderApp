@@ -14,7 +14,6 @@ import Item from '../Item'
 import { Appbar, Snackbar } from 'react-native-paper'
 import { SearchBar } from 'react-native-elements'
 import * as firebase from 'firebase'
-import { jsxIdentifier } from '@babel/types'
 
 var firebaseConfig = {
   apiKey: 'AIzaSyCiHpV7RMsd2okgSwqqBra2e8Gc3dlrKCY',
@@ -67,7 +66,7 @@ export default class BattList extends PureComponent {
     clearList: false,
     list: [],
     secList: [],
-    listFiltered: [],
+    listFiltered: sectionList,
     search: '',
     newItemName: '',
     newItemNMax: ''
@@ -89,31 +88,28 @@ export default class BattList extends PureComponent {
   setModalVisibleAdd = visible => {
     this.setState({ modalVisibleAdd: visible })
   }
-  constructor() {
-    super()
-    var items = []
-    database.orderByKey().on('value', snap => {
-      const tmp = snap.val()
-      if (tmp != null) {
-        for (const [key, childData] of Object.entries(tmp)) {
-          //console.log(`${key}: ${childData.id}`)
-          items.push({ id: childData.id, nome: key, nMax: childData.nMax })
-        }
-      }
-    })
-      this.state.list = items
-      this.state.secList = [
-        {
-          title: 'To Order',
-          data: this.state.list
-        }
-      ]
-      this.state.listFiltered = this.state.secList
-    // console.log(this.state.list)
-  }
-  componentDidUpdate(){
+  // constructor() { //IMPLEMENTAZIONE DOWNLOAD LISTA DA FIREBASE
+  //   super()
+  //   var items = [] 
+  //   database.orderByKey().on('value', snap => {
+  //     const tmp = snap.val()
+  //     if (tmp != null) {
+  //       for (const [key, childData] of Object.entries(tmp)) {
+  //         //console.log(`${key}: ${childData.id}`)
+  //         items.push({ id: childData.id, nome: key, nMax: childData.nMax })
+  //       }
+  //     }
+  //   })
+  //     this.state.list = items
+  //     this.state.listFiltered = [
+  //       {
+  //         title: 'To Order',
+  //         data: items
+  //       }
+  //     ]
+  //   // console.log(this.state.list)
+  // }
 
-  }
   renderRow = ({ item }) => (
     <Item
       NameItem={item.nome}
@@ -135,18 +131,19 @@ export default class BattList extends PureComponent {
       ]
     })
   }
-  addItem (newItem, newNMax) {
-    console.log(newItem)
-    console.log(newNMax)
-    database.update({
-      [newItem]:{
-        id:this.getRandomString(3),
-        n: 0,
-        resi: 0,
-        nMax: newNMax
-      }
-    })
-  }
+  // addItem (newItem, newNMax) {
+  //   console.log(newItem)
+  //   console.log(newNMax)
+  //   database.update({
+  //     [newItem]:{
+  //       id:this.getRandomString(3),
+  //       n: 0,
+  //       resi: 0,
+  //       nMax: newNMax
+  //     }
+  //   })
+  //   this.setModalVisibleAdd(!this.state.modalVisibleAdd)
+  // }
   onShareBatt = async () => {
     try {
       // const data = new Date()
@@ -298,7 +295,6 @@ export default class BattList extends PureComponent {
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
                 onPress={() => {
-                  this.setModalVisibleAdd(!this.state.modalVisibleAdd)
                   this.addItem(this.state.newItemName, this.state.newItemNMax)
                 }}
               >
@@ -344,14 +340,14 @@ export default class BattList extends PureComponent {
               this.clearListBatt()
             }}
           />
-          <Appbar.Action
+          {/* <Appbar.Action
             style={{ flex: 1 }}
             icon='plus'
             color={'white'}
             onPress={() => {
-              this.setModalVisibleAdd()
+              this.setModalVisibleAdd(true)
             }}
-          />
+          /> */}
           <Appbar.Action
             style={{ flex: 1 }}
             icon='send'

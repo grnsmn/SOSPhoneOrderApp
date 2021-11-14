@@ -95,7 +95,7 @@ const list = [
   {
     id: 'T72',
     nome: 'HUAWEI MATE 10',
-    compat: 'MATE 10 PRO \n P20 PRO \n P SMART Z \n P30 \n HONOR VIEW 20',
+    compat: 'MATE 10 PRO \n P20 PRO \n P SMART Z \n P30 \n HONOR VIEW 20\n MATE 20',
     nMax: 2,
     codice: 'HB436486ECW '
   },

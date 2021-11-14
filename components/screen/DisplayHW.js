@@ -125,7 +125,9 @@ export default class DisplayListHW extends DisplayList {
                           element.name +
                           ' ' +
                           element.frame +
-                          '\n'
+                          ' [' +
+                          element.Fab +
+                          ']\n'
                       )
                     } else {
                       return String(
@@ -137,7 +139,9 @@ export default class DisplayListHW extends DisplayList {
                           element.col +
                           ' ' +
                           element.frame +
-                          '\n'
+                          ' [' +
+                          element.Fab +
+                          ']\n'
                       )
                     }
                   } else {

@@ -11,8 +11,8 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ItemLCD from '../ItemLCD'
-import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
-import {SearchBar} from 'react-native-elements'
+import { Appbar, Snackbar } from 'react-native-paper'
+import { SearchBar } from 'react-native-elements'
 
 global.listDisplay = ''
 global.listResiDisplay = ''
@@ -30,7 +30,7 @@ const list = [
   { id: '2TI', nome: 'IPHONE X [ GX ]', nMax: 4 },
   { id: 'JQ7', nome: 'IPHONE XR', nMax: 2 },
   { id: '2A4', nome: 'IPHONE 11', nMax: 2 },
-  { id: '5QM', nome: 'IPHONE XS MAX', nMax: 2 },
+  { id: '5QM', nome: 'IPHONE XS MAX', nMax: 2 }
 ]
 const sectionList = [
   {
@@ -39,7 +39,12 @@ const sectionList = [
   }
 ]
 export default class DisplayList extends PureComponent {
-  state = { modalVisible: false, clearList: false, listFiltered:sectionList, search:'' }
+  state = {
+    modalVisible: false,
+    clearList: false,
+    listFiltered: sectionList,
+    search: ''
+  }
 
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
@@ -60,12 +65,12 @@ export default class DisplayList extends PureComponent {
   }
   onShareDisplay = async () => {
     try {
-      const data = new Date()
-      const tomorrow = new Date(data)
-      tomorrow.setDate(tomorrow.getDate() + 1)
-      if (tomorrow.getDay() == 0) {
-        tomorrow.setDate(tomorrow.getDate() + 1)
-      }
+      // const data = new Date()
+      // const tomorrow = new Date(data)
+      // tomorrow.setDate(tomorrow.getDate() + 1)
+      // if (tomorrow.getDay() == 0) {
+      //   tomorrow.setDate(tomorrow.getDate() + 1)
+      // }
 
       const result = await Share.share({
         message:
@@ -77,7 +82,9 @@ export default class DisplayList extends PureComponent {
           // tomorrow.getFullYear() +
           // '\n\n' +
           global.listDisplay +
-          (global.resi_Lcd.size==0?'' :  '\nResi:\n' + global.listResiDisplay) 
+          (global.resi_Lcd.size == 0
+            ? ''
+            : '\nResi:\n' + global.listResiDisplay)
       })
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -111,6 +118,8 @@ export default class DisplayList extends PureComponent {
             element.name +
             ' ' +
             element.frame +
+            ' ' +
+            element.Fab +
             '\n'
         } else {
           global.listDisplay +=
@@ -122,7 +131,9 @@ export default class DisplayList extends PureComponent {
             element.col +
             ' ' +
             element.frame +
-            '\n'
+            ' [' +
+            element.Fab +
+            ']\n'
         }
       } else {
         if (
@@ -179,17 +190,20 @@ export default class DisplayList extends PureComponent {
       //AsyncStorage.multiRemove([element.id+'W', element.id+'Bk']).then(console.log("multirimozione eseguita"))
       AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
-    this.setState({clearList: !this.state.clearList})
+    this.setState({ clearList: !this.state.clearList })
   }
   render () {
     return (
       <View style={styles.container}>
-      <Snackbar
+        <Snackbar
           visible={this.state.clearList}
-          onDismiss= {() => this.setState({clearList: false})}
+          onDismiss={() => this.setState({ clearList: false })}
           duration={700}
-          style={{backgroundColor: '#252850', textAlign:'center'}}
-          > LISTA AZZERATA </Snackbar>
+          style={{ backgroundColor: '#252850', textAlign: 'center' }}
+        >
+          {' '}
+          LISTA AZZERATA{' '}
+        </Snackbar>
         <Modal
           animationType='slide'
           transparent={true}
@@ -204,7 +218,6 @@ export default class DisplayList extends PureComponent {
                 IN ORDINE {'\n\n'}
                 {//Funzione che permette la stampa pulita della lista in ordine
                 [...global.store_Lcd.values()].sort().map(function (element) {
-                  
                   while (element.name.includes('IPHONE')) {
                     if (
                       element.name.includes('X') ||
@@ -226,7 +239,8 @@ export default class DisplayList extends PureComponent {
                           '\n'
                       )
                     }
-                  } while (element.name.includes('HUAWEI')){
+                  }
+                  while (element.name.includes('HUAWEI')) {
                     if (
                       element.name.includes('P20 LITE') ||
                       element.name.includes('P30 LITE') ||
@@ -300,7 +314,10 @@ export default class DisplayList extends PureComponent {
             </View>
           </SafeAreaView>
         </Modal>
-        <SectionList sections={this.state.listFiltered} renderItem={this.renderRow} />
+        <SectionList
+          sections={this.state.listFiltered}
+          renderItem={this.renderRow}
+        />
         <SearchBar
           placeholder='Cerca...'
           onChangeText={text => this.search(text)}
@@ -376,7 +393,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: 5
   },
   openButton: {
     backgroundColor: '#F194FF',
@@ -390,7 +407,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   modalText: {
-    fontSize:15,
+    fontSize: 15,
     marginBottom: 15,
     textAlign: 'left',
     color: '#F1F3F4'
@@ -398,18 +415,18 @@ const styles = StyleSheet.create({
   modalTextResi: {
     marginBottom: 15,
     textAlign: 'left',
-    color: 'lightgreen',
+    color: 'lightgreen'
   },
   container_input: {
     backgroundColor: '#2196F3',
-   // borderColor: '#252850',
-   // borderWidth: 0.5,
+    // borderColor: '#252850',
+    // borderWidth: 0.5,
     //margin: 3,
-    padding:3,
-   // height: 40,
-   borderRadius: 10
- },
-  input:{
+    padding: 3,
+    // height: 40,
+    borderRadius: 10
+  },
+  input: {
     borderRadius: 10
   }
 })
