@@ -8,8 +8,9 @@ import {
   Text,
   TouchableHighlight
 } from 'react-native'
+import {SearchBar} from 'react-native-elements'
 import ItemLCD_SM from '../ItemLCD_SM'
-import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
+import { Appbar, Snackbar} from 'react-native-paper'
 import DisplayList from './Display'
 
 const list = [
@@ -56,7 +57,7 @@ export default class DisplayListSM extends DisplayList {
     modalVisible: false,
     clearList: false,
     listFiltered: sectionList,
-    searchModel: ''
+    search: ''
   }
 
   setModalVisible = visible => {
@@ -68,6 +69,7 @@ export default class DisplayListSM extends DisplayList {
   )
   search (model) {
     this.setState({
+      search:model,
       listFiltered: [
         {
           title: 'To order',
@@ -89,9 +91,10 @@ export default class DisplayListSM extends DisplayList {
       const item = {
         id: element.id,
         nameItem: element.nome,
-        contatoreW: 0,
-        col: element.colore,
-        resiW: 0
+        contatore: 0,
+        colore: '\t',
+        resiW: 0,
+        quality: 'indeterminate'
       }
       //AsyncStorage.multiRemove([element.id+'W', element.id+'Bk']).then(console.log("multirimozione eseguita"))
       AsyncStorage.mergeItem(element.id, JSON.stringify(item))
@@ -105,10 +108,12 @@ export default class DisplayListSM extends DisplayList {
           sections={this.state.listFiltered}
           renderItem={this.renderRow}
         />
-        <Searchbar
-          placeholder='Cerca...'
+        <SearchBar
+      placeholder='Cerca...'
           onChangeText={text => this.search(text)}
-          style={styles.input}
+          value={this.state.search}
+          containerStyle={styles.container_input}
+          inputContainerStyle={styles.input}
         />
         <Snackbar
           visible={this.state.clearList}
@@ -180,7 +185,9 @@ export default class DisplayListSM extends DisplayList {
                           element.name +
                           ' ' +
                           element.col +
-                          '\n'
+                          ' [' +
+                          element.quality +
+                          ']\n'
                       )
                     }
                   }
@@ -203,12 +210,6 @@ export default class DisplayListSM extends DisplayList {
             icon='format-list-bulleted'
             color={'gold'}
             onPress={() => this.setModalVisible(true)}
-          />
-          <Appbar.Action
-            style={{ flex: 1 }}
-            icon='recycle'
-            color={'lightgreen'}
-            onPress={() => this.setModalVisibleResi(true)}
           />
           <Appbar.Action
             style={{ flex: 1 }}
@@ -289,12 +290,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white'
   },
-  input: {
+container_input: {
     backgroundColor: '#2196F3',
-    borderColor: '#252850',
-    borderWidth: 0.5,
-    marginTop: 3,
-    height: 40,
+    // borderColor: '#252850',
+    // borderWidth: 0.5,
+    //margin: 3,
+    padding: 3,
+    // height: 40,
+    borderRadius: 10
+  },
+  input: {
     borderRadius: 10
   }
 })

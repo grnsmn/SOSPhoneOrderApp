@@ -58,12 +58,12 @@ const list = [
   { id: 'A510', nome: 'SAMSUNG A5 2016', compat: '', nMax: 2 },
   { id: 'A520', nome: 'SAMSUNG A5 2017', compat: 'J5 2017 J530', nMax: 2 },
   { id: 'A605', nome: 'SAMSUNG A6 PLUS 2018', compat:'', nMax: 2 },
-  { id: 'J320', nome: 'SAMSUNG J3 2016', compat: 'J5 2015 SM-J500F', nMax: 2 },
-  { id: 'J330', nome: 'SAMSUNG J3 2017', compat: 'J5 2015 SM-J500F', nMax: 2 },
+  { id: 'J320', nome: 'SAMSUNG J3 2016', compat: '', nMax: 2 },
+  { id: 'J330', nome: 'SAMSUNG J3 2017', compat: '', nMax: 2 },
   { id: 'J415', nome: 'SAMSUNG J4 PLUS', compat: 'J6 PLUS', nMax: 2 },
-  { id: 'J510', nome: 'SAMSUNG J5 2016', compat: 'J6 PLUS', nMax: 2 },
-  { id: 'J710', nome: 'SAMSUNG J7 2016', compat: 'J6 PLUS', nMax: 2 },
-  { id: 'J730', nome: 'SAMSUNG J7 2017', compat: 'J6 PLUS', nMax: 2 }
+  { id: 'J510', nome: 'SAMSUNG J5 2016', compat: '', nMax: 2 },
+  { id: 'J710', nome: 'SAMSUNG J7 2016', compat: '', nMax: 2 },
+  { id: 'J730', nome: 'SAMSUNG J7 2017', compat: '', nMax: 2 }
 ]
 const sectionList = [
   {

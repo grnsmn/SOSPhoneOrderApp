@@ -4,16 +4,8 @@ import { Button } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 class ShareExample extends Component {
-  state = { extra: '' }
   onShare = async () => {
     try {
-      // const data = new Date()
-      // const tomorrow = new Date(data)
-      // tomorrow.setDate(tomorrow.getDate() + 1)
-      // if(tomorrow.getDay()==0) {
-      //   tomorrow.setDate(tomorrow.getDate() + 1)
-      // }
-
       const result = await Share.share({
         message:
         // 'Ordine del ' +
@@ -25,17 +17,17 @@ class ShareExample extends Component {
         '\n' +
         global.extra
       })
-      const result2 = await Share.share({
-        message:
-        // 'Ordine del ' +
-        // tomorrow.getDate() +
-        // '/' + 
-        // parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla tomorrow italiana
-        // '/' +
-        // tomorrow.getFullYear() +
-        '\n' +
-        global.listBatt
-      })
+      // const result2 = await Share.share({
+      //   message:
+      //   // 'Ordine del ' +
+      //   // tomorrow.getDate() +
+      //   // '/' + 
+      //   // parseInt(tomorrow.getMonth() + 1) +  //BISOGNA EFFETTUARE LA SOMMA PERCHE getMonth restituisce numeri da 0 a 11 in stringa così che corrisponda alla tomorrow italiana
+      //   // '/' +
+      //   // tomorrow.getFullYear() +
+      //   '\n' +
+      //   global.listBatt
+      // })
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // shared with activity type of result.activityType
@@ -45,15 +37,15 @@ class ShareExample extends Component {
       } else if (result.action === Share.dismissedAction) {
         // dismissed
       }
-      if (result2.action === Share.sharedAction) {
-        if (result2.activityType) {
-          // shared with activity type of result2.activityType
-        } else {
-          // shared
-        }
-      } else if (result2.action === Share.dismissedAction) {
-        // dismissed
-      }
+      // if (result2.action === Share.sharedAction) {
+      //   if (result2.activityType) {
+      //     // shared with activity type of result2.activityType
+      //   } else {
+      //     // shared
+      //   }
+      // } else if (result2.action === Share.dismissedAction) {
+      //   // dismissed
+      // }
     } catch (error) {
       alert(error.message)
     }

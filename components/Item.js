@@ -123,6 +123,11 @@ export default class Item extends PureComponent {
           ) : (
             <Text />
           )}
+          {(this.state.nomeItem.includes('SAMSUNG')==true) ? (
+            <Text style={styles.codText}>{'\n' + this.props.id}</Text>
+          ) : (
+            <Text />
+          )}
         </Text>
         <Text style={styles.compaText}>{this.state.compat}</Text>
         <View
@@ -161,7 +166,7 @@ export default class Item extends PureComponent {
             style={{
               flex: 0.4,
               borderLeftWidth: 0.5,
-              borderColor: 'lightgreen'
+              borderColor: '#2196F3'
             }}
           >
             <Input

@@ -30,6 +30,7 @@ const list = [
   { id: '2TI', nome: 'IPHONE X [ GX ]', nMax: 4 },
   { id: 'JQ7', nome: 'IPHONE XR', nMax: 2 },
   { id: '2A4', nome: 'IPHONE 11', nMax: 2 },
+  { id: '2A5', nome: 'IPHONE 11 PRO', nMax: 2 },
   { id: '5QM', nome: 'IPHONE XS MAX', nMax: 2 }
 ]
 const sectionList = [
@@ -116,9 +117,9 @@ export default class DisplayList extends PureComponent {
             'x ' +
             ' LCD ' +
             element.name +
-            ' ' +
+            ' [' +
             element.frame +
-            ' ' +
+            '] ' +
             element.Fab +
             '\n'
         } else {
@@ -129,11 +130,11 @@ export default class DisplayList extends PureComponent {
             element.name +
             ' ' +
             element.col +
-            ' ' +
-            element.frame +
             ' [' +
+            element.frame +
+            '] ' +
             element.Fab +
-            ']\n'
+            '\n'
         }
       } else {
         if (
@@ -221,7 +222,7 @@ export default class DisplayList extends PureComponent {
                   while (element.name.includes('IPHONE')) {
                     if (
                       element.name.includes('X') ||
-                      element.name.includes('XS Max') ||
+                      element.name.includes('XS MAX') ||
                       element.name.includes('XR') ||
                       element.name.includes('11')
                     ) {

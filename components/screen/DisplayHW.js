@@ -9,7 +9,7 @@ import {
   TouchableHighlight
 } from 'react-native'
 import ItemLCD from '../ItemLCD'
-import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
+import { Appbar, Snackbar} from 'react-native-paper'
 import DisplayList from './Display'
 import {SearchBar} from 'react-native-elements'
 
@@ -123,11 +123,11 @@ export default class DisplayListHW extends DisplayList {
                           'x ' +
                           ' LCD ' +
                           element.name +
-                          ' ' +
-                          element.frame +
                           ' [' +
+                          element.frame +
+                          '] ' +
                           element.Fab +
-                          ']\n'
+                          '\n'
                       )
                     } else {
                       return String(
@@ -137,11 +137,11 @@ export default class DisplayListHW extends DisplayList {
                           element.name +
                           ' ' +
                           element.col +
-                          ' ' +
-                          element.frame +
                           ' [' +
+                          element.frame +
+                          '] ' +
                           element.Fab +
-                          ']\n'
+                          '\n'
                       )
                     }
                   } else {

@@ -314,7 +314,7 @@ export default class Home extends PureComponent {
           </View>
         </View>
         <View style={{ flexDirection: 'row' }}>
-          <Button
+          {/* <Button
             title={' ORDER'}
             onPress={() => {
               this.setModalVisibleOrder(true)
@@ -327,7 +327,7 @@ export default class Home extends PureComponent {
             }}
             buttonStyle={{ backgroundColor: '#181818' }}
             icon={<Icon name='list' size={28} color='#F1F3F4' />}
-          />
+          /> */}
           <Button
             title={' Extra'}
             onPress={() => {

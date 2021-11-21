@@ -5,22 +5,8 @@ import { Checkbox } from 'react-native-paper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-
 global.store_Lcd = new Map() //Array globale che conterrà nomi e quantità di LCD IPHONE da mettere in lista
 global.resi_Lcd = new Map() //Per immagazzinamento lista resi
-
-const leftContent = (
-  <Text
-    style={{
-      color: '#F1F3F4',
-      marginLeft: 10,
-      fontSize: 16,
-      fontWeight: 'bold'
-    }}
-  >
-    Pull to activate
-  </Text>
-)
 
 export default class ItemLCD extends PureComponent {
   //OGNI ELEMENTO IN QUESTA CLASSE TIENE CONTO DI UN CONTEGGIO A COLORE DEL DISPLAY (BIANCO E NERO)
@@ -118,7 +104,7 @@ export default class ItemLCD extends PureComponent {
     const id_BK = this.state.id + 'Bk'
     //console.log("attualmente inseriti:" +  this.state.resiW)
     //elimina gli elementi da map se il valore inserito è 0
-    if (this.state.contatoreW == 0) global.store_Lcd.delete(id_W)
+    if (this.state.contatoreW == 0) storeLCD.delete(id_W)
     //aggiorna la quantità di elementi in contemporanea all'inserimento del valore desiderato
     else {
       storeLCD.set(id_W, {
@@ -142,7 +128,6 @@ export default class ItemLCD extends PureComponent {
         frame: this.state.noFrame == 'checked' ? '+ FRAME' : 'NO FRAME',
         Fab: this.state.Fab == 'checked' ? 'FAB' : ''
       })
-
     }
     //Aggiornamento lista resi
     //RESI BIANCHI
@@ -180,224 +165,104 @@ export default class ItemLCD extends PureComponent {
       return false
     }
   }
+  chackedFab () {
+    if (this.state.Fab == 'checked') {
+      Vibration.vibrate(3)
+      this.setState({ Fab: 'indeterminate' })
+    } else {
+      Vibration.vibrate(3)
+      this.setState({ Fab: 'checked' })
+    }
+  }
+  chackedFrame () {
+    if (this.state.noFrame == 'checked') {
+      Vibration.vibrate(3)
+      this.setState({ noFrame: 'indeterminate' })
+    } else {
+      Vibration.vibrate(3)
+      this.setState({ noFrame: 'checked' })
+    }
+  }
   render () {
     return (
-        <View style={styles.container}>
-          <View style={styles.TouchablesItem}>
-            <TouchableOpacity
-              style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }}
-              onPress={() => {
-                if (this.state.Fab == 'checked') {
-                  Vibration.vibrate(3)
-                  this.setState({ Fab: 'indeterminate' })
-                } else {
-                  Vibration.vibrate(3)
-                  this.setState({ Fab: 'checked' })
-                }
-              }}
-            >
-              <Text
-                style={{
-                  color: '#F1F3F4',
-                  marginLeft: 10,
-                  fontSize: 16,
-                  fontWeight: 'bold'
-                }}
-              >
-                {this.props.NameItem}
-              </Text>
-            </TouchableOpacity>
-          </View>
-
+      <View style={styles.container}>
+        <View style={styles.TouchablesItem}>
+          <TouchableOpacity
+            style={styles.viewItem}
+            onPress={() => this.chackedFab()}
+          >
+            <Text style={styles.textItem}>{this.props.NameItem}</Text>
+          </TouchableOpacity>
+        </View>
+        {this.props.NameItem.includes('IPHONE') == false ? (
           <View style={styles.container2}>
             <Checkbox.Item
               label={this.state.noFrame == 'checked' ? '+ FRAME' : 'NO FRAME'}
               color='gold'
-              labelStyle={{
-                color: '#BABCBE',
-                fontSize: 10
-              }}
+              labelStyle={styles.checkLabelStyle}
               status={this.state.noFrame}
-              onPress={() => {
-                if (this.state.noFrame == 'checked') {
-                  Vibration.vibrate(3)
-                  this.setState({ noFrame: 'indeterminate' })
-                } else {
-                  Vibration.vibrate(3)
-                  this.setState({ noFrame: 'checked' })
-                }
-              }}
+              onPress={() => this.chackedFrame()}
             />
             <Checkbox.Item
               label={this.state.Fab == 'checked' ? 'FAB' : 'FAB'}
               color='blue'
-              labelStyle={{
-                color: '#BABCBE',
-                fontSize: 10
-              }}
+              labelStyle={styles.checkLabelStyle}
               status={this.state.Fab}
-              onPress={() => {
-                if (this.state.Fab == 'checked') {
-                  Vibration.vibrate(3)
-                  this.setState({ Fab: 'indeterminate' })
-                } else {
-                  Vibration.vibrate(3)
-                  this.setState({ Fab: 'checked' })
-                }
-              }}
+              onPress={() => this.chackedFab()}
             />
           </View>
-          <View
-            style={{
-              flex: 1,
-              margin: 2,
-              flexDirection: 'row',
-              justifyContent: 'flex-end'
-            }}
-          >
-            {(this.props.NameItem.includes('IPHONE X') ||
-              this.props.NameItem.includes('IPHONE XR') ||
-              this.props.NameItem.includes('IPHONE 11') ||
-              this.props.NameItem.includes('P30 LITE') ||
-              this.props.NameItem.includes('P40 LITE') ||
-              this.props.NameItem.includes('MATE 20 LITE') ||
-              this.props.NameItem.includes('PSMART 2019') ||
-              this.props.NameItem.includes('PSMART Z') ||
-              this.props.NameItem.includes('P20 LITE')) == false ? (
-              <View
-                style={{
-                  flex: 0.5,
-                  borderWidth: 0.5,
-                  borderLeftColor: '#2196F3'
-                }}
-              >
-                <Input
-                  style={{
-                    borderWidth: 1,
-                    color: 'white',
-                    textAlign: 'center'
-                  }}
-                  label={'WHITE'}
-                  labelStyle={{
-                    color: 'black',
-                    textAlign: 'center',
-                    fontSize: 12,
-                    backgroundColor: '#F1F3F4'
-                  }}
-                  disabled={this.oneColor()}
-                  //renderErrorMessage={false}
-                  placeholder={
-                    String(this.state.contatoreW) == '0'
-                      ? '-'
-                      : String(this.state.contatoreW)
-                  }
-                  placeholderTextColor={'gold'}
-                  keyboardType='numeric'
-                  maxLength={1}
-                  onChangeText={value => {
-                    if (value <= this.props.nMax && value != '') {
-                      this.setState({
-                        contatoreW: parseInt(value),
-                        colore: 'BIANCO'
-                      })
-                    }
-                  }}
-                  //onSubmitEditing={() =>  this.componentDidMount()}
-                  errorStyle={{
-                    color: 'red',
-                    textAlign: 'center',
-                    fontSize: 10
-                  }}
-                  errorMessage={'max ' + this.props.nMax}
-                />
-                <Input
-                  style={{
-                    borderWidth: 1,
-                    color: 'white',
-                    textAlign: 'center'
-                  }}
-                  label={'Reso'}
-                  labelStyle={{
-                    color: 'black',
-                    textAlign: 'center',
-                    fontSize: 10,
-                    backgroundColor: 'lightgreen'
-                  }}
-                  disabled={this.oneColor()}
-                  placeholder={
-                    String(this.state.resiW) == '0'
-                      ? '-'
-                      : String(this.state.resiW)
-                  }
-                  placeholderTextColor={'lightgreen'}
-                  keyboardType='numeric'
-                  maxLength={1}
-                  renderErrorMessage={false}
-                  onChangeText={value => {
-                    if (value != '') {
-                      this.setState({
-                        resiW: parseInt(value),
-                        colore: 'BIANCO'
-                      })
-                    }
-                  }}
-                  //onSubmitEditing={() =>  this.componentDidMount()}
-                />
-              </View>
-            ) : (
-              <View />
-            )}
-            <View
-              style={{
-                flex: 0.5,
-                borderWidth: 0.5,
-                borderLeftColor: '#2196F3'
-              }}
-            >
+        ) : (
+          <View style={styles.container2} />
+        )}
+
+        <View style={styles.InputsView}>
+          {(this.props.NameItem.includes('IPHONE X') ||
+            this.props.NameItem.includes('IPHONE XR') ||
+            this.props.NameItem.includes('IPHONE 11') ||
+            this.props.NameItem.includes('P30 LITE') ||
+            this.props.NameItem.includes('P40 LITE') ||
+            this.props.NameItem.includes('MATE 20 LITE') ||
+            this.props.NameItem.includes('PSMART 2019') ||
+            this.props.NameItem.includes('PSMART Z') ||
+            this.props.NameItem.includes('P20 LITE')) == false ? (
+            <View style={styles.SingleInputView}>
               <Input
-                style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
-                label={'BLACK'}
-                labelStyle={{
-                  color: '#F1F3F4',
-                  textAlign: 'center',
-                  fontSize: 12
-                }}
+                style={styles.InputStyle}
+                label={'WHITE'}
+                labelStyle={styles.InputWhite}
+                //renderErrorMessage={false}
                 placeholder={
-                  String(this.state.contatoreBK) == '0'
+                  String(this.state.contatoreW) == '0'
                     ? '-'
-                    : String(this.state.contatoreBK)
+                    : String(this.state.contatoreW)
                 }
                 placeholderTextColor={'gold'}
-                //style={{ borderWidth: 0, color: 'white' }}
-                renderErrorMessage={false}
                 keyboardType='numeric'
                 maxLength={1}
                 onChangeText={value => {
                   if (value <= this.props.nMax && value != '') {
                     this.setState({
-                      contatoreBK: parseInt(value),
-                      colore: 'NERO'
+                      contatoreW: parseInt(value),
+                      colore: 'BIANCO'
                     })
                   }
                 }}
                 //onSubmitEditing={() =>  this.componentDidMount()}
-
-                errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
+                errorStyle={{
+                  color: 'red',
+                  textAlign: 'center',
+                  fontSize: 10
+                }}
                 errorMessage={'max ' + this.props.nMax}
               />
               <Input
-                style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
+                style={styles.InputStyle}
                 label={'Reso'}
-                labelStyle={{
-                  color: 'black',
-                  textAlign: 'center',
-                  fontSize: 10,
-                  backgroundColor: 'lightgreen'
-                }}
+                labelStyle={styles.InputReso}
                 placeholder={
-                  String(this.state.resiBK) == '0'
+                  String(this.state.resiW) == '0'
                     ? '-'
-                    : String(this.state.resiBK)
+                    : String(this.state.resiW)
                 }
                 placeholderTextColor={'lightgreen'}
                 keyboardType='numeric'
@@ -406,16 +271,71 @@ export default class ItemLCD extends PureComponent {
                 onChangeText={value => {
                   if (value != '') {
                     this.setState({
-                      resiBK: parseInt(value),
-                      colore: 'NERO'
+                      resiW: parseInt(value),
+                      colore: 'BIANCO'
                     })
                   }
                 }}
                 //onSubmitEditing={() =>  this.componentDidMount()}
               />
             </View>
+          ) : (
+            <View />
+          )}
+          <View style={styles.SingleInputView}>
+            <Input
+              style={styles.InputStyle}
+              label={'BLACK'}
+              labelStyle={styles.InputBlack}
+              placeholder={
+                String(this.state.contatoreBK) == '0'
+                  ? '-'
+                  : String(this.state.contatoreBK)
+              }
+              placeholderTextColor={'gold'}
+              //style={{ borderWidth: 0, color: 'white' }}
+              renderErrorMessage={false}
+              keyboardType='numeric'
+              maxLength={1}
+              onChangeText={value => {
+                if (value <= this.props.nMax && value != '') {
+                  this.setState({
+                    contatoreBK: parseInt(value),
+                    colore: 'NERO'
+                  })
+                }
+              }}
+              //onSubmitEditing={() =>  this.componentDidMount()}
+
+              errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
+              errorMessage={'max ' + this.props.nMax}
+            />
+            <Input
+              style={styles.InputStyle}
+              label={'Reso'}
+              labelStyle={styles.InputReso}
+              placeholder={
+                String(this.state.resiBK) == '0'
+                  ? '-'
+                  : String(this.state.resiBK)
+              }
+              placeholderTextColor={'lightgreen'}
+              keyboardType='numeric'
+              maxLength={1}
+              renderErrorMessage={false}
+              onChangeText={value => {
+                if (value != '') {
+                  this.setState({
+                    resiBK: parseInt(value),
+                    colore: 'NERO'
+                  })
+                }
+              }}
+              //onSubmitEditing={() =>  this.componentDidMount()}
+            />
           </View>
         </View>
+      </View>
     )
   }
 }
@@ -437,8 +357,48 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   container2: {
-    flex: 0.8,
+    flex: 1,
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+  },
+  viewItem: { flex: 1, alignItems: 'center', flexDirection: 'row' },
+  textItem: {
+    color: '#F1F3F4',
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+  checkLabelStyle: {
+    color: '#BABCBE',
+    fontSize: 10
+  },
+  InputsView: {
+    flex: 1,
+    margin: 2,
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
+  },
+  SingleInputView: {
+    flex: 0.5,
+    borderWidth: 0.5,
+    borderLeftColor: '#2196F3'
+  },
+  InputStyle: { borderWidth: 1, color: 'white', textAlign: 'center' },
+  InputWhite: {
+    color: 'black',
+    textAlign: 'center',
+    fontSize: 12,
+    backgroundColor: '#F1F3F4'
+  },
+  InputBlack: {
+    color: '#F1F3F4',
+    textAlign: 'center',
+    fontSize: 12
+  },
+  InputReso: {
+    color: 'black',
+    textAlign: 'center',
+    fontSize: 10,
+    backgroundColor: 'lightgreen'
   }
 })

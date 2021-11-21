@@ -51,7 +51,8 @@ let list = [
   { id: 'XVW', nome: 'IPHONE X', nMax: 2 },
   { id: 'XVR', nome: 'IPHONE XR', nMax: 2 },
   { id: 'XSV', nome: 'IPHONE XS', nMax: 2 },
-  { id: 'XQ4', nome: 'IPHONE XS MAX', nMax: 2 }
+  { id: 'XQ4', nome: 'IPHONE XS MAX', nMax: 2 },
+  { id: 'PHI', nome: 'IPHONE 11', nMax: 2 }
 ]
 const sectionList = [
   {
@@ -181,8 +182,8 @@ export default class BattList extends PureComponent {
   }
   stampList () {
     global.listBatt = '' //SVUOTA LA LISTA BATTERIA PRIMA DI UN NUOVO CONCATENAMENTO DI AGGIORNAMENTO DELLA LISTA
-    global.store_Batt.forEach(element => {
-      global.listBatt += element.n + 'x ' + ' BATT ' + element.name + '\n'
+    global.store_Batt.forEach((element,key) => {
+      global.listBatt += element.n + 'x ' + ' BATT ' + element.name + (element.name.includes('SAMSUNG')==true?' ['+key+']':'')+ '\n'
     })
     global.listResiBatt = ''
     global.resi_Batt_IP.size == 0
