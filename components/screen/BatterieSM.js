@@ -7,7 +7,7 @@ import {
   Modal,
   TouchableHighlight
 } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { SearchBar } from 'react-native-elements'
 import { Appbar, Snackbar, Searchbar } from 'react-native-paper'
 import BattList from './Batterie'
 import Item from '../Item'
@@ -33,23 +33,23 @@ if (!firebase.apps.length) {
 var database = firebase.database().ref('/BATTERIE/SAMSUNG/')
 
 const list = [
-  { id: 'G920F', nome: 'SAMSUNG S6', compat:'',nMax: 2 },
-  { id: 'G925F', nome: 'SAMSUNG S6 EDGE', compat:'',nMax: 2 },
-  { id: 'G928F', nome: 'SAMSUNG S6 EDGE PLUS', compat:'',nMax: 2 },
-  { id: 'G930F', nome: 'SAMSUNG S7', compat:'',nMax: 2 },
-  { id: 'G935F', nome: 'SAMSUNG S7 EDGE', compat:'',nMax: 2 },
-  { id: 'G950F', nome: 'SAMSUNG S8', compat:'',nMax: 2 },
-  { id: 'N950F', nome: 'SAMSUNG NOTE 8', compat:'',nMax: 2 },
-  { id: 'G955F', nome: 'SAMSUNG S8 PLUS', compat:'',nMax: 2 },
-  { id: 'G960F', nome: 'SAMSUNG S9', compat:'',nMax: 2 },
-  { id: 'N960F', nome: 'SAMSUNG NOTE 9', compat:'',nMax: 2 },
-  { id: 'G965F', nome: 'SAMSUNG S9 PLUS', compat:'',nMax: 2 },
-  { id: 'G970F', nome: 'SAMSUNG S10E', compat:'',nMax: 2 },
-  { id: 'G975F', nome: 'SAMSUNG S10 PLUS', compat:'',nMax: 2 },
-  { id: 'G980F', nome: 'SAMSUNG S20', compat:'',nMax: 2 },
-  { id: 'G985F', nome: 'SAMSUNG S20 PLUS', compat:'',nMax: 2 },
-  { id: 'A310', nome: 'SAMSUNG A3 2016', compat:'',nMax: 2 },
-  { id: 'A320', nome: 'SAMSUNG A3 2017', compat:'',nMax: 2 },
+  { id: 'G920F', nome: 'SAMSUNG S6', compat: '', nMax: 2 },
+  { id: 'G925F', nome: 'SAMSUNG S6 EDGE', compat: '', nMax: 2 },
+  { id: 'G928F', nome: 'SAMSUNG S6 EDGE PLUS', compat: '', nMax: 2 },
+  { id: 'G930F', nome: 'SAMSUNG S7', compat: '', nMax: 2 },
+  { id: 'G935F', nome: 'SAMSUNG S7 EDGE', compat: '', nMax: 2 },
+  { id: 'G950F', nome: 'SAMSUNG S8', compat: '', nMax: 2 },
+  { id: 'N950F', nome: 'SAMSUNG NOTE 8', compat: '', nMax: 2 },
+  { id: 'G955F', nome: 'SAMSUNG S8 PLUS', compat: '', nMax: 2 },
+  { id: 'G960F', nome: 'SAMSUNG S9', compat: '', nMax: 2 },
+  { id: 'N960F', nome: 'SAMSUNG NOTE 9', compat: '', nMax: 2 },
+  { id: 'G965F', nome: 'SAMSUNG S9 PLUS', compat: '', nMax: 2 },
+  { id: 'G970F', nome: 'SAMSUNG S10E', compat: '', nMax: 2 },
+  { id: 'G975F', nome: 'SAMSUNG S10 PLUS', compat: '', nMax: 2 },
+  { id: 'G980F', nome: 'SAMSUNG S20', compat: '', nMax: 2 },
+  { id: 'G985F', nome: 'SAMSUNG S20 PLUS', compat: '', nMax: 2 },
+  { id: 'A310', nome: 'SAMSUNG A3 2016', compat: '', nMax: 2 },
+  { id: 'A320', nome: 'SAMSUNG A3 2017', compat: '', nMax: 2 },
   { id: 'A105', nome: 'SAMSUNG A10', compat: ' A7 2018 A750', nMax: 2 },
   { id: 'A505', nome: 'SAMSUNG A30', compat: 'A20-A30-A30S-A50', nMax: 2 },
   { id: 'A405', nome: 'SAMSUNG A40', compat: '', nMax: 2 },
@@ -57,7 +57,7 @@ const list = [
   { id: 'A705', nome: 'SAMSUNG A70', compat: '', nMax: 2 },
   { id: 'A510', nome: 'SAMSUNG A5 2016', compat: '', nMax: 2 },
   { id: 'A520', nome: 'SAMSUNG A5 2017', compat: 'J5 2017 J530', nMax: 2 },
-  { id: 'A605', nome: 'SAMSUNG A6 PLUS 2018', compat:'', nMax: 2 },
+  { id: 'A605', nome: 'SAMSUNG A6 PLUS 2018', compat: '', nMax: 2 },
   { id: 'J320', nome: 'SAMSUNG J3 2016', compat: '', nMax: 2 },
   { id: 'J330', nome: 'SAMSUNG J3 2017', compat: '', nMax: 2 },
   { id: 'J415', nome: 'SAMSUNG J4 PLUS', compat: 'J6 PLUS', nMax: 2 },
@@ -76,11 +76,12 @@ export default class BattListSM extends BattList {
     modalVisible: false,
     clearList: false,
     listFiltered: sectionList,
-    searchModel: ''
+    search: '',
   }
 
   search (model) {
     this.setState({
+      search: model,
       listFiltered: [
         {
           title: 'To order',
@@ -88,12 +89,12 @@ export default class BattListSM extends BattList {
         },
         {
           title: 'To order',
-          data: list.filter(elem => (elem.compat.includes(model.toUpperCase())))
+          data: list.filter(elem => elem.compat.includes(model.toUpperCase()))
         },
         {
           title: 'To order',
-          data: list.filter(elem => (elem.id.includes(model.toUpperCase())))
-        },
+          data: list.filter(elem => elem.id.includes(model.toUpperCase()))
+        }
       ]
     })
   }
@@ -104,9 +105,9 @@ export default class BattListSM extends BattList {
       id={item.id}
       compat={item.compat}
       codice={item.codice}
-      pathDB={"BATTERIE/SAMSUNG/"}
+      pathDB={'BATTERIE/SAMSUNG/'}
     />
-    )
+  )
   clearListBatt () {
     //Azzera lista ordine
     // global.store_Batt.clear()
@@ -191,10 +192,12 @@ export default class BattListSM extends BattList {
           //   <Text style={styles.header}>{title}</Text>
           // )}
         ></SectionList>
-        <Searchbar
+        <SearchBar
           placeholder='Cerca...'
           onChangeText={text => this.search(text)}
-          style={styles.input}
+          value={this.state.search}
+          containerStyle={styles.container_input}
+          inputContainerStyle={styles.input}
         />
         <Appbar style={styles.bottom}>
           <Appbar.Action
@@ -290,12 +293,16 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: 'lightgreen'
   },
-  input: {
+  container_input: {
     backgroundColor: '#2196F3',
-    borderColor: '#252850',
-    borderWidth: 0.5,
-    marginTop: 3,
-    height: 40,
+    // borderColor: '#252850',
+    // borderWidth: 0.5,
+    //margin: 3,
+    padding: 3,
+    // height: 40,
+    borderRadius: 10
+  },
+  input: {
     borderRadius: 10
   }
 })

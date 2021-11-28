@@ -127,7 +127,7 @@ export default class BattList extends PureComponent {
       listFiltered: [
         {
           title: 'To order',
-          data: this.state.list.filter(elem => elem.nome.includes(model.toUpperCase()))
+          data: list.filter(elem => elem.nome.includes(model.toUpperCase()))
         }
       ]
     })
@@ -320,7 +320,6 @@ export default class BattList extends PureComponent {
         ></SectionList>
         <SearchBar
           placeholder='Cerca...'
-          //value={''}
           onChangeText={text => this.search(text)}
           value={this.state.search}
           containerStyle={styles.container_input}
