@@ -9,7 +9,7 @@ import {
   Vibration,
   StatusBar
 } from 'react-native'
-import { Button, Input } from 'react-native-elements'
+import { Button, Input, Badge } from 'react-native-elements'
 import { FAB, Snackbar } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import ShareExample from '../Sharing'
@@ -86,13 +86,13 @@ export default class Home extends PureComponent {
         }
       }
     )
-    global.listBatt=''
+    global.listBatt = ''
     var dbPoint = firebase.database().ref('/BATTERIE/ORDER')
     dbPoint.once('value').then(function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
         var key = childSnapshot.key
         var childData = childSnapshot.val()
-        global.listBatt+= childData.n + 'x '+ 'BATT' + ' ' + key + '\n'
+        global.listBatt += childData.n + 'x ' + 'BATT' + ' ' + key + '\n'
         //console.log(global.listBatt)
         if (childData.n == 0) global.store_Batt.delete(childData.id)
         if (childData.n != 0) {
@@ -112,8 +112,6 @@ export default class Home extends PureComponent {
         }
       })
     })
-
-
   }
   render () {
     const storeBatt = [...global.store_Batt.values()].sort()
@@ -125,7 +123,7 @@ export default class Home extends PureComponent {
           visible={this.state.reset}
           onDismiss={() => this.setState({ reset: false })}
           duration={700}
-          style={{ backgroundColor: '#252850', textAlign: '' }}
+          style={styles.snackbar}
         >
           {' '}
           RESET ESEGUITO{' '}
@@ -134,7 +132,7 @@ export default class Home extends PureComponent {
           visible={this.state.resetExtra}
           onDismiss={() => this.setState({ resetExtra: false })}
           duration={700}
-          style={{ backgroundColor: '#252850', textAlign: '' }}
+          style={styles.snackbar}
         >
           {' '}
           RESET LISTA EXTRA{' '}
@@ -190,9 +188,15 @@ export default class Home extends PureComponent {
               <View style={styles.modalView}>
                 <Text style={styles.modalText}>
                   BATTERIE {'\n\n'}
-                  
                   {storeBatt.map(function (element) {
-                    return String(element.n + 'x '+ element.section + ' ' + element.name + '\n')
+                    return String(
+                      element.n +
+                        'x ' +
+                        element.section +
+                        ' ' +
+                        element.name +
+                        '\n'
+                    )
                   })}
                 </Text>
                 <Text style={styles.modalTextResi}>
@@ -200,7 +204,14 @@ export default class Home extends PureComponent {
                   {[...global.resi_Batt_IP.values()]
                     .sort()
                     .map(function (element) {
-                      return String(element.n + 'x '+ element.section + ' ' + element.name + '\n')
+                      return String(
+                        element.n +
+                          'x ' +
+                          element.section +
+                          ' ' +
+                          element.name +
+                          '\n'
+                      )
                     })}
                 </Text>
                 <TouchableHighlight
@@ -214,18 +225,9 @@ export default class Home extends PureComponent {
               </View>
             </View>
           </Modal>
-          <View
-            style={{
-              justifyContent: 'space-around',
-              alignItems: 'center',
-              flex: 1
-            }}
-          >
+          <View style={styles.conteiner2}>
             <View style={{ alignItems: 'center' }}>
-              <Image
-                source={require('./apple.png')}
-                style={{ width: 40, height: 40 }}
-              />
+              <Image source={require('./apple.png')} style={styles.appleLogo} />
               <Text style={{ color: 'white', fontSize: 18 }}>iPhone</Text>
             </View>
             <Button
@@ -248,22 +250,11 @@ export default class Home extends PureComponent {
               icon={<Icon name='more' size={28} color='white' />}
             ></Button>  */}
           </View>
-          <View
-            style={{
-              justifyContent: 'space-around',
-              alignItems: 'center',
-              flex: 1
-            }}
-          >
+          <View style={styles.conteiner2}>
             <View style={{ alignItems: 'center' }}>
               <Image
                 source={require('./HUAWEI2.png')}
-                style={{
-                  width: 66,
-                  height: 66,
-                  backgroundColor: '#F1F3F4',
-                  borderRadius: 11
-                }}
+                style={styles.huaweiLogo}
               />
             </View>
             <Button
@@ -280,22 +271,11 @@ export default class Home extends PureComponent {
               icon={<Icon name='smartphone' size={28} color='#F1F3F4' />}
             ></Button>
           </View>
-          <View
-            style={{
-              justifyContent: 'space-around',
-              alignItems: 'center',
-              flex: 1
-            }}
-          >
+          <View style={styles.conteiner2}>
             <View style={{ alignItems: 'center' }}>
               <Image
                 source={require('./samsung.png')}
-                style={{
-                  width: 140,
-                  height: 30,
-                  marginTop: 16,
-                  marginBottom: 16
-                }}
+                style={styles.samsungLogo}
               />
             </View>
             <Button
@@ -328,6 +308,7 @@ export default class Home extends PureComponent {
             buttonStyle={{ backgroundColor: '#181818' }}
             icon={<Icon name='list' size={28} color='#F1F3F4' />}
           /> */}
+
           <Button
             title={' Extra'}
             onPress={() => {
@@ -335,14 +316,12 @@ export default class Home extends PureComponent {
             }}
             containerStyle={{
               flex: 1,
-              //borderBottomWidth: 2,
               borderTopWidth: 3
-              //borderLeftWidth: 2
             }}
             buttonStyle={{ backgroundColor: '#181818' }}
             icon={<Icon name='view-list' size={28} color='#F1F3F4' />}
+            iconRight={true}
           />
-
           <Button
             title={'Svuota Extra'}
             onPress={() => {
@@ -384,27 +363,24 @@ export default class Home extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //borderBottomColor: 'red',
-    //borderBottomWidth: 2,
-    //alignItems: 'center',
     justifyContent: 'space-evenly',
     backgroundColor: '#181818'
   },
+  conteiner2: {
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    flex: 1
+  },
   modelSection: {
     borderColor: 'red',
-    //borderWidth: 2,
-    //borderBottomColor: 'red',
     borderBottomWidth: 2,
     flex: 1,
     flexDirection: 'row'
-    //justifyContent: 'space-evenly',
-    //alignItems: 'center'
   },
   input: {
     flex: 1,
     textAlign: 'center',
     height: 40,
-    //borderColor: '#7a42f4',
     borderColor: 'red',
     borderWidth: 1,
     color: 'white',
@@ -416,10 +392,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex: 1,
     borderWidth: 2
-
-    //    borderBottomWidth: 3,
-    //  borderTopWidth: 1.5,
-    //borderLeftWidth: 2
   },
   header: {
     fontSize: 32,
@@ -495,5 +467,22 @@ const styles = StyleSheet.create({
     right: 143,
     bottom: 150,
     backgroundColor: '#007AFF'
+  },
+  snackbar: { backgroundColor: '#252850', textAlign: 'center' },
+  appleLogo: {
+    width: 40,
+    height: 40
+  },
+  huaweiLogo: {
+    width: 66,
+    height: 66,
+    backgroundColor: '#F1F3F4',
+    borderRadius: 11
+  },
+  samsungLogo: {
+    width: 140,
+    height: 30,
+    marginTop: 16,
+    marginBottom: 16
   }
 })

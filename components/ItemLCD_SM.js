@@ -15,10 +15,9 @@ export default class ItemLCD_SM extends PureComponent {
   state = {
     id: '',
     nomeItem: '',
-    section: 'LCD',
     colore: '\t',
     contatore: 0,
-    resiW: 0,
+    resi: 0,
     quality: 'indeterminate'
   }
 
@@ -29,7 +28,6 @@ export default class ItemLCD_SM extends PureComponent {
   }
   componentDidMount () {
     var storeLCD = global.store_Lcd
-    
     //console.log('Mount'+ this.state.nomeItem)
     AsyncStorage.getItem(this.state.id).then(result => {
       const parseElement = JSON.parse(result)
@@ -38,32 +36,32 @@ export default class ItemLCD_SM extends PureComponent {
           //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
           return value
         })
-        console.log(tmp)
+        //console.log(tmp)
         //Aggiornamento lista ordine
         if (this.state.contatore == 0) {
           storeLCD.delete(parseElement.id)
-        }else {
+        } else {
           storeLCD.set(parseElement.id, {
             id: parseElement.id,
             name: this.state.nomeItem,
-            col: (this.state.colore==''?'\t':this.state.colore),
+            col: this.state.colore == '' ? '\t' : this.state.colore,
             n: this.state.contatore,
-            quality: this.state.quality == 'checked' ? 'ORIG' : 'COMP'         
+            quality: this.state.quality == 'checked' ? 'ORIG' : 'COMP'
           })
         }
         //RESI BIANCHI
-        if (this.state.resiW == 0) global.resi_Lcd.delete(this.state.id)
-        if (this.state.resiW != 0) {
+        if (this.state.resi == 0) global.resi_Lcd.delete(this.state.id)
+        if (this.state.resi != 0) {
           global.resi_Lcd.set(this.state.id, {
             id: this.state.id,
             name: this.state.nomeItem,
-            n: this.state.resiW
+            n: this.state.resi
           })
         }
         this.setState({
-          contatore: tmp.n,
-          resiW: tmp.resiW,
-          colore: (tmp.col==''?'\t':tmp.col),
+          contatore: tmp.contatore,
+          resi: tmp.resi,
+          colore: tmp.colore == '' ? '\t' : tmp.colore,
           quality: tmp.quality
         })
       } else {
@@ -75,27 +73,33 @@ export default class ItemLCD_SM extends PureComponent {
     if (this.state.contatore == 0) global.store_Lcd.delete(this.state.id)
     //aggiorna la quantità di elementi in contemporanea all'inserimento del valore desiderato
     else {
-      AsyncStorage.mergeItem(
-        this.state.id,
-        JSON.stringify(this.state)
-        )
+      AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
       global.store_Lcd.set(this.state.id, {
         id: this.state.id,
         name: this.state.nomeItem,
-        col: (this.state.colore==''?'\t':this.state.colore),
+        col: this.state.colore == '' ? '\t' : this.state.colore,
         n: this.state.contatore,
         quality: this.state.quality == 'checked' ? 'ORIG' : 'COMP',
         section: 'LCD'
       })
-      }
-      //Aggiornamento lista resi
-      if (this.state.resiW == 0) global.resi_Lcd.delete(this.state.id)
-      else {
-        global.resi_Lcd.set(this.state.id, {
+    }
+    //Aggiornamento lista resi
+    if (this.state.resi == 0) global.resi_Lcd.delete(this.state.id)
+    else {
+      global.resi_Lcd.set(this.state.id, {
         id: this.state.id,
         name: this.state.nomeItem,
-        n: this.state.resiW
+        n: this.state.resi
       })
+    }
+  }
+  chackedQuality () {
+    if (this.state.quality == 'checked') {
+      Vibration.vibrate(3)
+      this.setState({ quality: 'indeterminate' })
+    } else {
+      Vibration.vibrate(3)
+      this.setState({ quality: 'checked' })
     }
   }
   render () {
@@ -103,40 +107,17 @@ export default class ItemLCD_SM extends PureComponent {
       <View style={styles.container}>
         <View style={styles.TouchablesItem}>
           <TouchableOpacity
-            style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }}
-            onPress={() => {
-              if (this.state.quality == 'checked') {
-                Vibration.vibrate(3)
-                this.setState({ quality: 'indeterminate' })
-              } else {
-                Vibration.vibrate(3)
-                this.setState({ quality: 'checked' })
-              }
-            }}
+            style={styles.viewItem}
+            onPress={() => this.chackedQuality()}
           >
-            <Text
-              style={{
-                color: '#F1F3F4',
-                marginLeft: 10,
-                fontSize: 16,
-                fontWeight: 'bold'
-              }}
-            >
+            <Text style={styles.textItem}>
               {this.props.NameItem}
               <Text style={styles.codText}>{'\n' + this.props.id}</Text>
             </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.container2}>
-          <Text
-            style={{
-              color: 'grey',
-              flex: 0.75,
-              fontSize: 11,
-              fontWeight: 'bold',
-              textAlign: 'right'
-            }}
-          >
+          <Text style={styles.qualityStyle}>
             {this.state.quality == 'checked' ? 'ORIG' : 'COMP'}
           </Text>
           <TouchableOpacity>
@@ -155,7 +136,7 @@ export default class ItemLCD_SM extends PureComponent {
               <MenuOptions>
                 <MenuOption onSelect={() => this.setState({ colore: 'NERO' })}>
                   <Text
-                    style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}
+                    style={{ color: '#F1F3F4', backgroundColor: '#252850', textAlign:'center' }}
                   >
                     NERO
                   </Text>
@@ -164,21 +145,21 @@ export default class ItemLCD_SM extends PureComponent {
                   onSelect={() => this.setState({ colore: 'BIANCO' })}
                 >
                   <Text
-                    style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}
+                    style={{ color: '#F1F3F4', backgroundColor: '#252850', textAlign:'center' }}
                   >
                     BIANCO
                   </Text>
                 </MenuOption>
                 <MenuOption onSelect={() => this.setState({ colore: 'BLU' })}>
                   <Text
-                    style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}
+                    style={{ color: '#F1F3F4', backgroundColor: '#252850', textAlign:'center' }}
                   >
                     BLU
                   </Text>
                 </MenuOption>
                 <MenuOption onSelect={() => this.setState({ colore: 'GOLD' })}>
                   <Text
-                    style={{ color: '#F1F3F4', backgroundColor: '#2196F3' }}
+                    style={{ color: '#F1F3F4', backgroundColor: '#252850', textAlign:'center' }}
                   >
                     GOLD
                   </Text>
@@ -200,7 +181,9 @@ export default class ItemLCD_SM extends PureComponent {
             justifyContent: 'flex-end'
           }}
         >
-          <View style={{ flex: 0.8, borderWidth: 0.5, borderLeftColor: '#2196F3' }}>
+          <View
+            style={{ flex: 0.8, borderWidth: 0.5, borderLeftColor: '#2196F3' }}
+          >
             <Input
               style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
               label={'Order'}
@@ -240,7 +223,7 @@ export default class ItemLCD_SM extends PureComponent {
                 backgroundColor: 'lightgreen'
               }}
               //disabled={this.oneColor()}
-              placeholder={String(this.state.resiW)}
+              placeholder={String(this.state.resi)}
               placeholderTextColor={'lightgreen'}
               keyboardType='numeric'
               maxLength={1}
@@ -248,7 +231,7 @@ export default class ItemLCD_SM extends PureComponent {
               onChangeText={value => {
                 if (value != '') {
                   this.setState({
-                    resiW: parseInt(value),
+                    resi: parseInt(value),
                     colore: 'BIANCO'
                   })
                 }
@@ -278,6 +261,13 @@ const styles = StyleSheet.create({
     margin: 1,
     alignItems: 'center'
   },
+  viewItem: { flex: 1, alignItems: 'center', flexDirection: 'row' },
+  textItem: {
+    color: '#F1F3F4',
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
   container2: {
     flex: 0.7,
     flexDirection: 'column',
@@ -286,7 +276,14 @@ const styles = StyleSheet.create({
   codText: {
     color: '#2196F3',
     fontSize: 11,
-    textAlign: 'center',
+    textAlign: 'center'
+  },
+  qualityStyle: {
+    color: 'grey',
+    flex: 0.75,
+    fontSize: 11,
+    fontWeight: 'bold',
+    textAlign: 'right'
   }
 })
 

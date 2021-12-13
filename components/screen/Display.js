@@ -136,7 +136,21 @@ export default class DisplayList extends PureComponent {
             element.Fab +
             '\n'
         }
-      } else {
+      } else if (element.name.includes('SAMSUNG')) {
+        global.listDisplay +=
+          element.n +
+          'x ' +
+          ' LCD ' +
+          element.name +
+          ' ' +
+          element.col +
+          ' [' +
+          element.id +
+          ' ' +
+          element.quality +
+          ']\n'
+      } else if(element.name.includes('IPHONE'))
+      {
         if (
           element.name.includes('IPHONE X') ||
           element.name.includes('IPHONE XR') ||

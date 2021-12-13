@@ -13,7 +13,6 @@ export default class ItemLCD extends PureComponent {
   state = {
     id: '',
     nomeItem: '',
-    section: 'LCD',
     colore: '',
     contatoreW: 0,
     contatoreBK: 0,
@@ -247,7 +246,6 @@ export default class ItemLCD extends PureComponent {
                     })
                   }
                 }}
-                //onSubmitEditing={() =>  this.componentDidMount()}
                 errorStyle={{
                   color: 'red',
                   textAlign: 'center',
@@ -276,7 +274,6 @@ export default class ItemLCD extends PureComponent {
                     })
                   }
                 }}
-                //onSubmitEditing={() =>  this.componentDidMount()}
               />
             </View>
           ) : (
@@ -305,8 +302,6 @@ export default class ItemLCD extends PureComponent {
                   })
                 }
               }}
-              //onSubmitEditing={() =>  this.componentDidMount()}
-
               errorStyle={{ color: 'red', textAlign: 'center', fontSize: 10 }}
               errorMessage={'max ' + this.props.nMax}
             />
@@ -331,7 +326,6 @@ export default class ItemLCD extends PureComponent {
                   })
                 }
               }}
-              //onSubmitEditing={() =>  this.componentDidMount()}
             />
           </View>
         </View>

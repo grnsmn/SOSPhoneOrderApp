@@ -8,9 +8,9 @@ import {
   Text,
   TouchableHighlight
 } from 'react-native'
-import {SearchBar} from 'react-native-elements'
+import { SearchBar } from 'react-native-elements'
 import ItemLCD_SM from '../ItemLCD_SM'
-import { Appbar, Snackbar} from 'react-native-paper'
+import { Appbar, Snackbar } from 'react-native-paper'
 import DisplayList from './Display'
 
 const list = [
@@ -69,7 +69,7 @@ export default class DisplayListSM extends DisplayList {
   )
   search (model) {
     this.setState({
-      search:model,
+      search: model,
       listFiltered: [
         {
           title: 'To order',
@@ -93,10 +93,9 @@ export default class DisplayListSM extends DisplayList {
         nameItem: element.nome,
         contatore: 0,
         colore: '\t',
-        resiW: 0,
+        resi: 0,
         quality: 'indeterminate'
       }
-      //AsyncStorage.multiRemove([element.id+'W', element.id+'Bk']).then(console.log("multirimozione eseguita"))
       AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
     this.setState({ clearList: !this.state.clearList })
@@ -109,7 +108,7 @@ export default class DisplayListSM extends DisplayList {
           renderItem={this.renderRow}
         />
         <SearchBar
-      placeholder='Cerca...'
+          placeholder='Cerca...'
           onChangeText={text => this.search(text)}
           value={this.state.search}
           containerStyle={styles.container_input}
@@ -290,7 +289,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white'
   },
-container_input: {
+  container_input: {
     backgroundColor: '#2196F3',
     // borderColor: '#252850',
     // borderWidth: 0.5,

@@ -9,14 +9,15 @@ import {
   Share,
   TextInput
 } from 'react-native'
-import Item from '../Item'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Appbar, Searchbar, Snackbar } from 'react-native-paper'
+import { Appbar, Snackbar } from 'react-native-paper'
 import ItemAccessori from '../ItemAccessori'
+import { SearchBar } from 'react-native-elements'
 
 const list_banco_vendita = [
-  { id: 'cè6', nome: 'CAVO LIGHTNING', nMax: 20 },
+  { id: 'cT6', nome: 'ADATTATORI SIM', nMax: 20 },
   { id: 'cè1', nome: 'CAVO LIGHTNING 2M', nMax: 20 },
+  { id: 'cè6', nome: 'CAVO LIGHTNING', nMax: 20 },
   { id: 'cè8', nome: 'CAVO MICRO-USB', nMax: 20 },
   { id: 'cè2', nome: 'CAVO MICRO-USB 2M', nMax: 20 },
   { id: 'cèM', nome: 'CAVO TYPE-C/LIGHTING', nMax: 20 },
@@ -58,6 +59,7 @@ const list_magazzino = [
   { id: 'VT1', nome: 'V.TEMP IPHONE 7', nMax: 10 },
   { id: 'VT2', nome: 'V.TEMP IPHONE 7P', nMax: 10 },
   { id: 'VT3', nome: 'V.TEMP IPHONE X/11 PRO', nMax: 10 },
+  { id: 'VT5', nome: 'V.TEMP IPHONE XS MAX', nMax: 10 },
   { id: 'VT4', nome: 'V.TEMP IPHONE XR/11', nMax: 10 },
   { id: 'BL1', nome: 'ARIA COMPRESSA', nMax: 5 },
   { id: 'BL2', nome: 'ALCOOL ISOPROPILICO', nMax: 5 },
@@ -84,9 +86,8 @@ export default class Accessori extends PureComponent {
     modalVisible: false,
     modalVisibleResi: false,
     listFiltered: sectionList,
-    searchModel: '',
+    search: '',
     clearList: false,
-
   }
 
   setModalVisible = visible => {
@@ -94,6 +95,7 @@ export default class Accessori extends PureComponent {
   }
   search (model) {
     this.setState({
+      search:model,
       listFiltered: [
         {
           title: 'Magazzino',
@@ -180,7 +182,7 @@ export default class Accessori extends PureComponent {
     this.setState({ modalVisibleResi: visible })
   }
   renderRow = ({ item }) => (
-    <ItemAccessori NameItem={item.nome} nMax={item.nMax} id={item.id} />
+    <ItemAccessori NameItem={item.nome} nMax={item.nMax} id={item.id}/>
   )
   render () {
     return (
@@ -224,16 +226,19 @@ export default class Accessori extends PureComponent {
           </View>
         </Modal>
         <SectionList
+        keyExtractor={(item,index)=> item.id}
           sections={this.state.listFiltered}
           renderItem={this.renderRow}
           renderSectionHeader={({ section: { title } }) => (
             <Text style={styles.header}>{title}</Text>
           )}
         ></SectionList>
-        <Searchbar
+        <SearchBar
           placeholder='Cerca...'
           onChangeText={text => this.search(text)}
-          style={styles.input}
+          value={this.state.search}
+          containerStyle={styles.container_input}
+          inputContainerStyle={styles.input}
         />
         <Appbar style={styles.bottom}>
           <Appbar.Action
@@ -321,12 +326,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white'
   },
-  input: {
+  container_input: {
     backgroundColor: '#2196F3',
-    borderColor: '#252850',
-    borderWidth: 0.5,
-    marginTop: 3,
-    height: 40,
+    // borderColor: '#252850',
+    // borderWidth: 0.5,
+    //margin: 3,
+    padding: 3,
+    // height: 40,
+    borderRadius: 10
+  },
+  input: {
     borderRadius: 10
   }
 })
