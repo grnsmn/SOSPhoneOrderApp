@@ -51,7 +51,7 @@ export default class DisplayList extends PureComponent {
     this.setState({ modalVisible: visible })
   }
   renderRow = ({ item }) => (
-    <ItemLCD NameItem={item.nome} nMax={item.nMax} id={item.id} />
+    <ItemLCD NameItem={item.nome} nMax={item.nMax} id={item.id} pathDB={'LCD/APPLE/IPHONE/'}/>
   )
   search (model) {
     this.setState({

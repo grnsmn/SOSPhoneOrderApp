@@ -13,6 +13,7 @@ export default class ItemLCD extends PureComponent {
   state = {
     id: '',
     nomeItem: '',
+    section: 'LCD',
     colore: '',
     contatoreW: 0,
     contatoreBK: 0,
