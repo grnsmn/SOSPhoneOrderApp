@@ -47,6 +47,11 @@ const list_banco_vendita = [
   { id: 'b3à', nome: 'COVER TPU IPHONE XR', nMax: 15 },
   { id: 'b4à', nome: 'COVER TPU IPHONE 11', nMax: 15 },
   { id: 'b5à', nome: 'COVER TPU IPHONE 12', nMax: 15 },
+  { id: 'p5à', nome: 'COVER TPU IPHONE 12 MINI', nMax: 15 },
+  { id: 'b8à', nome: 'COVER TPU IPHONE 12 PRO MAX', nMax: 15 },
+  { id: 'b9à', nome: 'COVER TPU IPHONE 13', nMax: 15 },
+  { id: 'c0à', nome: 'COVER TPU IPHONE 13 MINI', nMax: 15 },
+  { id: 'c1à', nome: 'COVER TPU IPHONE 13 PRO MAX', nMax: 15 },
   { id: 'b6à', nome: 'COVER TPU IPHONE 6PLUS', nMax: 15 },
   { id: 'b7à', nome: 'COVER TPU IPHONE 7PLUS', nMax: 15 }
 ]
@@ -59,8 +64,10 @@ const list_magazzino = [
   { id: 'VT1', nome: 'V.TEMP IPHONE 7', nMax: 10 },
   { id: 'VT2', nome: 'V.TEMP IPHONE 7P', nMax: 10 },
   { id: 'VT3', nome: 'V.TEMP IPHONE X/11 PRO', nMax: 10 },
-  { id: 'VT5', nome: 'V.TEMP IPHONE XS MAX', nMax: 10 },
   { id: 'VT4', nome: 'V.TEMP IPHONE XR/11', nMax: 10 },
+  { id: 'VT5', nome: 'V.TEMP IPHONE XS MAX', nMax: 10 },
+  { id: 'VT6', nome: 'V.TEMP IPHONE 12/12 PRO', nMax: 10 },
+  { id: 'VT7', nome: 'V.TEMP IPHONE 13', nMax: 10 },
   { id: 'BL1', nome: 'ARIA COMPRESSA', nMax: 5 },
   { id: 'BL2', nome: 'ALCOOL ISOPROPILICO', nMax: 5 },
   { id: 'BL3', nome: 'COLLA B-7000 110ml', nMax: 2 }

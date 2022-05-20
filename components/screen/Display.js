@@ -27,9 +27,9 @@ const list = [
   { id: 'G5G', nome: 'IPHONE 6S PLUS', nMax: 2 },
   { id: 'WYR', nome: 'IPHONE 7 PLUS', nMax: 2 },
   { id: 'M3P', nome: 'IPHONE 8 PLUS', nMax: 2 },
-  { id: '2TI', nome: 'IPHONE X [ GX ]', nMax: 4 },
-  { id: 'JQ7', nome: 'IPHONE XR', nMax: 2 },
-  { id: '2A4', nome: 'IPHONE 11', nMax: 2 },
+  { id: '2TI', nome: 'IPHONE X [ GX ]', nMax: 8 },
+  { id: 'JQ7', nome: 'IPHONE XR', nMax: 8 },
+  { id: '2A4', nome: 'IPHONE 11', nMax: 5 },
   { id: '2A5', nome: 'IPHONE 11 PRO', nMax: 2 },
   { id: '5QM', nome: 'IPHONE XS MAX', nMax: 2 }
 ]

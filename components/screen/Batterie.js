@@ -319,6 +319,7 @@ export default class BattList extends PureComponent {
           refreshing={this.state.refresh}
         ></SectionList>
         <SearchBar
+          autoComplete='tel-device'
           placeholder='Cerca...'
           onChangeText={text => this.search(text)}
           value={this.state.search}
