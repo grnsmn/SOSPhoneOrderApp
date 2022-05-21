@@ -60,14 +60,14 @@ const list_magazzino = [
   { id: 'za8', nome: 'PELLICOLE ZAGG SMALL', nMax: 10 },
   { id: 'zaG', nome: 'PELLICOLE ZAGG LARGE', nMax: 10 },
   { id: 'zaS', nome: 'SPRAY ZAGG', nMax: 2 },
-  { id: 'VT0', nome: 'V.TEMP IPHONE 5', nMax: 10 },
-  { id: 'VT1', nome: 'V.TEMP IPHONE 7', nMax: 10 },
-  { id: 'VT2', nome: 'V.TEMP IPHONE 7P', nMax: 10 },
-  { id: 'VT3', nome: 'V.TEMP IPHONE X/11 PRO', nMax: 10 },
-  { id: 'VT4', nome: 'V.TEMP IPHONE XR/11', nMax: 10 },
-  { id: 'VT5', nome: 'V.TEMP IPHONE XS MAX', nMax: 10 },
-  { id: 'VT6', nome: 'V.TEMP IPHONE 12/12 PRO', nMax: 10 },
-  { id: 'VT7', nome: 'V.TEMP IPHONE 13', nMax: 10 },
+  { id: 'VT0', nome: 'V. TEMP IPHONE 5', nMax: 10 },
+  { id: 'VT1', nome: 'V. TEMP IPHONE 7', nMax: 10 },
+  { id: 'VT2', nome: 'V. TEMP IPHONE 7P', nMax: 10 },
+  { id: 'VT3', nome: 'V. TEMP IPHONE X/11 PRO', nMax: 10 },
+  { id: 'VT4', nome: 'V. TEMP IPHONE XR/11', nMax: 10 },
+  { id: 'VT5', nome: 'V. TEMP IPHONE XS MAX', nMax: 10 },
+  { id: 'VT6', nome: 'V. TEMP IPHONE 12/12 PRO', nMax: 10 },
+  { id: 'VT7', nome: 'V. TEMP IPHONE 13', nMax: 10 },
   { id: 'BL1', nome: 'ARIA COMPRESSA', nMax: 5 },
   { id: 'BL2', nome: 'ALCOOL ISOPROPILICO', nMax: 5 },
   { id: 'BL3', nome: 'COLLA B-7000 110ml', nMax: 2 }
@@ -189,7 +189,7 @@ export default class Accessori extends PureComponent {
     this.setState({ modalVisibleResi: visible })
   }
   renderRow = ({ item }) => (
-    <ItemAccessori NameItem={item.nome} nMax={item.nMax} id={item.id}/>
+    <ItemAccessori NameItem={item.nome} nMax={item.nMax} id={item.id} pathDB={'/ACCESSORI/'}/>
   )
   render () {
     return (

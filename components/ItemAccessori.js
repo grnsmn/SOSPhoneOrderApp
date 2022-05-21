@@ -1,16 +1,38 @@
+//TODO
+// - INTEGRAZIONE FIREBASE ACCESSORI
+
 import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet, Modal, TouchableHighlight } from 'react-native'
 import { Input } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as firebase from 'firebase'
 
-global.store_accessori = new Map() 
+var firebaseConfig = {
+  apiKey: 'AIzaSyCiHpV7RMsd2okgSwqqBra2e8Gc3dlrKCY',
+  authDomain: 'sosorderapp.firebaseapp.com',
+  databaseURL:
+    'https://sosorderapp-default-rtdb.europe-west1.firebasedatabase.app',
+  projectId: 'sosorderapp',
+  storageBucket: 'sosorderapp.appspot.com',
+  messagingSenderId: '767773027474',
+  appId: '1:767773027474:web:7065eaed04359967d2ca4b',
+  measurementId: 'G-30X46P77RX'
+}
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig)
+} else {
+  firebase.app() // if already initialized, use that one
+}
+
+global.store_accessori = new Map()
 
 export default class ItemAccessori extends PureComponent {
   state = {
     id: '',
     nomeItem: '',
     contatore: '-',
-    modalVisible: false,
+    modalVisible: false
   }
   setModalVisible = visible => {
     this.setState({ modalVisible: visible })
@@ -20,32 +42,73 @@ export default class ItemAccessori extends PureComponent {
     this.state.nomeItem = this.props.NameItem
     this.state.id = this.props.id
   }
+  updateItem (ramo) {
+    firebase
+      .database()
+      .ref(ramo)
+      .update({
+        [String(this.state.id)]: {
+          id: this.state.nomeItem,
+          n: this.state.contatore
+        }
+      })
+  }
   componentDidMount () {
-    AsyncStorage.getItem(this.state.id).then(result => {
-      const parseElement = JSON.parse(result)
-      //console.log(parseElement)
-      if (parseElement != null && parseElement.id != null) {
-        
-          const tmp = JSON.parse(result, (key, value) => {
-            //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
-            return value
+    var dbPoint = firebase.database().ref(this.props.pathDB + this.state.id)
+
+    dbPoint.on('value', snap => {
+      const tmp = snap.val()
+      if (tmp != null) {
+        console.log(tmp)
+        this.setState({ contatore: tmp.n })
+        if (this.state.contatore == '-')
+          global.store_accessori.delete(this.state.id)
+        if (
+          this.state.contatore != '-' &&
+          isNaN(this.state.contatore) == false
+        ) {
+          global.store_accessori.set(this.state.id, {
+            name: this.state.nomeItem,
+            n: this.state.contatore
           })
-          this.setState({ contatore: tmp.contatore,})
-          if (this.state.contatore == '-') global.store_accessori.delete(this.state.id)
-          if (this.state.contatore != '-' && isNaN(this.state.contatore) == false) {
-            global.store_accessori.set(this.state.id, {
-              name: this.state.nomeItem,
-              n: this.state.contatore
-            })
-          }
-      } else {
+        }
       }
     })
+    // AsyncStorage.getItem(this.state.id).then(result => {
+    //   const parseElement = JSON.parse(result)
+    //   //console.log(parseElement)
+    //   if (parseElement != null && parseElement.id != null) {
+    //     const tmp = JSON.parse(result, (key, value) => {
+    //       //funzione per estrarre per ogni chiave il relativo valore dell'oggetto memorizzato nella memoria async
+    //       return value
+    //     })
+    //     this.setState({ contatore: tmp.contatore })
+    //     if (this.state.contatore == '-')
+    //       global.store_accessori.delete(this.state.id)
+    //     if (
+    //       this.state.contatore != '-' &&
+    //       isNaN(this.state.contatore) == false
+    //     ) {
+    //       global.store_accessori.set(this.state.id, {
+    //         name: this.state.nomeItem,
+    //         n: this.state.contatore
+    //       })
+    //     }
+    //   } else {
+    //   }
+    // })
   }
   componentDidUpdate () {
-    AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
-    if (this.state.contatore == '-' ) global.store_accessori.delete(this.state.id)
+    //AsyncStorage.mergeItem(this.state.id, JSON.stringify(this.state))
+    if (this.state.contatore == '-') {
+      global.store_accessori.delete(this.state.id)
+      firebase
+        .database()
+        .ref('ACCESSORI/' + this.state.id)
+        .remove()
+    }
     if (this.state.contatore != '-') {
+      this.updateItem('ACCESSORI/')
       global.store_accessori.set(this.state.id, {
         name: this.state.nomeItem,
         n: this.state.contatore
@@ -92,23 +155,25 @@ export default class ItemAccessori extends PureComponent {
             justifyContent: 'flex-end'
           }}
         >
-          <View
-            style={{ flex: 0.4 }}
-          >
+          <View style={{ flex: 0.4 }}>
             <Input
-              style={{ borderWidth: 1, color: 'white', textAlign:'center' }}
+              style={{ borderWidth: 1, color: 'white', textAlign: 'center' }}
               renderErrorMessage={false}
               labelStyle={{ color: 'gold', textAlign: 'center', fontSize: 11 }}
               label={'Ultimi'}
-              placeholder={this.state.contatore.toString()=="-"?"-":this.state.contatore.toString()}
+              placeholder={
+                this.state.contatore.toString() == '-'
+                  ? '-'
+                  : this.state.contatore.toString()
+              }
               placeholderTextColor={'gold'}
               keyboardType='number-pad'
               maxLength={2}
               onChangeText={value => {
                 if (parseInt(value) <= parseInt(this.props.nMax)) {
                   this.setState({ contatore: parseInt(value) })
-                }else if (value=='-'){
-                  this.setState({contatore: '-'})
+                } else if (value == '-') {
+                  this.setState({ contatore: '-' })
                 }
               }}
               //onSubmitEditing={() => this.inStore()}
@@ -132,7 +197,6 @@ const styles = StyleSheet.create({
     margin: 1,
     alignItems: 'center',
     backgroundColor: '#181818'
-
   },
   header: {
     fontSize: 32,
