@@ -53,10 +53,10 @@ class ShareExample extends Component {
 
   render () {
     return (
-      <View style={{ borderTopWidth: 2 }}>
+      <View style={{ marginLeft:2 }}>
         <Button
           onPress={this.onShare}
-          icon={<Icon name='send' size={23} color='white' />}
+          icon={<Icon name='send' size={35} color='white' />}
           title=''
           buttonStyle={{ backgroundColor: 'grey' }}
         />

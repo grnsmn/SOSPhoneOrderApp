@@ -29,14 +29,20 @@ const list = [
   { id: 'M3P', nome: 'IPHONE 8 PLUS', nMax: 2 },
   { id: '2TI', nome: 'IPHONE X [ GX ]', nMax: 8 },
   { id: 'JQ7', nome: 'IPHONE XR', nMax: 8 },
+  { id: '5QM', nome: 'IPHONE XS MAX', nMax: 2 },
   { id: '2A4', nome: 'IPHONE 11', nMax: 5 },
   { id: '2A5', nome: 'IPHONE 11 PRO', nMax: 2 },
-  { id: '5QM', nome: 'IPHONE XS MAX', nMax: 2 }
+  { id: '2B1', nome: 'IPHONE 11 PRO MAX', nMax: 2 },
+  { id: '2A8', nome: 'IPHONE 12 MINI', nMax: 5 },
+  { id: '2A6', nome: 'IPHONE 12/PRO', nMax: 5 },
+  { id: '5QQ', nome: 'IPHONE 12 PRO MAX', nMax: 2 },
+  { id: '2A9', nome: 'IPHONE 13 MINI', nMax: 5 },
+  { id: '2b0', nome: 'IPHONE 13', nMax: 5 },
 ]
 const sectionList = [
   {
     title: 'To Order',
-    data: list
+    data: list.sort()
   }
 ]
 export default class DisplayList extends PureComponent {

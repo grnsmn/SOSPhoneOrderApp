@@ -48,7 +48,7 @@ export default class Home extends PureComponent {
     resetExtra: false,
     input: React.createRef() //riferimento necessario ad azzerare il text dell'input all'inserimento dell'elemento extra
   }
-  constructor (props) {
+  constructor(props) {
     super(props)
   }
   setModalVisible = visible => {
@@ -57,13 +57,13 @@ export default class Home extends PureComponent {
   setModalVisibleOrder = visible => {
     this.setState({ modalVisibleOrder: visible })
   }
-  _save () {
+  _save() {
     global.extra += this.state.text + ' \n'
     AsyncStorage.setItem('ListExtra', global.extra)
     this.state.input.current.clear()
     Vibration.vibrate()
   }
-  _reset () {
+  _reset() {
     global.store_Batt = new Map()
     global.resi_Batt_IP = new Map()
     global.store_Lcd = new Map()
@@ -77,7 +77,7 @@ export default class Home extends PureComponent {
     this.setState({ reset: !this.state.reset })
     Vibration.vibrate()
   }
-  componentDidMount () {
+  componentDidMount() {
     AsyncStorage.getItem('ListExtra').then(
       //Mantiene in memoria la lista scritta anche dopo il riavvio dell'app
       result => {
@@ -113,7 +113,7 @@ export default class Home extends PureComponent {
       })
     })
   }
-  render () {
+  render() {
     const storeBatt = [...global.store_Batt.values()].sort()
 
     return (
@@ -138,19 +138,7 @@ export default class Home extends PureComponent {
           RESET LISTA EXTRA{' '}
         </Snackbar>
         <View style={styles.modelSection}>
-          <FAB
-            style={styles.fab}
-            small
-            animated
-            icon='delete-forever'
-            onPress={() => this._reset()}
-          />
-          <FAB
-            style={styles.fab2}
-            animated
-            icon='toolbox'
-            onPress={() => this.props.navigation.navigate('Accessori')}
-          />
+
           <Modal //modal Lista Extra
             animationType='slide'
             transparent={true}
@@ -191,11 +179,11 @@ export default class Home extends PureComponent {
                   {storeBatt.map(function (element) {
                     return String(
                       element.n +
-                        'x ' +
-                        element.section +
-                        ' ' +
-                        element.name +
-                        '\n'
+                      'x ' +
+                      element.section +
+                      ' ' +
+                      element.name +
+                      '\n'
                     )
                   })}
                 </Text>
@@ -206,11 +194,11 @@ export default class Home extends PureComponent {
                     .map(function (element) {
                       return String(
                         element.n +
-                          'x ' +
-                          element.section +
-                          ' ' +
-                          element.name +
-                          '\n'
+                        'x ' +
+                        element.section +
+                        ' ' +
+                        element.name +
+                        '\n'
                       )
                     })}
                 </Text>
@@ -235,7 +223,7 @@ export default class Home extends PureComponent {
               buttonStyle={styles.button}
               onPress={() => this.props.navigation.navigate('Batterie')}
               icon={<Icon name='battery-unknown' size={28} color='white' />}
-              //iconRight
+            //iconRight
             ></Button>
             <Button
               title='Display'
@@ -262,7 +250,7 @@ export default class Home extends PureComponent {
               buttonStyle={styles.button}
               onPress={() => this.props.navigation.navigate('Batterie Huawei')}
               icon={<Icon name='battery-unknown' size={28} color='#F1F3F4' />}
-              //iconRight
+            //iconRight
             ></Button>
             <Button
               title='Display'
@@ -283,7 +271,7 @@ export default class Home extends PureComponent {
               buttonStyle={styles.button}
               onPress={() => this.props.navigation.navigate('Batterie Samsung')}
               icon={<Icon name='battery-unknown' size={28} color='white' />}
-              //iconRight
+            //iconRight
             ></Button>
             <Button
               title='Display'
@@ -293,7 +281,7 @@ export default class Home extends PureComponent {
             ></Button>
           </View>
         </View>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           {/* <Button
             title={' ORDER'}
             onPress={() => {
@@ -308,35 +296,55 @@ export default class Home extends PureComponent {
             buttonStyle={{ backgroundColor: '#181818' }}
             icon={<Icon name='list' size={28} color='#F1F3F4' />}
           /> */}
+          <Button
+            containerStyle={styles.containerStyleButtonBottom}
+            title={'Reset'}
+            icon={<Icon name='delete-forever' size={45} color='#F1F3F4' />}
+            onPress={() => this._reset()}
+            buttonStyle={{ backgroundColor: 'darkred' }}
+            iconPosition={'top'}
+          />
 
           <Button
             title={' Extra'}
             onPress={() => {
               this.setModalVisible(true)
             }}
-            containerStyle={{
-              flex: 1,
-              borderTopWidth: 3
-            }}
+            containerStyle={styles.containerStyleButtonBottom}
+            // containerStyle={{
+            //   flex: 1,
+            //   //borderTopWidth: 3
+            // }}
             buttonStyle={{ backgroundColor: '#181818' }}
-            icon={<Icon name='view-list' size={28} color='#F1F3F4' />}
-            iconRight={true}
+            icon={<Icon name='view-list' size={38} color='#F1F3F4' />}
+            iconPosition={'top'}
           />
           <Button
+            iconPosition={'top'}
             title={'Svuota Extra'}
+            icon={<Icon name='wrap-text' size={25} color='#F1F3F4' />}
             onPress={() => {
               global.extra = ''
               AsyncStorage.removeItem('ListaExtra').then(() =>
                 this.setState({ resetExtra: !this.state.resetExtra })
               )
             }}
-            containerStyle={{
-              flex: 0.8,
-              //borderBottomWidth: 2,
-              borderTopWidth: 3,
-              borderRightWidth: 2
-            }}
+            // containerStyle={{
+            //   flex: 0.8,
+            //   //borderBottomWidth: 2,
+            //   // borderTopWidth: 3,
+            //   // borderRightWidth: 2
+            // }}
+            containerStyle={styles.containerStyleButtonBottom}
             buttonStyle={{ backgroundColor: 'red' }}
+          />
+          <Button
+            containerStyle={styles.containerStyleButtonBottom}
+            icon={<Icon name='business-center' size={45} color='#F1F3F4' />}
+            iconPosition={'top'}
+            title={'Accessori'}
+            titleStyle={{fontSize: 15}}
+            onPress={() => this.props.navigation.navigate('Accessori')}
           />
           <ShareExample nomeLista={'Lista Extra'} />
         </View>
@@ -370,6 +378,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     flex: 1
+  },
+  containerStyleButtonBottom: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingBottom: 4
   },
   modelSection: {
     borderColor: 'red',
@@ -455,17 +468,19 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   fab: {
-    position: 'absolute',
-    margin: 20,
-    right: 150,
-    bottom: -10,
+    flex: '1',
     backgroundColor: 'darkred'
   },
+  // fab2: {
+  //   position: 'absolute',
+  //   margin: 20,
+  //   right: 143,
+  //   bottom: 150,
+  //   backgroundColor: '#007AFF'
+  // },
   fab2: {
-    position: 'absolute',
+    alignSelf: 'center',
     margin: 20,
-    right: 143,
-    bottom: 150,
     backgroundColor: '#007AFF'
   },
   snackbar: { backgroundColor: '#252850', textAlign: 'center' },
