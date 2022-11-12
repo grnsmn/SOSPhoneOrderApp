@@ -1,6 +1,3 @@
-//TODO
-// - INTEGRAZIONE FIREBASE ACCESSORI
-
 import React, { PureComponent } from 'react'
 import { Text, View, StyleSheet, Modal, TouchableHighlight } from 'react-native'
 import { Input } from 'react-native-elements'
@@ -59,7 +56,6 @@ export default class ItemAccessori extends PureComponent {
     dbPoint.on('value', snap => {
       const tmp = snap.val()
       if (tmp != null) {
-        console.log(tmp)
         this.setState({ contatore: tmp.n })
         if (this.state.contatore == '-')
           global.store_accessori.delete(this.state.id)

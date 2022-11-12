@@ -56,7 +56,6 @@ export default class Item extends PureComponent {
       })
   }
   componentDidMount () {
-    // if (this.state.nomeItem.includes('IPHONE')) {
     var dbPoint = firebase
       .database()
       .ref(this.props.pathDB + this.state.nomeItem)

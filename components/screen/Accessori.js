@@ -1,3 +1,6 @@
+//TODO
+//IMPLEMENTARE LA CLEAR LIST PER AZZERARE TUTTA LA LISTA
+
 import React, { PureComponent } from 'react'
 import {
   StyleSheet,
@@ -9,10 +12,30 @@ import {
   Share,
   TextInput
 } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+//import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Appbar, Snackbar } from 'react-native-paper'
 import ItemAccessori from '../ItemAccessori'
 import { SearchBar } from 'react-native-elements'
+import * as firebase from 'firebase'
+
+var firebaseConfig = {
+  apiKey: 'AIzaSyCiHpV7RMsd2okgSwqqBra2e8Gc3dlrKCY',
+  authDomain: 'sosorderapp.firebaseapp.com',
+  databaseURL:
+    'https://sosorderapp-default-rtdb.europe-west1.firebasedatabase.app',
+  projectId: 'sosorderapp',
+  storageBucket: 'sosorderapp.appspot.com',
+  messagingSenderId: '767773027474',
+  appId: '1:767773027474:web:7065eaed04359967d2ca4b',
+  measurementId: 'G-30X46P77RX'
+}
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig)
+} else {
+  firebase.app() // if already initialized, use that one
+}
+var database = firebase.database().ref('/ACCESSORI')
 
 const list_banco_vendita = [
   { id: 'cT6', nome: 'ADATTATORI SIM', nMax: 20 },
@@ -94,7 +117,7 @@ export default class Accessori extends PureComponent {
     modalVisibleResi: false,
     listFiltered: sectionList,
     search: '',
-    clearList: false,
+    clearList: false
   }
 
   setModalVisible = visible => {
@@ -102,7 +125,7 @@ export default class Accessori extends PureComponent {
   }
   search (model) {
     this.setState({
-      search:model,
+      search: model,
       listFiltered: [
         {
           title: 'Magazzino',
@@ -163,38 +186,57 @@ export default class Accessori extends PureComponent {
     //Azzera lista ordine
     global.store_accessori.clear()
     global.list_accessori = ''
-    this.setState({ clearList: !this.state.clearList})
+    this.setState({ clearList: !this.state.clearList })
 
     list_banco_vendita.forEach(element => {
       //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
+
+      database.update({
+        [String(element.id)]: {
+          id: element.nome,
+          n: '-'
+        }
+      })
+
       const item = {
         id: element.id,
         nomeItem: element.nome,
         contatore: '-'
       }
-      AsyncStorage.mergeItem(element.id, JSON.stringify(item))
+      //AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
     list_magazzino.forEach(element => {
       //AZZERA TUTTI GLI ELEMENTI NELLO STORE CON PERSISTENZA LOCALE
+      database.update({
+        [String(element.id)]: {
+          id: element.nome,
+          n: '-'
+        }
+      })
+
       const item = {
         id: element.id,
         nomeItem: element.nome,
         contatore: '-'
       }
-      AsyncStorage.mergeItem(element.id, JSON.stringify(item))
+      //AsyncStorage.mergeItem(element.id, JSON.stringify(item))
     })
-    
   }
   setModalVisibleResi = visible => {
     this.setState({ modalVisibleResi: visible })
   }
   renderRow = ({ item }) => (
-    <ItemAccessori NameItem={item.nome} nMax={item.nMax} id={item.id} pathDB={'/ACCESSORI/'}/>
+    <ItemAccessori
+      NameItem={item.nome}
+      nMax={item.nMax}
+      id={item.id}
+      pathDB={'/ACCESSORI/'}
+    />
   )
   render () {
     return (
       <View style={styles.container}>
-       <Snackbar
+        <Snackbar
           visible={this.state.clearList}
           onDismiss={() => this.setState({ clearList: false })}
           duration={700}
@@ -233,7 +275,7 @@ export default class Accessori extends PureComponent {
           </View>
         </Modal>
         <SectionList
-        keyExtractor={(item,index)=> item.id}
+          keyExtractor={(item, index) => item.id}
           sections={this.state.listFiltered}
           renderItem={this.renderRow}
           renderSectionHeader={({ section: { title } }) => (
@@ -289,7 +331,7 @@ const styles = StyleSheet.create({
   bottom: {
     borderRadius: 15,
     borderTopWidth: 1,
-   // borderColor: '#2196F3',
+    // borderColor: '#2196F3',
     backgroundColor: '#252850',
     position: 'relative',
     left: 0,
